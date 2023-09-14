@@ -66,7 +66,7 @@
 #' 
 #' # find expected sample size for default design with
 #' # n.fix=1000
-#' x <- gsDesign(n.fix = 1000)
+#' x <- gsDesignCRT(n.fix = 1000)
 #' x
 #' 
 #' # set a prior distribution for theta
@@ -86,7 +86,7 @@
 #'   main = "Expected sample size for different theta values"
 #' )
 #' lines(y$z, z$en)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
@@ -95,7 +95,7 @@
 #' @export
 #' @rdname normalGrid
 #' @importFrom stats dnorm
-#' @useDynLib gsDesign stdnorpts
+#' @useDynLib gsDesignCRT stdnorpts
 # normalGrid function [sinew] ----
 normalGrid <- function(r = 18, bounds = c(0, 0), mu = 0, sigma = 1) {
   checkScalar(r, "integer", c(1, 80))

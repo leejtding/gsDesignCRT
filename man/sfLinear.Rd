@@ -52,11 +52,11 @@ The function \code{sfLinear()} allows specification of a piecewise linear
 spending function. The function \code{sfStep()} specifies a step function
 spending function. Both functions provide complete flexibility in setting
 spending at desired timepoints in a group sequential design. Normally these
-function will be passed to \code{gsDesign()} in the parameter \code{sfu} for
+function will be passed to \code{gsDesignCRT()} in the parameter \code{sfu} for
 the upper bound or \code{sfl} for the lower bound to specify a spending
-function family for a design. When passed to \code{gsDesign()}, the value of
+function family for a design. When passed to \code{gsDesignCRT()}, the value of
 \code{param} would be passed to \code{sfLinear()} or \code{sfStep()} through
-the \code{gsDesign()} arguments \code{sfupar} for the upper bound and
+the \code{gsDesignCRT()} arguments \code{sfupar} for the upper bound and
 \code{sflpar} for the lower bound.
 
 Note that \code{sfStep()} allows setting a particular level of spending when
@@ -65,7 +65,7 @@ I error when timing of analyses are changed based on knowing the treatment
 effect at an interim.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
@@ -73,7 +73,7 @@ library(ggplot2)
 # set up alpha spending and beta spending to be piecewise linear
 sfupar <- c(.2, .4, .05, .2)
 sflpar <- c(.3, .5, .65, .5, .75, .9)
-x <- gsDesign(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
+x <- gsDesignCRT(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
 plot(x, plottype = "sf")
 x
 
@@ -81,14 +81,14 @@ x
 # and no upper spending at interim 2
 sflpar <- c(1 / 3, 2 / 3, 0, .25)
 sfupar <- c(1 / 3, 2 / 3, .1, .1)
-x <- gsDesign(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
+x <- gsDesignCRT(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
 plot(x, plottype = "sf")
 x
 
 # now do an example where timing of interims changes slightly, but error spending does not
 # also, spend all alpha when at least >=90 percent of final information is in the analysis
 sfupar <- c(.2, .4, .9, ((1:3) / 3)^3)
-x <- gsDesign(k = 3, n.fix = 100, sfu = sfStep, sfupar = sfupar, test.type = 1)
+x <- gsDesignCRT(k = 3, n.fix = 100, sfu = sfStep, sfupar = sfupar, test.type = 1)
 plot(x, pl = "sf")
 # original planned sample sizes
 ceiling(x$n.I)
@@ -97,7 +97,7 @@ cumsum(x$upper$spend)
 # change timing of analyses;
 # note that cumulative spending "P(Cross) if delta=0" does not change from cumsum(x$upper$spend)
 # while full alpha is spent, power is reduced by reduced sample size
-y <- gsDesign(
+y <- gsDesignCRT(
   k = 3, sfu = sfStep, sfupar = sfupar, test.type = 1,
   maxn.IPlan = x$n.I[x$k], n.I = c(30, 70, 95),
   n.fix = x$n.fix
@@ -106,7 +106,7 @@ y <- gsDesign(
 gsBoundSummary(y)
 
 # now show how step function can be abused by 'adapting' stage 2 sample size based on interim result
-x <- gsDesign(k = 2, delta = .05, sfu = sfStep, sfupar = c(.02, .001), timing = .02, test.type = 1)
+x <- gsDesignCRT(k = 2, delta = .05, sfu = sfStep, sfupar = c(.02, .001), timing = .02, test.type = 1)
 # spending jumps from miniscule to full alpha at first analysis after interim 1
 plot(x, pl = "sf")
 # sample sizes at analyses:
@@ -140,7 +140,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}
 }
 \author{

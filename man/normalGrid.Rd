@@ -45,7 +45,7 @@ the function integrated is not large in the tails of the grid where points
 are spread further apart.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
@@ -84,7 +84,7 @@ sum(x$gridwgts * x$density)
 
 # find expected sample size for default design with
 # n.fix=1000
-x <- gsDesign(n.fix = 1000)
+x <- gsDesignCRT(n.fix = 1000)
 x
 
 # set a prior distribution for theta

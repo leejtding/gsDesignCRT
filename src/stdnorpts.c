@@ -1,4 +1,4 @@
-#include "gsDesign.h"
+#include "gsDesignCRT.h"
 
 void stdnorpts(int *r,double *bounds,double *z,double *w)
 {  int gridpts(int,double,double,double,double *,double *);

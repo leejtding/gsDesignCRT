@@ -221,7 +221,7 @@ that it covers the possible range of values that include the true minimum.
 NOTE: the one-sided evaluation of significance is more conservative than using the 2-sided exact test in \code{binom.test}.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{

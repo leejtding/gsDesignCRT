@@ -7,9 +7,9 @@
 gsBoundCP(x, theta = "thetahat", r = 18)
 }
 \arguments{
-\item{x}{An object of type \code{gsDesign} or \code{gsProbability}}
+\item{x}{An object of type \code{gsDesignCRT} or \code{gsProbability}}
 
-\item{theta}{if \code{"thetahat"} and \code{class(x)!="gsDesign"},
+\item{theta}{if \code{"thetahat"} and \code{class(x)!="gsDesignCRT"},
 conditional power computations for each boundary value are computed using
 estimated treatment effect assuming a test statistic at that boundary
 (\code{zi/sqrt(x$n.I[i])} at analysis \code{i}, interim test statistic
@@ -39,13 +39,13 @@ See Conditional power section of manual for further clarification. See also
 Muller and Schaffer (2001) for background theory.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 
 # set up a group sequential design
-x <- gsDesign(k = 5)
+x <- gsDesignCRT(k = 5)
 x
 
 # compute conditional power based on interim treatment effects
@@ -63,7 +63,7 @@ designs for clinical trials: combining the advantages of adaptive and
 classical group sequential approaches. \emph{Biometrics};57:886-891.
 }
 \seealso{
-\code{\link{gsDesign}}, \code{\link{gsProbability}},
+\code{\link{gsDesignCRT}}, \code{\link{gsProbability}},
 \code{\link{gsCP}}
 }
 \author{

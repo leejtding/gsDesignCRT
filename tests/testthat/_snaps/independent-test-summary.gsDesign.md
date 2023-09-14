@@ -26,7 +26,7 @@
 
     [1] "Asymmetric two-sided group sequential design with non-binding futility bound, 3 analyses, time-to-event outcome with sample size 530 and 100 events required, 90 percent power, 2.5 percent (1-sided) Type I error. Efficacy bounds derived using a Hwang-Shih-DeCani spending function with gamma = -4. Futility bounds derived using a Hwang-Shih-DeCani spending function with gamma = -2."
 
-# Test gsDesign summary for nSurvival
+# Test gsDesignCRT summary for nSurvival
 
     [1] "Asymmetric two-sided group sequential design with non-binding futility bound, 3 analyses, time-to-event outcome with sample size 430 and 82 events required, 90 percent power, 2.5 percent (1-sided) Type I error. Efficacy bounds derived using a Hwang-Shih-DeCani spending function with gamma = -4. Futility bounds derived using a Hwang-Shih-DeCani spending function with gamma = -2."
 
@@ -34,7 +34,7 @@
 
     [1] "Asymmetric two-sided group sequential design with non-binding futility bound, 3 analyses, sample size 1963, 90 percent power, 2.5 percent (1-sided) Type I error. Efficacy bounds derived using a Hwang-Shih-DeCani spending function with gamma = -4. Futility bounds derived using a Hwang-Shih-DeCani spending function with gamma = -2."
 
-# Test gsDesign summary -test.type = 2
+# Test gsDesignCRT summary -test.type = 2
 
     [1] "Symmetric two-sided group sequential design with 4 analyses, sample size 2, 90 percent power, 2.5 percent (1-sided) Type I error. Bounds derived using a  Pocock boundary."
 

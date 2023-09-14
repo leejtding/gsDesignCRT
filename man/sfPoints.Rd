@@ -29,7 +29,7 @@ details.
 The function \code{sfPoints} implements a spending function with values
 specified for an arbitrary set of specified points. It is now recommended to
 use sfLinear rather than sfPoints. Normally \code{sfPoints} will be passed
-to \code{gsDesign} in the parameter \code{sfu} for the upper bound or
+to \code{gsDesignCRT} in the parameter \code{sfu} for the upper bound or
 \code{sfl} for the lower bound to specify a spending function family for a
 design. In this case, the user does not need to know the calling sequence,
 just the points they wish to specify. If using \code{sfPoints()} in a
@@ -38,13 +38,13 @@ specified points (e.g,, linear interpolation); also consider fitting smooth
 spending functions; see \code{vignette("SpendingFunctionOverview")}.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 library(ggplot2)
 # example to specify spending on a pointwise basis
-x <- gsDesign(
+x <- gsDesignCRT(
   k = 6, sfu = sfPoints, sfupar = c(.01, .05, .1, .25, .5, 1),
   test.type = 2
 )
@@ -78,7 +78,7 @@ text(x = .6, y = .83, "t-Distribution Spending with 3-point interpolation")
 
 # example without lower spending at initial interim or
 # upper spending at last interim
-x <- gsDesign(
+x <- gsDesignCRT(
   k = 3, sfu = sfPoints, sfupar = c(.25, .25),
   sfl = sfPoints, sflpar = c(0, .25)
 )
@@ -90,7 +90,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}, \link{sfLogistic}
 }
 \author{

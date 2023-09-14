@@ -8,7 +8,7 @@ source('../gsDesign_independent_code.R')
 ## low value.
 
 
-x <- gsDesign()
+x <- gsDesignCRT()
 pltobj <- plotRR(x)
 
 

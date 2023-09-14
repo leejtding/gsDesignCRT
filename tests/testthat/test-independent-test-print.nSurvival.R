@@ -3,7 +3,7 @@
 #-----------------------------------
 
 testthat::test_that(desc = "Test: checking invalid-object", code = {
-  gs <- gsDesign(k = 5, test.type = 1, n.fix = 1)
+  gs <- gsDesignCRT(k = 5, test.type = 1, n.fix = 1)
   testthat::expect_error(print.nSurvival(gs),
     info = "Tests print.nSurvival - invalid-object"
   )

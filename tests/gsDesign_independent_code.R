@@ -1,6 +1,6 @@
 
 # This script contains independently programmed functions for validating some of 
-# the functions of the gsDesign package.
+# the functions of the gsDesignCRT package.
 #-------------------------------------------------------------------------------
 # gsPP : averages conditional power across a posterior distribution to compute
 #       predictive power.
@@ -301,7 +301,7 @@ validate_sfStep <- function(alpha, t, param) {
 
 #--------------------------------------------------------------------------------
 ## sfTDist : The function sfTDist() provides perhaps the maximum flexibility
-#           among spending functions provided in the gsDesign package.
+#           among spending functions provided in the gsDesignCRT package.
 #-------------------------------------------------------------------------------
 # Independent code Author : Apurva Bhingare
 # alpha: Type I error (or Type II error) specification takes values between 0 and 1.
@@ -855,7 +855,7 @@ gridpts <- function(r = 18, mu = 0, a = -Inf, b = Inf){
 }
 #-------------------------------------------------------------------------------
 
-## This script contains independently programmed functions for validating some of the functions of the gsDesign package.
+## This script contains independently programmed functions for validating some of the functions of the gsDesignCRT package.
 
 #########################################################################################
 # This Function validates z2Z.

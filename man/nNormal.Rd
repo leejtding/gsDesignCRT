@@ -86,7 +86,7 @@ A more detailed formulation is available in the vignette on two-sample normal sa
 # equal variances
 n=nNormal(delta1=.5,sd=1.1,alpha=.025,beta=.2)
 n
-x <- gsDesign(k = 3, n.fix = n, test.type = 4, alpha = 0.025, beta = 0.1, timing = c(.5,.75),
+x <- gsDesignCRT(k = 3, n.fix = n, test.type = 4, alpha = 0.025, beta = 0.1, timing = c(.5,.75),
 sfu = sfLDOF, sfl = sfHSD, sflpar = -1, delta1 = 0.5, endpoint = 'normal') 
 gsBoundSummary(x)
 summary(x)

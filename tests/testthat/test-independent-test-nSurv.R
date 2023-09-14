@@ -40,11 +40,11 @@ testthat::test_that("Checking consistency nEvents power vs sample size", {
 ################################################################################
 ## ADDITIONAL TEST SCENARIOs
 
-## We use nSurvival() from the gsDesign package to validate the nSurv().
+## We use nSurvival() from the gsDesignCRT package to validate the nSurv().
 ## This is done keeping in mind that nSurvival has been programmed
 ## independently and can be used for limited validations of nSurv()
 testthat::test_that(
-  desc = "Test nSurv() using nSurvival() from the gsDesign package : ",
+  desc = "Test nSurv() using nSurvival() from the gsDesignCRT package : ",
   code = {
     ss2 <- nSurv(
       lambdaC = log(2) / 6, hr = .5, eta = log(2) / 40,
@@ -144,7 +144,7 @@ test_that(
     
     ## compare the power x$power
     ## tolerance is high as the power computation depends 
-    ## upon # of events which have differences between different gsDesign and East 6.5.
+    ## upon # of events which have differences between different gsDesignCRT and East 6.5.
     expect_lte(abs(x$power - 0.58120457), 0.02)
   }
 )

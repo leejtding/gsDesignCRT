@@ -146,7 +146,7 @@
 #' 
 #' #  group sequential translation with default bounds
 #' #  note that delta1 is log hazard ratio; used later in gsBoundSummary summary
-#' x <- gsDesign(
+#' x <- gsDesignCRT(
 #'   k = 5, test.type = 2, n.fix = ss$nEvents, nFixSurv = ss$n,
 #'   delta1 = log(ss$lambda2 / ss$lambda1)
 #' )
@@ -198,8 +198,8 @@
 #' hrn2z(hr = 1 / .6, n = 75, ratio = 2)
 #' @author Shanhong Guan \email{shanhong.guan@@gmail.com}, Keaven Anderson
 #' \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-#' \link{gsDesign}, \link{gsHR}
+#' @seealso \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+#' \link{gsDesignCRT}, \link{gsHR}
 #' @references Lachin JM and Foulkes MA (1986), Evaluation of Sample Size and
 #' Power for Analyses of Survival with Allowance for Nonuniform Patient Entry,
 #' Losses to Follow-Up, Noncompliance, and Stratification. \emph{Biometrics},

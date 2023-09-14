@@ -15,7 +15,7 @@ spendingFunction(alpha, t, param)
 \item{...}{Not currently used.}
 
 \item{alpha}{Real value \eqn{> 0} and no more than 1. Defaults in calls to
-\code{gsDesign()} are \code{alpha=0.025} for one-sided Type I error
+\code{gsDesignCRT()} are \code{alpha=0.025} for one-sided Type I error
 specification and \code{alpha=0.1} for Type II error specification.
 However, this could be set to 1 if, for descriptive purposes, you wish to
 see the proportion of spending as a function of the proportion of sample
@@ -40,19 +40,19 @@ the parameter(s) in \code{param}.}
 \item{spend}{a vector of cumulative spending values corresponding to
 the input values in \code{t}.}
 \item{bound}{this is null when returned from the spending function,
-but is set in \code{gsDesign()} if the spending function is called
+but is set in \code{gsDesignCRT()} if the spending function is called
 from there.  Contains z-values for bounds of a design.}
 \item{prob}{this is null when returned from the spending function,
-but is set in \code{gsDesign()} if the spending function is called
+but is set in \code{gsDesignCRT()} if the spending function is called
 from there.  Contains probabilities of boundary crossing at \code{i}-th
-analysis for \code{j}-th theta value input to \code{gsDesign()} in
+analysis for \code{j}-th theta value input to \code{gsDesignCRT()} in
 \code{prob[i,j]}.}
 }
 \description{
 Spending Function
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
@@ -60,7 +60,7 @@ The gsDesign technical manual is available at
 
 # Design a 4-analysis trial using a Hwang-Shih-DeCani spending function
 # for both lower and upper bounds
-x <- gsDesign(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
+x <- gsDesignCRT(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
 
 # Print the design
 x
@@ -72,8 +72,8 @@ summary(x$lower)
 plot(x, plottype = 5)
 
 # What happens to summary if we used a boundary function design
-x <- gsDesign(test.type = 2, sfu = "OF")
-y <- gsDesign(test.type = 1, sfu = "WT", sfupar = .25)
+x <- gsDesignCRT(test.type = 2, sfu = "OF")
+y <- gsDesignCRT(test.type = 1, sfu = "WT", sfupar = .25)
 summary(x$upper)
 summary(y$upper)
 
@@ -128,7 +128,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{\link{gsDesign}}, \code{\link{sfHSD}}, \code{\link{sfPower}},
+\code{\link{gsDesignCRT}}, \code{\link{sfHSD}}, \code{\link{sfPower}},
 \code{\link{sfLogistic}}, \code{\link{sfExponential}},
 \code{\link{sfTruncated}}, \code{vignette("gsDesignPackageOverview")}
 }

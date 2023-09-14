@@ -1,6 +1,6 @@
 #include "R.h"
 #include "Rmath.h"
-#include "gsDesign.h"
+#include "gsDesignCRT.h"
 /* sub-density function (integrates to < 1) between bounds at interim
    analysis for group sequential design */
 void gsdensity(double *den, int *xnanal, int *ntheta, double *xtheta,

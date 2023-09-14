@@ -20,7 +20,7 @@ function will be computed.}
 \item{param}{In the three-parameter specification, the first paramater (a)
 may be any real value, the second (b) any positive value, and the third
 parameter (df=degrees of freedom) any real value 1 or greater. When
-\code{gsDesign()} is called with a t-distribution spending function, this is
+\code{gsDesignCRT()} is called with a t-distribution spending function, this is
 the parameterization printed.  The five parameter specification is
 \code{c(t1,t2,u1,u2,df)} where the objective is that the resulting
 cumulative proportion of spending at \code{t} represented by \code{sf(t)}
@@ -42,11 +42,11 @@ details.
 }
 \description{
 The function \code{sfTDist()} provides perhaps the maximum flexibility among
-spending functions provided in the \code{gsDesign} package. This function
+spending functions provided in the \code{gsDesignCRT} package. This function
 allows fitting of three points on a cumulative spending function curve; in
 this case, six parameters are specified indicating an x and a y coordinate
 for each of 3 points. Normally this function will be passed to
-\code{gsDesign()} in the parameter \code{sfu} for the upper bound or
+\code{gsDesignCRT()} in the parameter \code{sfu} for the upper bound or
 \code{sfl} for the lower bound to specify a spending function family for a
 design. In this case, the user does not need to know the calling sequence.
 The calling sequence is useful, however, when the user wishes to plot a
@@ -57,7 +57,7 @@ F(a+bF^{-1}(t))} where \eqn{F()} is a cumulative t-distribution function
 with \code{df} degrees of freedom and \eqn{F^{-1}()} is its inverse.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
@@ -110,7 +110,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}
 }
 \author{

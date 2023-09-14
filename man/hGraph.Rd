@@ -107,6 +107,6 @@ The graph can also be used with the **gMCPLite** package to evaluate a set of no
 See vignette **Multiplicity graphs formatting using ggplot2** for explanation of formatting.
 }
 \examples{
-# 'gsDesign::hGraph' is deprecated.
+# 'gsDesignCRT::hGraph' is deprecated.
 # See the examples in 'gMCPLite::hGraph' instead.
 }

@@ -7,7 +7,7 @@ source('../gsDesign_independent_code.R')
 testthat::test_that(
   desc = "Test: checking lengths of inputs for prior variable.",
   code = {
-    x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+    x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
     local_edition(3)
     expect_error(gsPosterior(x, i = 2, zi = NULL,
       prior = list(
@@ -20,7 +20,7 @@ testthat::test_that(
 
 
 testthat::test_that(desc = "Test: checking prior$density out of range.", code = {
-  x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x, i = 2, zi = NULL,
     prior = list(
@@ -34,7 +34,7 @@ testthat::test_that(desc = "Test: checking prior$density out of range.", code = 
 testthat::test_that(
   desc = "Test: checking prior$gridwgts out of range.",
   code = {
-    x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+    x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
     local_edition(3)
     expect_error(gsPosterior(x, i = 2, zi = NULL,
       prior = list(
@@ -48,7 +48,7 @@ testthat::test_that(
 
 
 testthat::test_that(desc = "Test: checking variable i data types.", code = {
-  x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x, i = 0.2, zi = NULL, prior = normalGrid(), r = 18))
 })
@@ -56,7 +56,7 @@ testthat::test_that(desc = "Test: checking variable i data types.", code = {
 
 
 testthat::test_that(desc = "Test: checking out of range i.", code = {
-  x <- gsDesign(k = 2, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 2, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x,
     i = 3, zi = NULL,
@@ -74,7 +74,7 @@ testthat::test_that(desc = "Test: checking checking x class object.", code = {
 
 
 testthat::test_that(desc = "Test: checking length zi .", code = {
-  x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x, i = 2, zi = rep(1, 3), prior = normalGrid(), r = 18))
 })
@@ -82,7 +82,7 @@ testthat::test_that(desc = "Test: checking length zi .", code = {
 
 
 testthat::test_that(desc = "Test: checking z parameter value", code = {
-  x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x, i = 2, zi = c(0.5, 0.2),
     prior = normalGrid(), r = 18
@@ -92,7 +92,7 @@ testthat::test_that(desc = "Test: checking z parameter value", code = {
 
 
 testthat::test_that(desc = "Test: checking z variable types.", code = {
-  x <- gsDesign(k = 4, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 4, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPosterior(x, i = 2, zi = c(0.5, "a"), prior = normalGrid(), r = 18))
 })
@@ -103,7 +103,7 @@ testthat::test_that(
   desc = "Test: checking Output validation, 
           source: /tests/cytel/gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+    x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
     theta <- seq(-3, 3, 0.75)
     i <- 1
     zi <- 0.5

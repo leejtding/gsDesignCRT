@@ -1,13 +1,13 @@
 testthat::context("Two-sample normal sample size and power tests")
 
 testthat::test_that("Testing nNormal input types", {
-  testthat::expect_error(gsDesign::nNormal(alpha="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(beta="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(delta1="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(sd="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(sided="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(delta0="abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::nNormal(outtype="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(alpha="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(beta="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(delta1="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(sd="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(sided="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(delta0="abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::nNormal(outtype="abc"), info = "Checking for incorrect variable type")
 })
 
 testthat::test_that("Testing nNormal input values", {

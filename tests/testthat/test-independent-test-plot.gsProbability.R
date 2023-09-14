@@ -5,7 +5,7 @@ source('../gsDesign_independent_code.R')
 ## whereas save_gr_plot() is used with plots created using graphics package.
 #----------------------------------------------
 
-x <- gsDesign(k = 5, test.type = 2, n.fix = 100)
+x <- gsDesignCRT(k = 5, test.type = 2, n.fix = 100)
 
 y <- gsProbability(k = 5, theta = seq(0, .5, .025), x$n.I, 
                    x$lower$bound, x$upper$bound)

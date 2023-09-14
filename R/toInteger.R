@@ -1,13 +1,13 @@
 #' Translate group sequential design to integer events (survival designs)
 #' or sample size (other designs)
 #'
-#' @param x An object of class \code{gsDesign}.
+#' @param x An object of class \code{gsDesignCRT}.
 #' @param ratio Integer indicating randomization ratio; not used for
 #'   time-to-event outcome; see details.
 #' @param roundUpFinal Final value in returned \code{n.I} rounded up
 #'   if \code{TRUE}; otherwise, just rounded.
 #'
-#' @return An object of class \code{gsDesign} with integer vector for \code{n.I}.
+#' @return An object of class \code{gsDesignCRT} with integer vector for \code{n.I}.
 #'
 #' @details
 #' Note that if ratio is 0, rounding for \code{n.I} is done to the
@@ -45,7 +45,7 @@
 #' # Convert bounds to exact binomial bounds
 #' toInteger(x, ratio = 3)
 toInteger <- function(x, ratio = 0, roundUpFinal = TRUE) {
-  if (!inherits(x, "gsDesign")) stop("toInteger must have class gsDesign as input")
+  if (!inherits(x, "gsDesignCRT")) stop("toInteger must have class gsDesignCRT as input")
   if (!is.numeric(ratio) || ratio < 0) stop("toInteger input ratio must be a non-negative integer")
   counts <- round(x$n.I) # Round counts (event counts for survival; otherwise sample size)
   # For time-to-event endpoint or non-integer ratio, just round final count up
@@ -60,7 +60,7 @@ toInteger <- function(x, ratio = 0, roundUpFinal = TRUE) {
     }
   }
   # update bounds and counts from original design
-  xi <- gsDesign(
+  xi <- gsDesignCRT(
     k = x$k, test.type = x$test.type, n.I = counts, maxn.IPlan = counts[x$k],
     alpha = x$alpha, beta = x$beta, astar = x$astar,
     delta = x$delta, delta1 = x$delta1, delta0 = x$delta0, endpoint = x$endpoint,
@@ -125,7 +125,7 @@ toInteger <- function(x, ratio = 0, roundUpFinal = TRUE) {
     xi$etaE <- z$etaE
     xi$variable <- x$variable
     xi$tol <- x$tol
-    class(xi) <- c("gsSurv", "gsDesign")
+    class(xi) <- c("gsSurv", "gsDesignCRT")
     nameR <- nameperiod(cumsum(xi$R))
     stratnames <- paste("Stratum", seq_len(ncol(xi$lambdaC)))
     if (is.null(xi$S)) {

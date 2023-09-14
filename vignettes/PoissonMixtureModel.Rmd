@@ -1,7 +1,7 @@
 ---
 title: "A cure model calendar-based design"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{A cure model calendar-based design}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(gsDesign)
+library(gsDesignCRT)
 library(dplyr)
 library(tibble)
 library(ggplot2)

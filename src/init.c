@@ -2,9 +2,9 @@
 #include "Rmath.h"
 #include "Rinternals.h"
 #include "R_ext/Rdynload.h"
-#include "gsDesign.h"
+#include "gsDesignCRT.h"
 
-/* This file is to register all .C entry points in gsDesign: 
+/* This file is to register all .C entry points in gsDesignCRT: 
 gsbound; gsbound1; probrej; gsdensity; stdnorpts */
 
 /*

@@ -1,4 +1,4 @@
-# test: Checking LaTeX output for gsDesign
+# test: Checking LaTeX output for gsDesignCRT
 
     \begin{table}[ht]
     \centering

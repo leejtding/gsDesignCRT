@@ -1,16 +1,16 @@
 testthat::context("sf inputs")
 
 testthat::test_that("test.sfTDist.param", {
-  testthat::expect_error(gsDesign::sfTDist(param = rep(1, 4)), info = "Checking for incorrect variable length")
-  testthat::expect_error(gsDesign::sfTDist(param = c(1, 0, 1)), info = "Checking for out-of-range variable value")
-  testthat::expect_error(gsDesign::sfTDist(param = c(1, 1, 0.5)), info = "Checking for out-of-range variable value")
-  testthat::expect_error(gsDesign::sfTDist(param = 1, 1:3 / 4, c(0.25, 0.5, 0.75, 0.1, 0.2, 0.3)),
+  testthat::expect_error(gsDesignCRT::sfTDist(param = rep(1, 4)), info = "Checking for incorrect variable length")
+  testthat::expect_error(gsDesignCRT::sfTDist(param = c(1, 0, 1)), info = "Checking for out-of-range variable value")
+  testthat::expect_error(gsDesignCRT::sfTDist(param = c(1, 1, 0.5)), info = "Checking for out-of-range variable value")
+  testthat::expect_error(gsDesignCRT::sfTDist(param = 1, 1:3 / 4, c(0.25, 0.5, 0.75, 0.1, 0.2, 0.3)),
     info = "Checking for out-of-range variable value"
   )
 })
 
 testthat::test_that("test.sfTDist.param ", {
-  testthat::expect_error(gsDesign::sfTDist(param = "abc"),
+  testthat::expect_error(gsDesignCRT::sfTDist(param = "abc"),
     info = "Checking for incorrect variable type"
   )
 })
@@ -48,10 +48,10 @@ testthat::test_that("test.sflogistic.param ", {
 })
 
 testthat::test_that("test.sfHSD.param", {
-  testthat::expect_error(gsDesign::sfHSD(param = "abc"), info = "Checking for incorrect variable type")
-  testthat::expect_error(gsDesign::sfHSD(param = rep(1, 2)), info = "Checking for incorrect variable length")
-  testthat::expect_error(gsDesign::sfHSD(param = -41), info = "Checking for out-of-range variable value")
-  testthat::expect_error(gsDesign::sfHSD(param = 41), info = "Checking for out-of-range variable value")
+  testthat::expect_error(gsDesignCRT::sfHSD(param = "abc"), info = "Checking for incorrect variable type")
+  testthat::expect_error(gsDesignCRT::sfHSD(param = rep(1, 2)), info = "Checking for incorrect variable length")
+  testthat::expect_error(gsDesignCRT::sfHSD(param = -41), info = "Checking for out-of-range variable value")
+  testthat::expect_error(gsDesignCRT::sfHSD(param = 41), info = "Checking for out-of-range variable value")
 })
 
 testthat::test_that("test.sfexp.param", {

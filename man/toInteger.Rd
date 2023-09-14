@@ -8,7 +8,7 @@ or sample size (other designs)}
 toInteger(x, ratio = 0, roundUpFinal = TRUE)
 }
 \arguments{
-\item{x}{An object of class \code{gsDesign}.}
+\item{x}{An object of class \code{gsDesignCRT}.}
 
 \item{ratio}{Integer indicating randomization ratio; not used for
 time-to-event outcome; see details.}
@@ -17,7 +17,7 @@ time-to-event outcome; see details.}
 if \code{TRUE}; otherwise, just rounded.}
 }
 \value{
-An object of class \code{gsDesign} with integer vector for \code{n.I}.
+An object of class \code{gsDesignCRT} with integer vector for \code{n.I}.
 }
 \description{
 Translate group sequential design to integer events (survival designs)

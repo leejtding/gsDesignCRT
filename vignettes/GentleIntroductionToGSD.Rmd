@@ -3,7 +3,7 @@ title: "A gentle introduction to group sequential design"
 output:
   rmarkdown::html_document:
     code_folding: show
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{A gentle introduction to group sequential design}
   %\VignetteEngine{knitr::rmarkdown}
@@ -165,7 +165,7 @@ $$g(t; \beta) = 2\left(  1-\Phi\left(  \frac{\Phi
 ^{-1}(\beta/2)}{\sqrt{t}}\right)  \right).$$
 
 ```{r, message=FALSE, warning=FALSE}
-library(gsDesign)
+library(gsDesignCRT)
 ```
 
 ```{r}
@@ -200,7 +200,7 @@ n <- nNormal(
 
 ```{r}
 # Derive group sequential design based on parameters above
-x <- gsDesign(
+x <- gsDesignCRT(
   k = k,
   test.type = test.type,
   alpha = alpha,
@@ -254,7 +254,7 @@ lsTime <- usTime
 
 ```{r}
 # Update design based on actual interim sample size and planned final sample size
-xu <- gsDesign(
+xu <- gsDesignCRT(
   k = ku,
   test.type = test.type,
   alpha = alphau,

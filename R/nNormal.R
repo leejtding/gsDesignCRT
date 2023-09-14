@@ -62,7 +62,7 @@
 # Note that the argument delta1 does NOT affect sample size approximation,
 # but DOES affect approximation of observed difference in means to achieve 
 # statistical significance when gsBoundSummary is run.
-#' x <- gsDesign(k = 3, n.fix = n, test.type = 4, alpha = 0.025, beta = 0.1, timing = c(.5,.75),
+#' x <- gsDesignCRT(k = 3, n.fix = n, test.type = 4, alpha = 0.025, beta = 0.1, timing = c(.5,.75),
 #' sfu = sfLDOF, sfl = sfHSD, sflpar = -1, delta1 = 0.5, endpoint = 'normal') 
 #' gsBoundSummary(x)
 #' summary(x)

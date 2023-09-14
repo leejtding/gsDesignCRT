@@ -15,7 +15,7 @@
 
 # Test environments
 
-All are on github.com/keaven/gsDesign actions:
+All are on github.com/keaven/gsDesignCRT actions:
 
 - Windows (latest)
 - MacOS (latest)

@@ -1,4 +1,4 @@
 library(testthat)
-library(gsDesign)
+library(gsDesignCRT)
 
-test_check("gsDesign")
+test_check("gsDesignCRT")

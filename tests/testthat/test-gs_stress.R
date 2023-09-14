@@ -1,5 +1,5 @@
 testthat::context("gs stress")
-### Utility functions for gsDesign stress tests
+### Utility functions for gsDesignCRT stress tests
 
 "alpha.beta.range.util" <- function(alpha, beta, type, sf) {
   no.err <- TRUE
@@ -11,7 +11,7 @@ testthat::context("gs stress")
       # sfLDPocock, test.type=3: errors with alpha >= .5 and beta close to 1 - alpha
       if (b < 1 - a - 0.1) {
         # cat("a = ", a, "b = ", b, "\n")
-        res <- try(gsDesign(test.type = type, alpha = a, beta = b, sfu = sf))
+        res <- try(gsDesignCRT(test.type = type, alpha = a, beta = b, sfu = sf))
         
         if (inherits(res, "try-error")) {
           no.err <- FALSE
@@ -28,7 +28,7 @@ testthat::context("gs stress")
   
   for (p in param)
   {
-    res <- try(gsDesign(test.type = type, sfu = sf, sfupar = p))
+    res <- try(gsDesignCRT(test.type = type, sfu = sf, sfupar = p))
     
     if (inherits(res, "try-error")) {
       no.err <- FALSE

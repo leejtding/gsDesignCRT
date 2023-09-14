@@ -231,7 +231,7 @@ checkVector <- function(x, isType = "numeric", ..., length = NULL) {
 # isInteger function [sinew] ----
 isInteger <- function(x) all(is.numeric(x)) && all(round(x, 0) == x)
 
-checkMD5 <- function(package = "gsDesign", dir) {
+checkMD5 <- function(package = "gsDesignCRT", dir) {
   if (missing(dir)) {
     dir <- find.package(package, quiet = TRUE)
   }
@@ -244,8 +244,8 @@ checkMD5 <- function(package = "gsDesign", dir) {
   }
 
   ignore <- c(
-    "MD5", "DESCRIPTION", "Meta/package.rds", "R/gsDesign.rdb", "R/gsDesign.rdx",
-    "libs/i386/gsDesign.so", "libs/ppc/gsDesign.so"
+    "MD5", "DESCRIPTION", "Meta/package.rds", "R/gsDesignCRT.rdb", "R/gsDesignCRT.rdx",
+    "libs/i386/gsDesignCRT.so", "libs/ppc/gsDesignCRT.so"
   )
 
   inlines <- readLines(md5file)

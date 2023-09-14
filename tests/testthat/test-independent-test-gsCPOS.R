@@ -3,7 +3,7 @@ source('../gsDesign_independent_code.R')
 ## gsCPOS
 #------------
 
-testthat::test_that(desc = "Test: checking class object gsDesign or gsProbability", 
+testthat::test_that(desc = "Test: checking class object gsDesignCRT or gsProbability", 
                     code = {
   x <- seq(1, 2, 0.5)
   local_edition(3)
@@ -14,7 +14,7 @@ testthat::test_that(desc = "Test: checking class object gsDesign or gsProbabilit
 
 
 testthat::test_that(desc = "Test: checking lengths of input", code = {
-  x <- gsDesign(k = 3, test.type = 2, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 2, n.fix = 800)
   local_edition(3)
   expect_error(gsCPOS(x, i = 1, theta = c(-1.50, -0.75, 0.75, 1.50),
     wgts = c(0.064758798, 0.301137432, 0.199471140, 0.301137432, 0.064758798)
@@ -24,7 +24,7 @@ testthat::test_that(desc = "Test: checking lengths of input", code = {
 
 
 testthat::test_that(desc = "Test: checking out of range i ", code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsCPOS(x, i = 4, theta = c(-1.50, -0.75, 0.75, 1.50),
     wgts = c(0.064758798, 0.01137432, 0.199471140, 0.301137432)
@@ -34,7 +34,7 @@ testthat::test_that(desc = "Test: checking out of range i ", code = {
 
 testthat::test_that(desc = "Test: output validation 
                     source: gsDesign_independent_code.R", code = {
-  x <- gsDesign(k = 3, test.type = 2, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 2, n.fix = 800)
   theta = c(-1.50, -0.75, 0.00, 0.75, 1.50)
   wgts = c(0.064758798, 0.301137432, 0.199471140, 0.301137432, 0.064758798)
   i <- 2

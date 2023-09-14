@@ -8,7 +8,7 @@ source('../gsDesign_independent_code.R')
 
 testthat::test_that(desc = "Test: checking out of range i", 
                     code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPI(x, i = 4, zi = 0, j = 2, level = 0.95, theta = c(0, 3), 
                     wgts = c(0.5, 0.5)))
@@ -16,7 +16,7 @@ testthat::test_that(desc = "Test: checking out of range i",
 
 
 testthat::test_that(desc = "Test: checking out of range zi", code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPI(x, i = 1, zi = Inf, j = 2, level = 0.95, theta = c(0, 3), 
                     wgts = c(0.5, 0.5)))
@@ -24,21 +24,21 @@ testthat::test_that(desc = "Test: checking out of range zi", code = {
 
 
 testthat::test_that(desc = "Test: checking out of range zi", code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPI(x, i = 1, zi = 1, j = 2, level = 0.95, theta = c(0, 3), wgts = c(-1, 1)))
 })
 
 
 testthat::test_that(desc = "Test: checking input length", code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPI(x, i = 1, zi = 1, j = 2, level = 0.95, theta = c(0, 1.5, 3), wgts = c(0.5, 0.5)))
 })
 
 
 testthat::test_that(desc = "Test: checking out of range R", code = {
-  x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPI(x, i = 1, zi = 1, j = 1, level = 0.95, theta = c(0, 3), wgts = c(0.5, 0.5)))
 })
@@ -56,7 +56,7 @@ testthat::test_that(desc = "Test: checking output validation
                     source: gsDesign_independent_code.R", 
                     code = {
                       
-    x <- gsDesign(k = 4, n.fix = 1371, timing = c(0.25,0.5, 0.7),
+    x <- gsDesignCRT(k = 4, n.fix = 1371, timing = c(0.25,0.5, 0.7),
                   beta = 0.2, sfupar = -3, endpoint = "binomial", delta1 = 0.05)
     i <- 1
     j <- 3

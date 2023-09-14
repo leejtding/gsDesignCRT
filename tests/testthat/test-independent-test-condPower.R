@@ -13,7 +13,7 @@ testthat::test_that(
   desc = "Test : output validation condPower 
           source : CP calculator in East 6.5", 
   code = {
-    x <- gsDesign(k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
+    x <- gsDesignCRT(k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
                   delta1 = 0.1146049, delta0 = 0)
     
    
@@ -29,7 +29,7 @@ testthat::test_that(
   desc = "Test : output validation condPower
           source : CP calculator in East 6.5", 
   code = {
-    x <- gsDesign(k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
+    x <- gsDesignCRT(k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
                   delta1 = 0.1146049, delta0 = 0)
     a_res <- condPower(z1 = 1.151764990571, n2 = 403, z2 = z2NC,
                        theta = 0.057339132, x = x)

@@ -1,4 +1,4 @@
-url: https://keaven.github.io/gsDesign/
+url: https://keaven.github.io/gsDesignCRT/
 
 template:
   bootstrap: 5
@@ -6,11 +6,11 @@ template:
 reference:
 - title: Group Sequential Computation
   desc: >
-    For an overview of the gsDesign package, see
+    For an overview of the gsDesignCRT package, see
     `vignette("gsDesignPackageOverview")`.
   contents:
-  - gsDesign
-  - plot.gsDesign
+  - gsDesignCRT
+  - plot.gsDesignCRT
   - gsProbability
   - gsBound1
   - gsBound
@@ -124,7 +124,7 @@ articles:
   - title: "Designing for time-to-event endpoints"
     desc: >
       These vignettes provide an introduction to designing group sequential trials with
-      time-to-event endpoints using gsDesign.
+      time-to-event endpoints using gsDesignCRT.
     contents:
       - SurvivalOverview
       - toInteger

@@ -219,11 +219,11 @@ provide larger number of grid points and greater accuracy.  Normally
 
 \item{usTime}{Default is NULL in which case upper bound spending time is
 determined by \code{timing}. Otherwise, this should be a vector of length
-code{k} with the spending time at each analysis (see Details in help for \code{gsDesign}).}
+code{k} with the spending time at each analysis (see Details in help for \code{gsDesignCRT}).}
 
 \item{lsTime}{Default is NULL in which case lower bound spending time is
 determined by \code{timing}. Otherwise, this should be a vector of length
-\code{k} with the spending time at each analysis (see Details in help for \code{gsDesign}).}
+\code{k} with the spending time at each analysis (see Details in help for \code{gsDesignCRT}).}
 
 \item{caption}{passed through to generic \code{xtable()}.}
 
@@ -276,7 +276,7 @@ follow-up duration, or "Power" if accrual rates and duration as well as
 follow-up duration was specified and \code{beta=NULL} was input.}
 
 \code{gsSurv()} returns much of the above plus variables in the class
-\code{gsDesign}; see \code{\link{gsDesign}}
+\code{gsDesignCRT}; see \code{\link{gsDesignCRT}}
 for general documentation on what is returned in \code{gs}.  The value of
 \code{gs$n.I} represents the number of endpoints required at each analysis
 to adequately power the trial. Other items returned by \code{gsSurv()} are:
@@ -333,7 +333,7 @@ with treatment groups referred to as experimental and control. A stratified
 population is allowed as in Lachin and Foulkes (1986); this method has been
 extended to derive non-inferiority as well as superiority trials.
 Stratification also allows power calculation for meta-analyses.
-\code{gsSurv()} combines \code{nSurv()} with \code{gsDesign()} to derive a
+\code{gsSurv()} combines \code{nSurv()} with \code{gsDesignCRT()} to derive a
 group sequential design for a study with a time-to-event endpoint.
 }
 \details{
@@ -342,7 +342,7 @@ operate on the returned value from \code{gsSurv()}, an object of class
 \code{gsSurv}. \code{print()} is also extended to \code{nSurv} objects. The
 functions \code{\link{gsBoundSummary}} (data frame for tabular output),
 \code{\link{xprint}} (application of \code{xtable} for tabular output) and
-\code{summary.gsSurv} (textual summary of \code{gsDesign} or \code{gsSurv}
+\code{summary.gsSurv} (textual summary of \code{gsDesignCRT} or \code{gsSurv}
 object) may be preferred summary functions; see example in vignettes. See
 also \link{gsBoundSummary} for output
 of tabular summaries of bounds for designs produced by \code{gsSurv()}.
@@ -387,7 +387,7 @@ with infinite follow-up. This method produces a corresponding error message
 in such cases.
 
 The input to \code{gsSurv} is a combination of the input to \code{nSurv()}
-and \code{gsDesign()}.
+and \code{gsDesignCRT()}.
 
 \code{nEventsIA()} is provided to compute the expected number of events at a
 given point in time given enrollment, event and censoring rates. The routine
@@ -463,8 +463,8 @@ Comparing Survival Distributions. \emph{Biometrika}, 68, 316-319.
 }
 \seealso{
 \code{\link{gsBoundSummary}}, \code{\link{xprint}},
-\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-\code{\link{gsDesign}}, \code{\link{gsHR}}, \code{\link{nSurvival}}
+\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+\code{\link{gsDesignCRT}}, \code{\link{gsHR}}, \code{\link{nSurvival}}
 
 \code{\link[stats]{uniroot}}
 

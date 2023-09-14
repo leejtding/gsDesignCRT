@@ -1,25 +1,25 @@
-# gsDesign <img src="man/figures/logo.png" align="right" width="120" />
+# gsDesignCRT <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/gsDesign)](https://CRAN.R-project.org/package=gsDesign)
-[![Codecov test coverage](https://codecov.io/gh/keaven/gsDesign/branch/master/graph/badge.svg)](https://app.codecov.io/gh/keaven/gsDesign?branch=master)
-[![pkgdown](https://github.com/keaven/gsDesign/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/keaven/gsDesign/actions/workflows/pkgdown.yaml)
-[![R-CMD-check](https://github.com/keaven/gsDesign/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/keaven/gsDesign/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/gsDesignCRT)](https://CRAN.R-project.org/package=gsDesignCRT)
+[![Codecov test coverage](https://codecov.io/gh/keaven/gsDesignCRT/branch/master/graph/badge.svg)](https://app.codecov.io/gh/keaven/gsDesignCRT?branch=master)
+[![pkgdown](https://github.com/keaven/gsDesignCRT/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/keaven/gsDesignCRT/actions/workflows/pkgdown.yaml)
+[![R-CMD-check](https://github.com/keaven/gsDesignCRT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/keaven/gsDesignCRT/actions/workflows/R-CMD-check.yaml)
 [![shinyapps.io](https://img.shields.io/badge/Shiny-shinyapps.io-blue)](https://rinpharma.shinyapps.io/gsdesign/)
 <!-- badges: end -->
 
-The gsDesign package supports group sequential clinical trial design, largely as presented in the book Group Sequential Methods with Applications to Clinical Trials by Christopher Jennison and Bruce Turnbull (Chapman and Hall/CRC, 2000).
+The gsDesignCRT package supports group sequential clinical trial design, largely as presented in the book Group Sequential Methods with Applications to Clinical Trials by Christopher Jennison and Bruce Turnbull (Chapman and Hall/CRC, 2000).
 An easy-to-use [web interface](https://rinpharma.shinyapps.io/gsdesign/) to both enable usage without coding and to generate code to be able to reproduce the design; this is being enhanced to support more features on an ongoing basis. See the [talk](https://www.youtube.com/watch?v=8uZRuvzma9M) presented at the R/Pharma Conference to get started with the web interface.
 
 ## Installation
 
 ```r
-# The easiest way to get gsDesign is to install:
-install.packages("gsDesign")
+# The easiest way to get gsDesignCRT is to install:
+install.packages("gsDesignCRT")
 
 # Alternatively, install development version from GitHub:
 # install.packages("remotes")
-remotes::install_github("keaven/gsDesign")
+remotes::install_github("keaven/gsDesignCRT")
 ```
 
 ## Description
@@ -28,9 +28,9 @@ While there is a strong focus on designs using **α** and **β** spending functi
 
 Most routines are designed to provide simple access to commonly used designs using default arguments. Standard, published spending functions are supported as well as the ability to write custom spending functions. A plot function provides a wide variety of plots summarizing designs: boundaries, power, estimated treatment effect at boundaries, conditional power at boundaries, spending function plots, expected sample size plot, and B-values at boundaries.
 
-While the main design functions, ```gsDesign()``` and ```gsSurv()``` have a complex output, the function ```gsBoundSummary()``` provides a simple summary of a design in a data frame that can be useful for printing in a document.
+While the main design functions, ```gsDesignCRT()``` and ```gsSurv()``` have a complex output, the function ```gsBoundSummary()``` provides a simple summary of a design in a data frame that can be useful for printing in a document.
 
-Thus, the intent of the gsDesign package is to easily create, fully characterize and even optimize routine group sequential trial designs as well as provide a tool to evaluate innovative designs.
+Thus, the intent of the gsDesignCRT package is to easily create, fully characterize and even optimize routine group sequential trial designs as well as provide a tool to evaluate innovative designs.
 
 ## A little history
 

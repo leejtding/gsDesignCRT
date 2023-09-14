@@ -13,7 +13,7 @@ source('../gsDesign_independent_code.R')
 test_that(desc = 'check plot data values,
                  source: spend Calculations done using East 6.5', 
           code = {
-     x <- gsDesign(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
+     x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
                    delta1 = 0.3, sfu = sfLDOF)
      plotobj <- plotsf(x)
      
@@ -24,7 +24,7 @@ test_that(desc = 'check plot data values,
 test_that(desc = 'check plot data values,
                  source: spend Calculations done using East 6.5', 
           code = {
-   x <- gsDesign(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
+   x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
                  delta1 = 0.3, sfu = sfLDOF)
    plotobj <- plotsf(x)
    
@@ -35,7 +35,7 @@ test_that(desc = 'check plot data values,
 
 test_that(desc = "Test plotsf graphs are correctly rendered,test.type = 1",
           code = {
-    x <- gsDesign(k = 3, test.type = 1, alpha = 0.025, beta = 0.1,
+    x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025, beta = 0.1,
                   delta1 = 0.3, sfu = sfLDOF)
 
     save_plot_obj <- save_gg_plot(plotsf(x = x))
@@ -46,7 +46,7 @@ test_that(desc = "Test plotsf graphs are correctly rendered,test.type = 1",
 
 test_that(desc = "Test plotsf graphs are correctly rendered,test.type = 5",
           code = {
-  x <- gsDesign(k = 3, test.type = 5, alpha = 0.025, beta = 0.1,
+  x <- gsDesignCRT(k = 3, test.type = 5, alpha = 0.025, beta = 0.1,
                 delta1 = 0.3, sfu = sfLDOF)
   
   save_plot_obj <- save_gr_plot(plotsf(x = x, base = TRUE))
@@ -57,7 +57,7 @@ test_that(desc = "Test plotsf graphs are correctly rendered,test.type = 5",
 
 test_that(desc = "Test plotgsCP graphs are correctly rendered,test.type = 4",
           code = {
-  x <- gsDesign(k = 3, test.type = 4, alpha = 0.025, beta = 0.1,
+  x <- gsDesignCRT(k = 3, test.type = 4, alpha = 0.025, beta = 0.1,
                 delta1 = 0.3, sfu = sfLDOF)
   
   save_plot_obj <- save_gg_plot(plotsf(x = x, base = FALSE))

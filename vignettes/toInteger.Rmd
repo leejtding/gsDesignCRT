@@ -2,7 +2,7 @@
 title: "Integer sample size and event counts"
 author: "Keaven Anderson"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{Integer sample size and event counts}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,7 +11,7 @@ vignette: >
 
 # Introduction
 
-The **gsDesign** package was originally designed to have continuous sample size planned rather than integer-based sample size.
+The **gsDesignCRT** package was originally designed to have continuous sample size planned rather than integer-based sample size.
 Designs with time-to-event outcomes also had non-integer event counts at times of analysis.
 This vignette  documents the capability to convert to integer sample sizes and event counts.
 This has a couple of implications on design characteristics:
@@ -30,7 +30,7 @@ The initial design for a time-to-event endpoint in a 2-arm trial does not have i
 See comments in the code and output from the `summary()` function below to understand inputs.
 
 ```{r}
-library(gsDesign)
+library(gsDesignCRT)
 
 x <- gsSurv(
   k = 3, # Number of analyses
@@ -108,7 +108,7 @@ Now we convert the fixed sample size `n.fix` from above to a 1-sided group seque
 
 ```{r}
 # 1-sided design (efficacy bound only; test.type = 1)
-x <- gsDesign(alpha = .025, beta = .2, n.fix = n.fix, test.type = 1, sfu = sfLDOF, timing = c(.5, .75))
+x <- gsDesignCRT(alpha = .025, beta = .2, n.fix = n.fix, test.type = 1, sfu = sfLDOF, timing = c(.5, .75))
 # Continuous sample size (non-integer) at planned analyses
 x$n.I
 ```
@@ -177,7 +177,7 @@ The parameter `delta1` is the natural parameter denoting the difference in respo
 
 ```{r}
 # 2-sided asymmetric design with non-binding futility bound (test.type = 4)
-xnb <- gsDesign(
+xnb <- gsDesignCRT(
   alpha = .025, beta = .2, n.fix = n.fix, test.type = 4,
   sfu = sfLDOF, sfl = sfHSD, sflpar = -2,
   timing = c(.5, .75), delta1 = .1

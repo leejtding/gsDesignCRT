@@ -25,8 +25,8 @@ An object of type \code{spendfn}. See \code{vignette("SpendingFunctionOverview")
 }
 \description{
 The function \code{sfHSD} implements a Hwang-Shih-DeCani spending function.
-This is the default spending function for \code{gsDesign()}. Normally it
-will be passed to \code{gsDesign} in the parameter \code{sfu} for the upper
+This is the default spending function for \code{gsDesignCRT()}. Normally it
+will be passed to \code{gsDesignCRT} in the parameter \code{sfu} for the upper
 bound or \code{sfl} for the lower bound to specify a spending function
 family for a design. In this case, the user does not need to know the
 calling sequence. The calling sequence is useful, however, when the user
@@ -41,21 +41,21 @@ for a better fit), while a value of \eqn{\gamma=1}{gamma=1} approximates a
 Pocock design well.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 library(ggplot2)
 # design a 4-analysis trial using a Hwang-Shih-DeCani spending function
 # for both lower and upper bounds
-x <- gsDesign(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
+x <- gsDesignCRT(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
 
 # print the design
 x
 
 # since sfHSD is the default for both sfu and sfl,
 # this could have been written as
-x <- gsDesign(k = 4, sfupar = -2, sflpar = 1)
+x <- gsDesignCRT(k = 4, sfupar = -2, sflpar = 1)
 
 # print again
 x
@@ -81,7 +81,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}
 }
 \author{

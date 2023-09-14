@@ -1,7 +1,7 @@
 ---
 title: "Multiplicity graphs"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{Multiplicity graphs}
   %\VignetteEngine{knitr::rmarkdown}

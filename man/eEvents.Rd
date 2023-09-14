@@ -118,8 +118,8 @@ stratified clinical trials. \emph{Journal of Statistical Computation and
 Simulation}, 8:65-73.
 }
 \seealso{
-\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-\code{\link{gsDesign}}, \code{\link{gsHR}},
+\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+\code{\link{gsDesignCRT}}, \code{\link{gsHR}},
 \code{\link{nSurvival}}
 }
 \author{

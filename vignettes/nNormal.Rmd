@@ -1,7 +1,7 @@
 ---
 title: "Two-sample normal sample size"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{Two-sample normal sample size}
   %\VignetteEngine{knitr::rmarkdown}
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 # Introduction
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(gsDesign)
+library(gsDesignCRT)
 library(tidyr)
 library(knitr)
 ```
@@ -36,7 +36,7 @@ We provide a tool where for a large sample case where a reasonable estimate of s
 
 # The problem considered
 
-The overall sample size notation used for **gsDesign** is to consider a standardized effect size parameter which is referred to as $\theta$ in @JTBook.
+The overall sample size notation used for **gsDesignCRT** is to consider a standardized effect size parameter which is referred to as $\theta$ in @JTBook.
 We begin with the 2-sample normal problem where we assume a possibly different standard deviation in each treatment group.
 For $j = 1, 2$, we let $X_{j, i}$, $i = 1, 2, \ldots n_j$ represent independent and identically distributed observations following a normal distribution with mean $\mu_j$ and standard deviation $\sigma_j$.
 The natural parameter for comparing the two distributions is
@@ -178,7 +178,7 @@ We will largely use default parameters and show two methods.
 For the first, we plug in the fixed sample size above as follows:
 
 ```{r}
-d <- gsDesign(
+d <- gsDesignCRT(
   k = 2,
   n.fix = nNormal(delta1 = 0.8, sd = 1.6, sd2 = 1.25, alpha = 0.025, beta = .1, ratio = 2),
   delta1 = 0.8
@@ -197,7 +197,7 @@ cat(summary(d))
 We can get the same answer by plugging in the standardized effect size we computed above:
 
 ```{r}
-gsDesign(
+gsDesignCRT(
   k = 2,
   delta = theta,
   delta1 = 0.8

@@ -3,7 +3,7 @@
 #' @description  \code{gsBound()} and \code{gsBound1()} are lower-level functions used to
 #' find boundaries for a group sequential design. They are not recommended
 #' (especially \code{gsBound1()}) for casual users. These functions do not
-#' adjust sample size as \code{gsDesign()} does to ensure appropriate power for
+#' adjust sample size as \code{gsDesignCRT()} does to ensure appropriate power for
 #' a design.
 #'
 #' \code{gsBound()} computes upper and lower bounds given boundary crossing
@@ -36,7 +36,7 @@
 #' @param printerr If this scalar argument set to 1, this will print messages
 #' from underlying C program.  Mainly intended to notify user when an output
 #' solution does not match input specifications.  This is not intended to stop
-#' execution as this often occurs when deriving a design in \code{gsDesign}
+#' execution as this often occurs when deriving a design in \code{gsDesignCRT}
 #' that uses beta-spending.
 #' @return Both routines return a list. Common items returned by the two
 #' routines are: \item{k}{The length of vectors input; a scalar.}
@@ -58,10 +58,10 @@
 #' lower boundary crossing probabilities; computed using input lower bound and
 #' derived upper bound.} \item{probhi}{vector of upper boundary crossing
 #' probabilities as input.}
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("gsDesignPackageOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("gsDesignPackageOverview")}, \code{\link{gsDesignCRT}},
 #' \code{\link{gsProbability}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -107,8 +107,8 @@
 #' #  above after first interim analysis
 #' gsProbability(k = length(x$b), theta = c(0, 2.2), n.I = x$I, b = x$b, a = -y$b)
 #' @export
-#' @useDynLib gsDesign gsbound
-#' @useDynLib gsDesign gsbound1
+#' @useDynLib gsDesignCRT gsbound
+#' @useDynLib gsDesignCRT gsbound1
 #' @rdname gsBound
 # gsBound function [sinew] ----
 gsBound <- function(I, trueneg, falsepos, tol = 0.000001, r = 18, printerr = 0) {
@@ -198,9 +198,9 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
   y
 }
 
-# gsDesign roxy [sinew] ----
+# gsDesignCRT roxy [sinew] ----
 #' @title Design Derivation
-#' @description  \code{gsDesign()} is used to find boundaries and trial size required for a
+#' @description  \code{gsDesignCRT()} is used to find boundaries and trial size required for a
 #' group sequential design.
 #'
 #' Many parameters normally take on default values and thus do not require
@@ -210,10 +210,10 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' spending functions as well as other built-in and user-specified functions
 #' for Type I error and futility are supported. Type I error computations for
 #' asymmetric designs may assume binding or non-binding lower bounds. The print
-#' function has been extended using \code{\link{print.gsDesign}()} to print
-#' \code{gsDesign} objects; see examples.
+#' function has been extended using \code{\link{print.gsDesignCRT}()} to print
+#' \code{gsDesignCRT} objects; see examples.
 #'
-#' The user may ignore the structure of the value returned by \code{gsDesign()}
+#' The user may ignore the structure of the value returned by \code{gsDesignCRT()}
 #' if the standard printing and plotting suffice; see examples.
 #'
 #' \code{delta} and \code{n.fix} are used together to determine what sample
@@ -313,7 +313,7 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' from initial design; see examples.
 #' @param nFixSurv If a time-to-event variable is used, \code{nFixSurv}
 #' computed as the sample size from \code{nSurvival} may be entered to have
-#' \code{gsDesign} compute the total sample size required as well as the number
+#' \code{gsDesignCRT} compute the total sample size required as well as the number
 #' of events at each analysis that will be returned in \code{n.fix}; this is
 #' rounded up to an even number.
 #' @param endpoint An optional character string that should represent the type
@@ -337,13 +337,13 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' @param lsTime Default is NULL in which case lower bound spending time is 
 #' determined by \code{timing}. Otherwise, this should be a vector of length 
 #' \code{k} with the spending time at each analysis (see Details).
-#' @return An object of the class \code{gsDesign}. This class has the following
-#' elements and upon return from \code{gsDesign()} contains: \item{k}{As
+#' @return An object of the class \code{gsDesignCRT}. This class has the following
+#' elements and upon return from \code{gsDesignCRT()} contains: \item{k}{As
 #' input.} \item{test.type}{As input.} \item{alpha}{As input.} \item{beta}{As
 #' input.} \item{astar}{As input, except when \code{test.type=5} or \code{6}
 #' and \code{astar} is input as 0; in this case \code{astar} is changed to
 #' \code{1-alpha}.} \item{delta}{The standardized effect size for which the
-#' design is powered. Will be as input to \code{gsDesign()} unless it was input
+#' design is powered. Will be as input to \code{gsDesignCRT()} unless it was input
 #' as 0; in that case, value will be computed to give desired power for fixed
 #' design with input sample size \code{n.fix}.} \item{n.fix}{Sample size
 #' required to obtain desired power when effect size is \code{delta}.}
@@ -390,16 +390,16 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' #  symmetric, 2-sided design with O'Brien-Fleming-like boundaries
 #' #  lower bound is non-binding (ignored in Type I error computation)
 #' #  sample size is computed based on a fixed design requiring n=800
-#' x <- gsDesign(k = 5, test.type = 2, n.fix = 800)
+#' x <- gsDesignCRT(k = 5, test.type = 2, n.fix = 800)
 #' 
-#' # note that "x" below is equivalent to print(x) and print.gsDesign(x)
+#' # note that "x" below is equivalent to print(x) and print.gsDesignCRT(x)
 #' x
 #' plot(x)
 #' plot(x, plottype = 2)
 #' 
 #' # Assuming after trial was designed actual analyses occurred after
 #' # 300, 600, and 860 patients, reset bounds
-#' y <- gsDesign(
+#' y <- gsDesignCRT(
 #'   k = 3, test.type = 2, n.fix = 800, n.I = c(300, 600, 860),
 #'   maxn.IPlan = x$n.I[x$k]
 #' )
@@ -410,7 +410,7 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' sfup <- c(.033333, .063367, .1)
 #' sflp <- c(.25, .5, .75)
 #' timing <- c(.1, .4, .7)
-#' x <- gsDesign(
+#' x <- gsDesignCRT(
 #'   k = 4, timing = timing, sfu = sfPoints, sfupar = sfup, sfl = sfPoints,
 #'   sflpar = sflp, n.fix = 1000
 #' )
@@ -419,15 +419,15 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' plot(x, plottype = 2)
 #' 
 #' # same design, but with relative sample sizes
-#' gsDesign(
+#' gsDesignCRT(
 #'   k = 4, timing = timing, sfu = sfPoints, sfupar = sfup, sfl = sfPoints,
 #'   sflpar = sflp
 #' )
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
 #' @seealso \code{vignette("gsDesignPackageOverview")}, \link{gsBoundSummary},
-#' \link{plot.gsDesign},
+#' \link{plot.gsDesignCRT},
 #' \code{\link{gsProbability}}, \code{vignette("SpendingFunctionOverview")},
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -437,21 +437,21 @@ gsBound1 <- function(theta, I, a, probhi, tol = 0.000001, r = 18, printerr = 0) 
 #' group sequential trials with random information levels. \emph{Journal of biopharmaceutical statistics}; 22(4), 687-699.
 #' @keywords design
 #' @export
-#' @name gsDesign
-# gsDesign function [sinew] ----
-gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
+#' @name gsDesignCRT
+# gsDesignCRT function [sinew] ----
+gsDesignCRT <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
                      delta = 0, n.fix = 1, timing = 1, sfu = sfHSD, sfupar = -4,
                      sfl = sfHSD, sflpar = -2, tol = 0.000001, r = 18, n.I = 0, maxn.IPlan = 0,
                      nFixSurv = 0, endpoint = NULL, delta1 = 1, delta0 = 0, overrun = 0, usTime = NULL, lsTime = NULL) {
-  # Derive a group sequential design and return in a gsDesign structure
-  # set up class variable x for gsDesign being requested
+  # Derive a group sequential design and return in a gsDesignCRT structure
+  # set up class variable x for gsDesignCRT being requested
   x <- list(
     k = k, test.type = test.type, alpha = alpha, beta = beta, astar = astar,
     delta = delta, n.fix = n.fix, timing = timing, tol = tol, r = r, n.I = n.I, maxn.IPlan = maxn.IPlan,
     nFixSurv = nFixSurv, nSurv = 0, endpoint = endpoint, delta1 = delta1, delta0 = delta0, overrun = overrun, usTime = usTime, lsTime = lsTime
   )
 
-  class(x) <- "gsDesign"
+  class(x) <- "gsDesignCRT"
 
   # check parameters other than spending functions
   x <- gsDErrorCheck(x)
@@ -551,12 +551,12 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' examples.
 #'
 #' Depending on the calling sequence, an object of class \code{gsProbability}
-#' or class \code{gsDesign} is returned. If it is of class \code{gsDesign} then
+#' or class \code{gsDesignCRT} is returned. If it is of class \code{gsDesignCRT} then
 #' the members of the object will be the same as described in
-#' \code{\link{gsDesign}}. If \code{d} is input as \code{NULL} (the default),
+#' \code{\link{gsDesignCRT}}. If \code{d} is input as \code{NULL} (the default),
 #' all other arguments (other than \code{r}) must be specified and an object of
 #' class \code{gsProbability} is returned. If \code{d} is passed as an object
-#' of class \code{gsProbability} or \code{gsDesign} the only other argument
+#' of class \code{gsProbability} or \code{gsDesignCRT} the only other argument
 #' required is \code{theta}; the object returned has the same class as the
 #' input \code{d}. On output, the values of \code{theta} input to
 #' \code{gsProbability} will be the parameter values for which the design is
@@ -566,7 +566,7 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' @param theta Vector of standardized effect sizes for which boundary crossing
 #' probabilities are to be computed.
 #' @param n.I Sample size or relative sample size at analyses; vector of length
-#' k. See \code{\link{gsDesign}} and manual.
+#' k. See \code{\link{gsDesignCRT}} and manual.
 #' @param a Lower bound cutoffs (z-values) for futility or harm at each
 #' analysis, vector of length k.
 #' @param b Upper bound cutoffs (z-values) for futility at each analysis;
@@ -574,7 +574,7 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' @param r Control for grid as in Jennison and Turnbull (2000); default is 18,
 #' range is 1 to 80.  Normally this will not be changed by the user.
 #' @param d If not \code{NULL}, this should be an object of type
-#' \code{gsDesign} returned by a call to \code{gsDesign()}.  When this is
+#' \code{gsDesignCRT} returned by a call to \code{gsDesignCRT()}.  When this is
 #' specified, the values of \code{k}, \code{n.I}, \code{a}, \code{b}, and
 #' \code{r} will be obtained from \code{d} and only \code{theta} needs to be
 #' specified by the user.
@@ -597,13 +597,13 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' \code{print.gsProbability()} returns the input \code{x}.
 #' @examples
 #' library(ggplot2)
-#' # making a gsDesign object first may be easiest...
-#' x <- gsDesign()
+#' # making a gsDesignCRT object first may be easiest...
+#' x <- gsDesignCRT()
 #' 
 #' # take a look at it
 #' x
 #' 
-#' # default plot for gsDesign object shows boundaries
+#' # default plot for gsDesignCRT object shows boundaries
 #' plot(x)
 #' 
 #' # \code{plottype=2} shows boundary crossing probabilities
@@ -619,7 +619,7 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' y
 #' 
 #' # the plot does not change from before since this is a
-#' # gsDesign object; note that theta/delta is on x axis
+#' # gsDesignCRT object; note that theta/delta is on x axis
 #' plot(y, plottype = 2)
 #' 
 #' # now let's see what happens with a gsProbability object
@@ -635,10 +635,10 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' # default plottype is now 2
 #' # this is the same range for theta, but plot now has theta on x axis
 #' plot(z)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \link{plot.gsDesign}, \code{\link{gsDesign}},
+#' @seealso \link{plot.gsDesignCRT}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -646,7 +646,7 @@ gsDesign <- function(k = 3, test.type = 4, alpha = 0.025, beta = 0.1, astar = 0,
 #' @export
 #' @aliases print.gsProbability
 #' @rdname gsProbability
-#' @useDynLib gsDesign probrej
+#' @useDynLib gsDesignCRT probrej
 # gsProbability function [sinew] ----
 gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0) {
   # compute boundary crossing probabilities and return in a gsProbability structure
@@ -656,8 +656,8 @@ gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0
   checkVector(theta, "numeric")
 
   if (k == 0) {
-    if (!inherits(d, "gsDesign")) {
-      stop("d should be an object of class gsDesign")
+    if (!inherits(d, "gsDesignCRT")) {
+      stop("d should be an object of class gsDesignCRT")
     }
     return(gsDProb(theta = theta, d = d))
   }
@@ -723,7 +723,7 @@ gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0
 #' See Jennison and Turnbull (2000) for details on how these computations are
 #' performed.
 #'
-#' @param x An object of type \code{gsDesign} or \code{gsProbability}
+#' @param x An object of type \code{gsDesignCRT} or \code{gsProbability}
 #' @param theta a vector with \eqn{\theta}{theta} value(s) at which the interim
 #' density function is to be computed.
 #' @param i analysis at which interim z-values are given; must be from 1 to
@@ -740,7 +740,7 @@ gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0
 #' @examples
 #' library(ggplot2)
 #' # set up a group sequential design
-#' x <- gsDesign()
+#' x <- gsDesignCRT()
 #' 
 #' # set theta values where density is to be evaluated
 #' theta <- x$theta[2] * c(0, .5, 1, 1.5)
@@ -779,7 +779,7 @@ gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0
 #' # Replicate part of figures 8.1 and 8.2 of Jennison and Turnbull text book
 #' # O'Brien-Fleming design with four analyses
 #' 
-#' x <- gsDesign(k = 4, test.type = 2, sfu = "OF", alpha = .1, beta = .2)
+#' x <- gsDesignCRT(k = 4, test.type = 2, sfu = "OF", alpha = .1, beta = .2)
 #' 
 #' z <- seq(-4.2, 4.2, .05)
 #' d <- gsDensity(x = x, theta = x$theta, i = 4, zi = z)
@@ -789,21 +789,21 @@ gsProbability <- function(k = 0, theta, n.I, a, b, r = 18, d = NULL, overrun = 0
 #' u <- x$upper$bound[4]
 #' text(expression(paste(theta, "=", delta)), x = 2.2, y = .2, cex = 1.5)
 #' text(expression(paste(theta, "=0")), x = .55, y = .4, cex = 1.5)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{\link{gsDesign}}, \code{\link{gsProbability}},
+#' @seealso \code{\link{gsDesignCRT}}, \code{\link{gsProbability}},
 #' \code{\link{gsBoundCP}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 #' @keywords design
 #' @export
 #' @rdname gsDensity
-#' @useDynLib gsDesign gsdensity
+#' @useDynLib gsDesignCRT gsdensity
 # gsDensity function [sinew] ----
 gsDensity <- function(x, theta = 0, i = 1, zi = 0, r = 18) {
-  if (!inherits(x, "gsDesign") && !inherits(x, "gsProbability")) {
-    stop("x must have class gsDesign or gsProbability.")
+  if (!inherits(x, "gsDesignCRT") && !inherits(x, "gsProbability")) {
+    stop("x must have class gsDesignCRT or gsProbability.")
   }
   checkVector(theta, "numeric")
   checkScalar(i, "integer", c(0, x$k), c(FALSE, TRUE))
@@ -1521,7 +1521,7 @@ gsDErrorCheck <- function(x) {
     x$timing <- x$n.I / x$maxn.IPlan
 
     # Following check removed when spending time added (lsTime, usTime); KA 9/30/17
-    # Appropriate checking is done in gsDesign after return from this function
+    # Appropriate checking is done in gsDesignCRT after return from this function
     #if (x$n.I[x$k-1] >= x$maxn.IPlan)
     #{
     #    stop("Only 1 n >= Planned Final n")        

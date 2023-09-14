@@ -8,7 +8,7 @@
 #' all allow fitting of two points on a cumulative spending function curve; in
 #' this case, four parameters are specified indicating an x and a y coordinate
 #' for each of 2 points. Normally each of these functions will be passed to
-#' \code{gsDesign()} in the parameter \code{sfu} for the upper bound or
+#' \code{gsDesignCRT()} in the parameter \code{sfu} for the upper bound or
 #' \code{sfl} for the lower bound to specify a spending function family for a
 #' design. In this case, the user does not need to know the calling sequence.
 #' The calling sequence is useful, however, when the user wishes to plot a
@@ -60,7 +60,7 @@
 #' library(ggplot2)
 #' # design a 4-analysis trial using a Kim-DeMets spending function
 #' # for both lower and upper bounds
-#' x <- gsDesign(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
+#' x <- gsDesignCRT(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
 #' 
 #' # print the design
 #' x
@@ -124,10 +124,10 @@
 #' # from the others
 #' param <- c(.25, .5, .05, .1)
 #' plotsf(.025, t, param)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{\link{gsDesign}}
+#' @seealso \code{\link{gsDesignCRT}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 #' @keywords design
@@ -191,7 +191,7 @@ sfLogistic <- function(alpha, t, param) {
 #' @title Exponential Spending Function
 #' @description The function \code{sfExponential} implements the exponential spending
 #' function (Anderson and Clark, 2009). Normally \code{sfExponential} will be
-#' passed to \code{gsDesign} in the parameter \code{sfu} for the upper bound or
+#' passed to \code{gsDesignCRT} in the parameter \code{sfu} for the upper bound or
 #' \code{sfl} for the lower bound to specify a spending function family for a
 #' design. In this case, the user does not need to know the calling sequence.
 #' The calling sequence is useful, however, when the user wishes to plot a
@@ -230,17 +230,17 @@ sfLogistic <- function(alpha, t, param) {
 #' library(ggplot2)
 #' # use 'best' exponential approximation for k=6 to O'Brien-Fleming design
 #' # (see manual for details)
-#' gsDesign(
+#' gsDesignCRT(
 #'   k = 6, sfu = sfExponential, sfupar = 0.7849295,
 #'   test.type = 2
 #' )$upper$bound
 #' 
 #' # show actual O'Brien-Fleming bound
-#' gsDesign(k = 6, sfu = "OF", test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = "OF", test.type = 2)$upper$bound
 #' 
 #' # show Lan-DeMets approximation
 #' # (not as close as sfExponential approximation)
-#' gsDesign(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
 #' 
 #' # plot exponential spending function across a range of values of interest
 #' t <- 0:100 / 100
@@ -261,11 +261,11 @@ sfLogistic <- function(alpha, t, param) {
 #'   )
 #' )
 #' text(x = .59, y = .95 * .025, labels = "<--approximates O'Brien-Fleming")
-#' @note The gsDesign technical manual shows how to use \code{sfExponential()}
+#' @note The gsDesignCRT technical manual shows how to use \code{sfExponential()}
 #'   to closely approximate an O'Brien-Fleming design. An example is given below.
 #'   The manual is available at <https://keaven.github.io/gsd-tech-manual/>.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Anderson KM and Clark JB (2009), Fitting spending functions.
 #' \emph{Statistics in Medicine}; 29:321-327.
@@ -507,8 +507,8 @@ sfExtremeValue2 <- function(alpha, t, param) {
 # sfHSD roxy [sinew] ----
 #' @title Hwang-Shih-DeCani Spending Function
 #' @description The function \code{sfHSD} implements a Hwang-Shih-DeCani spending function.
-#' This is the default spending function for \code{gsDesign()}. Normally it
-#' will be passed to \code{gsDesign} in the parameter \code{sfu} for the upper
+#' This is the default spending function for \code{gsDesignCRT()}. Normally it
+#' will be passed to \code{gsDesignCRT} in the parameter \code{sfu} for the upper
 #' bound or \code{sfl} for the lower bound to specify a spending function
 #' family for a design. In this case, the user does not need to know the
 #' calling sequence. The calling sequence is useful, however, when the user
@@ -537,14 +537,14 @@ sfExtremeValue2 <- function(alpha, t, param) {
 #' library(ggplot2)
 #' # design a 4-analysis trial using a Hwang-Shih-DeCani spending function
 #' # for both lower and upper bounds
-#' x <- gsDesign(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
+#' x <- gsDesignCRT(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
 #' 
 #' # print the design
 #' x
 #' 
 #' # since sfHSD is the default for both sfu and sfl,
 #' # this could have been written as
-#' x <- gsDesign(k = 4, sfupar = -2, sflpar = 1)
+#' x <- gsDesignCRT(k = 4, sfupar = -2, sflpar = 1)
 #' 
 #' # print again
 #' x
@@ -564,10 +564,10 @@ sfExtremeValue2 <- function(alpha, t, param) {
 #'   x = c(.0, .375), y = .025 * c(.8, 1), lty = 1:3,
 #'   legend = c("gamma= -4", "gamma= -2", "gamma= 1")
 #' )
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -627,7 +627,7 @@ sfHSD <- function(alpha, t, param) {
 #' @param param This parameter is not used for \code{sfLDPocock}, not required 
 #' for \code{sfLDOF} and need not be specified. For \code{sfLDPocock} it is here 
 #' so that the calling sequence conforms to the standard for spending functions used 
-#' with \code{gsDesign()}. For \code{sfLDOF} it will default to 1 (Lan-DeMets function 
+#' with \code{gsDesignCRT()}. For \code{sfLDOF} it will default to 1 (Lan-DeMets function 
 #' to approximate O'Brien-Fleming) if \code{NULL} or if outside of the range \code{[.005,2]}.
 #' otherwise, it will be use to set rho from Liu et al (2012).
 #' @return An object of type \code{spendfn}. See spending functions for further
@@ -636,34 +636,34 @@ sfHSD <- function(alpha, t, param) {
 #' library(ggplot2)
 #' # 2-sided,  symmetric 6-analysis trial Pocock
 #' # spending function approximation
-#' gsDesign(k = 6, sfu = sfLDPocock, test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = sfLDPocock, test.type = 2)$upper$bound
 #' 
 #' # show actual Pocock design
-#' gsDesign(k = 6, sfu = "Pocock", test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = "Pocock", test.type = 2)$upper$bound
 #' 
 #' # approximate Pocock again using a standard
 #' # Hwang-Shih-DeCani approximation
-#' gsDesign(k = 6, sfu = sfHSD, sfupar = 1, test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = sfHSD, sfupar = 1, test.type = 2)$upper$bound
 #' 
 #' # use 'best' Hwang-Shih-DeCani approximation for Pocock,  k=6;
 #' # see manual for details
-#' gsDesign(k = 6, sfu = sfHSD, sfupar = 1.3354376, test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = sfHSD, sfupar = 1.3354376, test.type = 2)$upper$bound
 #' 
 #' # 2-sided, symmetric 6-analysis trial
 #' # O'Brien-Fleming spending function approximation
-#' gsDesign(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
 #' 
 #' # show actual O'Brien-Fleming bound
-#' gsDesign(k = 6, sfu = "OF", test.type = 2)$upper$bound
+#' gsDesignCRT(k = 6, sfu = "OF", test.type = 2)$upper$bound
 #' 
 #' # approximate again using a standard Hwang-Shih-DeCani
 #' # approximation to O'Brien-Fleming
-#' x <- gsDesign(k = 6, test.type = 2)
+#' x <- gsDesignCRT(k = 6, test.type = 2)
 #' x$upper$bound
 #' x$upper$param
 #' 
 #' # use 'best' exponential approximation for k=6; see manual for details
-#' gsDesign(
+#' gsDesignCRT(
 #'   k = 6, sfu = sfExponential, sfupar = 0.7849295,
 #'   test.type = 2
 #' )$upper$bound
@@ -680,10 +680,10 @@ sfHSD <- function(alpha, t, param) {
 #'   geom_line()+
 #'   guides(col=guide_legend(expression(rho)))+
 #'   ggtitle("Generalized Lan-DeMets O'Brien-Fleming Spending Function")
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -702,7 +702,7 @@ sfLDOF <- function(alpha, t, param = NULL) {
   checkScalar(alpha, "numeric", c(0, Inf), c(FALSE, FALSE))
   checkVector(t, "numeric", c(0, Inf), c(TRUE, FALSE))
   # Following 2 lines udated 10/11/17 
-  # fix needed since default for gsDesign is param=-4 is out of range for LDOF
+  # fix needed since default for gsDesignCRT is param=-4 is out of range for LDOF
   if (is.null(param) || param < .005 || param > 20) param <- 1
   checkScalar(param, "numeric", c(.005,20),c(TRUE,TRUE))
   t[t>1] <- 1
@@ -804,11 +804,11 @@ sfNormal <- function(alpha, t, param) {
 #' spending function. The function \code{sfStep()} specifies a step function
 #' spending function. Both functions provide complete flexibility in setting
 #' spending at desired timepoints in a group sequential design. Normally these
-#' function will be passed to \code{gsDesign()} in the parameter \code{sfu} for
+#' function will be passed to \code{gsDesignCRT()} in the parameter \code{sfu} for
 #' the upper bound or \code{sfl} for the lower bound to specify a spending
-#' function family for a design. When passed to \code{gsDesign()}, the value of
+#' function family for a design. When passed to \code{gsDesignCRT()}, the value of
 #' \code{param} would be passed to \code{sfLinear()} or \code{sfStep()} through
-#' the \code{gsDesign()} arguments \code{sfupar} for the upper bound and
+#' the \code{gsDesignCRT()} arguments \code{sfupar} for the upper bound and
 #' \code{sflpar} for the lower bound.
 #'
 #' Note that \code{sfStep()} allows setting a particular level of spending when
@@ -854,7 +854,7 @@ sfNormal <- function(alpha, t, param) {
 #' # set up alpha spending and beta spending to be piecewise linear
 #' sfupar <- c(.2, .4, .05, .2)
 #' sflpar <- c(.3, .5, .65, .5, .75, .9)
-#' x <- gsDesign(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
+#' x <- gsDesignCRT(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
 #' plot(x, plottype = "sf")
 #' x
 #' 
@@ -862,14 +862,14 @@ sfNormal <- function(alpha, t, param) {
 #' # and no upper spending at interim 2
 #' sflpar <- c(1 / 3, 2 / 3, 0, .25)
 #' sfupar <- c(1 / 3, 2 / 3, .1, .1)
-#' x <- gsDesign(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
+#' x <- gsDesignCRT(sfu = sfLinear, sfl = sfLinear, sfupar = sfupar, sflpar = sflpar)
 #' plot(x, plottype = "sf")
 #' x
 #' 
 #' # now do an example where timing of interims changes slightly, but error spending does not
 #' # also, spend all alpha when at least >=90 percent of final information is in the analysis
 #' sfupar <- c(.2, .4, .9, ((1:3) / 3)^3)
-#' x <- gsDesign(k = 3, n.fix = 100, sfu = sfStep, sfupar = sfupar, test.type = 1)
+#' x <- gsDesignCRT(k = 3, n.fix = 100, sfu = sfStep, sfupar = sfupar, test.type = 1)
 #' plot(x, pl = "sf")
 #' # original planned sample sizes
 #' ceiling(x$n.I)
@@ -878,7 +878,7 @@ sfNormal <- function(alpha, t, param) {
 #' # change timing of analyses;
 #' # note that cumulative spending "P(Cross) if delta=0" does not change from cumsum(x$upper$spend)
 #' # while full alpha is spent, power is reduced by reduced sample size
-#' y <- gsDesign(
+#' y <- gsDesignCRT(
 #'   k = 3, sfu = sfStep, sfupar = sfupar, test.type = 1,
 #'   maxn.IPlan = x$n.I[x$k], n.I = c(30, 70, 95),
 #'   n.fix = x$n.fix
@@ -887,7 +887,7 @@ sfNormal <- function(alpha, t, param) {
 #' gsBoundSummary(y)
 #' 
 #' # now show how step function can be abused by 'adapting' stage 2 sample size based on interim result
-#' x <- gsDesign(k = 2, delta = .05, sfu = sfStep, sfupar = c(.02, .001), timing = .02, test.type = 1)
+#' x <- gsDesignCRT(k = 2, delta = .05, sfu = sfStep, sfupar = c(.02, .001), timing = .02, test.type = 1)
 #' # spending jumps from miniscule to full alpha at first analysis after interim 1
 #' plot(x, pl = "sf")
 #' # sample sizes at analyses:
@@ -916,10 +916,10 @@ sfNormal <- function(alpha, t, param) {
 #' sum(z1alt >= x$upper$bound[1] | z2alt >= x$upper$bound[2]) / 1000000
 #' 
 #' @aliases sfLinear
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -1033,7 +1033,7 @@ sfStep <- function(alpha, t, param) {
 #' @description The function \code{sfPoints} implements a spending function with values
 #' specified for an arbitrary set of specified points. It is now recommended to
 #' use sfLinear rather than sfPoints. Normally \code{sfPoints} will be passed
-#' to \code{gsDesign} in the parameter \code{sfu} for the upper bound or
+#' to \code{gsDesignCRT} in the parameter \code{sfu} for the upper bound or
 #' \code{sfl} for the lower bound to specify a spending function family for a
 #' design. In this case, the user does not need to know the calling sequence,
 #' just the points they wish to specify. If using \code{sfPoints()} in a
@@ -1058,7 +1058,7 @@ sfStep <- function(alpha, t, param) {
 #' @examples
 #' library(ggplot2)
 #' # example to specify spending on a pointwise basis
-#' x <- gsDesign(
+#' x <- gsDesignCRT(
 #'   k = 6, sfu = sfPoints, sfupar = c(.01, .05, .1, .25, .5, 1),
 #'   test.type = 2
 #' )
@@ -1092,16 +1092,16 @@ sfStep <- function(alpha, t, param) {
 #' 
 #' # example without lower spending at initial interim or
 #' # upper spending at last interim
-#' x <- gsDesign(
+#' x <- gsDesignCRT(
 #'   k = 3, sfu = sfPoints, sfupar = c(.25, .25),
 #'   sfl = sfPoints, sflpar = c(0, .25)
 #' )
 #' x
 #' 
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}, \link{sfLogistic}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -1157,7 +1157,7 @@ sfPoints <- function(alpha, t, param) {
 #' @description The function \code{sfPower()} implements a Kim-DeMets (power) spending
 #' function. This is a flexible, one-parameter spending function recommended by
 #' Jennison and Turnbull (2000). Normally it will be passed to
-#' \code{gsDesign()} in the parameter \code{sfu} for the upper bound or
+#' \code{gsDesignCRT()} in the parameter \code{sfu} for the upper bound or
 #' \code{sfl} for the lower bound to specify a spending function family for a
 #' design. In this case, the user does not need to know the calling sequence.
 #' The calling sequence is useful, however, when the user wishes to plot a
@@ -1185,7 +1185,7 @@ sfPoints <- function(alpha, t, param) {
 #' library(ggplot2)
 #' # design a 4-analysis trial using a Kim-DeMets spending function
 #' # for both lower and upper bounds
-#' x <- gsDesign(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
+#' x <- gsDesignCRT(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
 #' 
 #' # print the design
 #' x
@@ -1215,10 +1215,10 @@ sfPoints <- function(alpha, t, param) {
 #'   x = c(.0, .357), y = .025 * c(.65, .85), lty = 1:3, bty = "n", col = 2,
 #'   legend = c("gamma= -4", "gamma= -2", "gamma=1")
 #' )
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -1249,11 +1249,11 @@ sfPower <- function(alpha, t, param) {
 #' @title t-distribution Spending Function
 #'
 #' @description The function \code{sfTDist()} provides perhaps the maximum flexibility among
-#' spending functions provided in the \code{gsDesign} package. This function
+#' spending functions provided in the \code{gsDesignCRT} package. This function
 #' allows fitting of three points on a cumulative spending function curve; in
 #' this case, six parameters are specified indicating an x and a y coordinate
 #' for each of 3 points. Normally this function will be passed to
-#' \code{gsDesign()} in the parameter \code{sfu} for the upper bound or
+#' \code{gsDesignCRT()} in the parameter \code{sfu} for the upper bound or
 #' \code{sfl} for the lower bound to specify a spending function family for a
 #' design. In this case, the user does not need to know the calling sequence.
 #' The calling sequence is useful, however, when the user wishes to plot a
@@ -1274,7 +1274,7 @@ sfPower <- function(alpha, t, param) {
 #' @param param In the three-parameter specification, the first paramater (a)
 #' may be any real value, the second (b) any positive value, and the third
 #' parameter (df=degrees of freedom) any real value 1 or greater. When
-#' \code{gsDesign()} is called with a t-distribution spending function, this is
+#' \code{gsDesignCRT()} is called with a t-distribution spending function, this is
 #' the parameterization printed.  The five parameter specification is
 #' \code{c(t1,t2,u1,u2,df)} where the objective is that the resulting
 #' cumulative proportion of spending at \code{t} represented by \code{sf(t)}
@@ -1335,10 +1335,10 @@ sfPower <- function(alpha, t, param) {
 #'   x = c(.0, .3), y = .025 * c(.7, 1), lty = 1:5,
 #'   legend = c("df = 1", "df = 1.5", "df = 3", "df = 10", "df = 100")
 #' )
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -1496,10 +1496,10 @@ sfTDist <- function(alpha, t, param) {
 #' ggplot2::geom_line()
 #' 
 #' 
-#' # now apply the sfTrimmed version in gsDesign
+#' # now apply the sfTrimmed version in gsDesignCRT
 #' # initially, eliminate the early efficacy analysis
 #' # note: final spend must occur at > next to last interim
-#' x <- gsDesign(
+#' x <- gsDesignCRT(
 #'   k = 4, n.fix = 100, sfu = sfTrimmed,
 #'   sfupar = list(sf = sfHSD, param = 1, trange = c(.3, .9))
 #' )
@@ -1509,19 +1509,19 @@ sfTDist <- function(alpha, t, param) {
 #' 
 #' # now, do not eliminate early efficacy analysis
 #' param <- list(sf = sfHSD, param = 1, trange = c(0, .9))
-#' x <- gsDesign(k = 4, n.fix = 100, sfu = sfTrimmed, sfupar = param)
+#' x <- gsDesignCRT(k = 4, n.fix = 100, sfu = sfTrimmed, sfupar = param)
 #' 
 #' # The above means if final analysis is done a little early, all spending can occur
 #' # Suppose we set calendar date for final analysis based on
 #' # estimated full information, but come up with only 97 pct of plan
-#' xA <- gsDesign(
+#' xA <- gsDesignCRT(
 #'   k = x$k, n.fix = 100, n.I = c(x$n.I[1:3], .97 * x$n.I[4]),
 #'   test.type = x$test.type,
 #'   maxn.IPlan = x$n.I[x$k],
 #'   sfu = sfTrimmed, sfupar = param
 #' )
 #' # now accelerate without the trimmed spending function
-#' xNT <- gsDesign(
+#' xNT <- gsDesignCRT(
 #'   k = x$k, n.fix = 100, n.I = c(x$n.I[1:3], .97 * x$n.I[4]),
 #'   test.type = x$test.type,
 #'   maxn.IPlan = x$n.I[x$k],
@@ -1538,7 +1538,7 @@ sfTDist <- function(alpha, t, param) {
 #' 
 #' # note that if the last analysis is LATE, all 3 approaches should give the same
 #' # final bound that has a little larger z-value
-#' xlate <- gsDesign(
+#' xlate <- gsDesignCRT(
 #'   k = x$k, n.fix = 100, n.I = c(x$n.I[1:3], 1.25 * x$n.I[4]),
 #'   test.type = x$test.type,
 #'   maxn.IPlan = x$n.I[x$k],
@@ -1549,11 +1549,11 @@ sfTDist <- function(alpha, t, param) {
 #' # eliminate futility after the first interim analysis
 #' # note that by setting trange[1] to .2, the spend at t=.2 is used for the first
 #' # interim at or after 20 percent of information
-#' x <- gsDesign(n.fix = 100, sfl = sfGapped, sflpar = list(trange = c(.2, .9), sf = sfHSD, param = 1))
-#' @note The gsDesign technical manual is available at
+#' x <- gsDesignCRT(n.fix = 100, sfl = sfGapped, sflpar = list(trange = c(.2, .9), sf = sfHSD, param = 1))
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+#' @seealso \code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 #' \code{vignette("gsDesignPackageOverview")}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -1676,7 +1676,7 @@ sfGapped <- function(alpha, t, param) {
 #' @title Spending Function
 #'
 #' @param alpha Real value \eqn{> 0} and no more than 1. Defaults in calls to
-#'   \code{gsDesign()} are \code{alpha=0.025} for one-sided Type I error
+#'   \code{gsDesignCRT()} are \code{alpha=0.025} for one-sided Type I error
 #'   specification and \code{alpha=0.1} for Type II error specification.
 #'   However, this could be set to 1 if, for descriptive purposes, you wish to
 #'   see the proportion of spending as a function of the proportion of sample
@@ -1701,24 +1701,24 @@ sfGapped <- function(alpha, t, param) {
 #' \item{spend}{a vector of cumulative spending values corresponding to
 #' the input values in \code{t}.}
 #' \item{bound}{this is null when returned from the spending function,
-#' but is set in \code{gsDesign()} if the spending function is called
+#' but is set in \code{gsDesignCRT()} if the spending function is called
 #' from there.  Contains z-values for bounds of a design.}
 #' \item{prob}{this is null when returned from the spending function,
-#' but is set in \code{gsDesign()} if the spending function is called
+#' but is set in \code{gsDesignCRT()} if the spending function is called
 #' from there.  Contains probabilities of boundary crossing at \code{i}-th
-#' analysis for \code{j}-th theta value input to \code{gsDesign()} in
+#' analysis for \code{j}-th theta value input to \code{gsDesignCRT()} in
 #' \code{prob[i,j]}.}
 #'
 #' @export
 #'
 #' @rdname spendingFunction
 #'
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #'
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
 #'
-#' @seealso \code{\link{gsDesign}}, \code{\link{sfHSD}}, \code{\link{sfPower}},
+#' @seealso \code{\link{gsDesignCRT}}, \code{\link{sfHSD}}, \code{\link{sfPower}},
 #' \code{\link{sfLogistic}}, \code{\link{sfExponential}},
 #' \code{\link{sfTruncated}}, \code{vignette("gsDesignPackageOverview")}
 #'
@@ -1732,7 +1732,7 @@ sfGapped <- function(alpha, t, param) {
 #'
 #' # Design a 4-analysis trial using a Hwang-Shih-DeCani spending function
 #' # for both lower and upper bounds
-#' x <- gsDesign(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
+#' x <- gsDesignCRT(k = 4, sfu = sfHSD, sfupar = -2, sfl = sfHSD, sflpar = 1)
 #'
 #' # Print the design
 #' x
@@ -1744,8 +1744,8 @@ sfGapped <- function(alpha, t, param) {
 #' plot(x, plottype = 5)
 #'
 #' # What happens to summary if we used a boundary function design
-#' x <- gsDesign(test.type = 2, sfu = "OF")
-#' y <- gsDesign(test.type = 1, sfu = "WT", sfupar = .25)
+#' x <- gsDesignCRT(test.type = 2, sfu = "OF")
+#' y <- gsDesignCRT(test.type = 1, sfu = "WT", sfupar = .25)
 #' summary(x$upper)
 #' summary(y$upper)
 #'

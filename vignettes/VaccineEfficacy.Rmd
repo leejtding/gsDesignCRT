@@ -3,7 +3,7 @@ title: "Vaccine efficacy trial design"
 output:
   rmarkdown::html_document:
     code_folding: show
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{Vaccine efficacy trial design}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,7 +27,7 @@ options(width = 58)
 ```
 
 ```{r, message=FALSE, warning=FALSE, class.source="fold-hide"}
-library(gsDesign)
+library(gsDesignCRT)
 library(gt)
 library(dplyr)
 ```

@@ -1,11 +1,11 @@
 ---
-title: "gsDesign package overview"
+title: "gsDesignCRT package overview"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 nocite: |
   @JTBook, @PLWBook
 vignette: >
-  %\VignetteIndexEntry{gsDesign package overview}
+  %\VignetteIndexEntry{gsDesignCRT package overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,11 +26,11 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-gsDesign is a package for deriving and describing group sequential designs.
+gsDesignCRT is a package for deriving and describing group sequential designs.
 The package allows particular flexibility for designs with alpha- and
 beta-spending. Many plots are available for describing design properties.
 
-The gsDesign package supports group sequential
+The gsDesignCRT package supports group sequential
 clinical trial design.  While there is a strong focus on designs using
 $\alpha$- and $\beta$-spending functions, Wang-Tsiatis
 designs, including O'Brien-Fleming and Pocock designs, are also available.
@@ -41,7 +41,7 @@ bounds are employed.
 The routines are designed to provide simple access to commonly used designs
 using default arguments.  Standard, published spending functions are
 supported as well as the ability to write custom spending functions.
-A `gsDesign` class is defined and returned by the `gsDesign()`
+A `gsDesignCRT` class is defined and returned by the `gsDesignCRT()`
 function.  A plot function for this class provides a wide variety of plots:
 boundaries, power, estimated treatment effect at boundaries, conditional
 power at boundaries, spending function plots, expected sample size plot, and
@@ -51,7 +51,7 @@ could not be anticipated through a GUI interface.  This enables the user to
 easily create designs with features they desire, such as designs with
 minimum expected sample size.
 
-Thus, the intent of the gsDesign package is to easily create, fully
+Thus, the intent of the gsDesignCRT package is to easily create, fully
 characterize and even optimize routine group sequential trial designs as
 well as provide a tool to evaluate innovative designs.
 
@@ -62,9 +62,9 @@ with the same endpoint requires 200 subjects for 90% power at
 $\alpha$ = 0.025, one-sided:
 
 ```{r}
-library(gsDesign)
+library(gsDesignCRT)
 
-x <- gsDesign(n.fix = 200)
+x <- gsDesignCRT(n.fix = 200)
 plot(x)
 gsBoundSummary(x)
 ```

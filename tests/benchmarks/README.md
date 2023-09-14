@@ -1,6 +1,6 @@
 # Independent Test Benchmarks
 
-This folder is created for sharing benchmarks and independent R program that we have used while performing Unit Testing for gsDesign Package. Below is a description of the files found in this folder:
+This folder is created for sharing benchmarks and independent R program that we have used while performing Unit Testing for gsDesignCRT Package. Below is a description of the files found in this folder:
 
 - __*.cywx__ : these files are output of East 6.5 saved as workbook.
 - __*.html__ : these files are output of East 6.5 saved as html for individiual design.

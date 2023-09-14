@@ -23,7 +23,7 @@ function will be computed.}
 \item{param}{This parameter is not used for \code{sfLDPocock}, not required 
 for \code{sfLDOF} and need not be specified. For \code{sfLDPocock} it is here 
 so that the calling sequence conforms to the standard for spending functions used 
-with \code{gsDesign()}. For \code{sfLDOF} it will default to 1 (Lan-DeMets function 
+with \code{gsDesignCRT()}. For \code{sfLDOF} it will default to 1 (Lan-DeMets function 
 to approximate O'Brien-Fleming) if \code{NULL} or if outside of the range \code{[.005,2]}.
 otherwise, it will be use to set rho from Liu et al (2012).}
 }
@@ -53,41 +53,41 @@ O'Brien-Fleming bounds can be closely approximated using
 \code{\link{sfExponential}}.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 library(ggplot2)
 # 2-sided,  symmetric 6-analysis trial Pocock
 # spending function approximation
-gsDesign(k = 6, sfu = sfLDPocock, test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = sfLDPocock, test.type = 2)$upper$bound
 
 # show actual Pocock design
-gsDesign(k = 6, sfu = "Pocock", test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = "Pocock", test.type = 2)$upper$bound
 
 # approximate Pocock again using a standard
 # Hwang-Shih-DeCani approximation
-gsDesign(k = 6, sfu = sfHSD, sfupar = 1, test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = sfHSD, sfupar = 1, test.type = 2)$upper$bound
 
 # use 'best' Hwang-Shih-DeCani approximation for Pocock,  k=6;
 # see manual for details
-gsDesign(k = 6, sfu = sfHSD, sfupar = 1.3354376, test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = sfHSD, sfupar = 1.3354376, test.type = 2)$upper$bound
 
 # 2-sided, symmetric 6-analysis trial
 # O'Brien-Fleming spending function approximation
-gsDesign(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
 
 # show actual O'Brien-Fleming bound
-gsDesign(k = 6, sfu = "OF", test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = "OF", test.type = 2)$upper$bound
 
 # approximate again using a standard Hwang-Shih-DeCani
 # approximation to O'Brien-Fleming
-x <- gsDesign(k = 6, test.type = 2)
+x <- gsDesignCRT(k = 6, test.type = 2)
 x$upper$bound
 x$upper$param
 
 # use 'best' exponential approximation for k=6; see manual for details
-gsDesign(
+gsDesignCRT(
   k = 6, sfu = sfExponential, sfupar = 0.7849295,
   test.type = 2
 )$upper$bound
@@ -116,7 +116,7 @@ for group sequential trials with random information levels.
 \emph{Journal of biopharmaceutical statistics}; 22(4), 687-699.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}
 }
 \author{

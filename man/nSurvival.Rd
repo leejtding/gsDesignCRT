@@ -213,7 +213,7 @@ ss <- nSurvival(
 
 #  group sequential translation with default bounds
 #  note that delta1 is log hazard ratio; used later in gsBoundSummary summary
-x <- gsDesign(
+x <- gsDesignCRT(
   k = 5, test.type = 2, n.fix = ss$nEvents, nFixSurv = ss$n,
   delta1 = log(ss$lambda2 / ss$lambda1)
 )
@@ -274,8 +274,8 @@ Schoenfeld D (1981), The Asymptotic Properties of Nonparametric Tests for
 Comparing Survival Distributions. \emph{Biometrika}, 68, 316-319.
 }
 \seealso{
-\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-\link{gsDesign}, \link{gsHR}
+\code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+\link{gsDesignCRT}, \link{gsHR}
 }
 \author{
 Shanhong Guan \email{shanhong.guan@gmail.com}, Keaven Anderson

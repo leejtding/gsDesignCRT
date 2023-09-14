@@ -8,7 +8,7 @@ testthat::test_that(
   desc = "test: checking output validation density = 0, 
                     source independent R Program gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+    x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
     theta <- c(0, 0.5)
     i <- 2
     zi <- Inf
@@ -35,7 +35,7 @@ testthat::test_that(
   desc = "test : checking output validation,
                     source : independent R Program gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(k = 3, test.type = 1, n.fix = 800)
+    x <- gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
     theta <- c(0, 2, 0.5)
     i <- 1
     zi <- 0.5
@@ -54,7 +54,7 @@ testthat::test_that(
   desc = "test : checking output validation, 
   source : independent R Program gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(k = 4, test.type = 2, n.fix = 800)
+    x <- gsDesignCRT(k = 4, test.type = 2, n.fix = 800)
     theta <- c(0, 0.1, 0.05)
     i <- 2
     zi <- c(0.1, 0.175, 0.22)
@@ -70,7 +70,7 @@ testthat::test_that(
 testthat::test_that(
   desc = "test : checking output validation : expected output is NA ",
   code = {
-    x <- gsDesign(k = 4, test.type = 2, n.fix = 800)
+    x <- gsDesignCRT(k = 4, test.type = 2, n.fix = 800)
     z <- gsZ(x, theta = c(0, 0.1, 0.05), i = 5, zi = c(0.1, 0.175, 0.22))
 
     fze <- matrix(rep(NA, 9), nrow = 3, ncol = 3)

@@ -30,7 +30,7 @@
 #' @param wchar character for alphaHypotheses in ellipses
 #' @return A `ggplot` object with a multi-layer multiplicity graph
 #' @examples
-#' # 'gsDesign::hGraph' is deprecated.
+#' # 'gsDesignCRT::hGraph' is deprecated.
 #' # See the examples in 'gMCPLite::hGraph' instead.
 #' @details
 #' See vignette **Multiplicity graphs formatting using ggplot2** for explanation of formatting.
@@ -75,7 +75,7 @@ hGraph <- function(
   # following is temporary fix from intended {'\u03b1'} for Windows
   wchar = if(as.character(Sys.info()[1])=="Windows"){'w'}else{'w'}
 ){
-  .Deprecated("gMCPLite::hGraph", old = "gsDesign::hGraph")
+  .Deprecated("gMCPLite::hGraph", old = "gsDesignCRT::hGraph")
   #####################################################################
   # Begin: Internal functions
   #####################################################################

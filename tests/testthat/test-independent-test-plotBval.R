@@ -5,7 +5,7 @@
 ## For such test cases,the tolerance is set to 1e-6 (= 0.000001), a sufficiently 
 ## low value.
 
-x <- gsDesign(k = 5, test.type = 2, n.fix = 800)
+x <- gsDesignCRT(k = 5, test.type = 2, n.fix = 800)
 pltobj <- plotBval(x)
 
 test_that(

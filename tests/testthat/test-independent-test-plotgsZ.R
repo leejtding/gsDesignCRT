@@ -7,7 +7,7 @@ source('../gsDesign_independent_code.R')
 ## low value.
 
 
-x <- gsDesign(k = 5, test.type = 2, n.fix = 800)
+x <- gsDesignCRT(k = 5, test.type = 2, n.fix = 800)
 
 pltobj <- plotgsZ(x)
 

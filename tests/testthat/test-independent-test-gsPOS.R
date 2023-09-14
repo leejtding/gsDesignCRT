@@ -16,7 +16,7 @@ testthat::test_that(desc = "Test: checking class object of x", code = {
 
 
 testthat::test_that(desc = "Test: checking numeric check", code = {
-  x = gsDesign(k = 3, test.type = 1, n.fix = 800)
+  x = gsDesignCRT(k = 3, test.type = 1, n.fix = 800)
   local_edition(3)
   expect_error(gsPOS(x,theta = 'theta', wgts = c(0.5, 0.5)))
 })
@@ -24,7 +24,7 @@ testthat::test_that(desc = "Test: checking numeric check", code = {
 
 
 testthat::test_that(desc = "Test: checking lengths of inputs", code = {
-  x = gsDesign(k = 2, test.type = 1)
+  x = gsDesignCRT(k = 2, test.type = 1)
   local_edition(3)
   expect_error(gsPOS(x, theta = c(-1.50, -0.75 ,0.75, 1.50), 
   wgts =c(0.064758798, 0.301137432, 0.199471140, 0.301137432, 0.064758798)))
@@ -32,8 +32,8 @@ testthat::test_that(desc = "Test: checking lengths of inputs", code = {
 
 
 testthat::test_that(desc = "Test: checking output validation,
-                    source: calculation done in excel using the formula in the gsDesign manual", code = {
-  x = gsDesign(k = 2, test.type = 1)
+                    source: calculation done in excel using the formula in the gsDesignCRT manual", code = {
+  x = gsDesignCRT(k = 2, test.type = 1)
   local_edition(3)
   POS <- (gsPOS(x, theta = c(-1.50, -0.75, 0.00, 0.75, 1.50), 
        wgts =c(0.064758798, 0.301137432,0.199471140, 0.301137432, 0.064758798)))

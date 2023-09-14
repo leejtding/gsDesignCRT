@@ -23,7 +23,7 @@ test_that(
   desc = "Test : output validation z2
                     source : independent R Program gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(
+    x <- gsDesignCRT(
       k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
       delta1 = 0.114605, delta0 = 0
     )
@@ -45,7 +45,7 @@ testthat::test_that(
   desc = "Test : output validation z2NC
           source : independent R Program-gsDesign_independent_code.R",
   code = {
-    x <- gsDesign(
+    x <- gsDesignCRT(
       k = 2, test.type = 1, n.fix = 800, timing = c(0.5, 1),
       delta = 0.114605
     )
@@ -65,7 +65,7 @@ testthat::test_that(
 testthat::test_that(
   desc = "Test : output Validation z2Fisher
           source : independent R Program-gsDesign_independent_code.R", code = {
-            x <- gsDesign(
+            x <- gsDesignCRT(
               k = 2, test.type = 1, n.fix = 3200, timing = c(0.25, 1),
               delta = 0.114605
             )

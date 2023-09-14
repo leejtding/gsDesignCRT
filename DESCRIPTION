@@ -1,4 +1,4 @@
-Package: gsDesign
+Package: gsDesignCRT
 Version: 3.5.0
 Title: Group Sequential Design
 Authors@R: person(given = "Keaven", family = "Anderson", email =
@@ -11,8 +11,8 @@ Description: Derives group sequential clinical trial designs and describes
     ISBN: 0-8493-0316-8.
 License: GPL (>= 3)
 Copyright: Copyright 2010, Merck Research Laboratories
-URL: https://keaven.github.io/gsDesign/, https://github.com/keaven/gsDesign
-BugReports: https://github.com/keaven/gsDesign/issues
+URL: https://keaven.github.io/gsDesignCRT/, https://github.com/keaven/gsDesignCRT
+BugReports: https://github.com/keaven/gsDesignCRT/issues
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0)

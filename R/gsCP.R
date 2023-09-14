@@ -26,7 +26,7 @@
 #'
 #' For \code{gsPP()}, \code{gsPI()}, \code{gsPOS()} and \code{gsCPOS()}, the
 #' prior distribution for the standardized parameter \code{theta} () for a
-#' group sequential design specified through a gsDesign object is specified
+#' group sequential design specified through a gsDesignCRT object is specified
 #' through the arguments \code{theta} and \code{wgts}. This can be a discrete
 #' or a continuous probability density function. For a discrete function,
 #' generally all weights would be 1. For a continuous density, the \code{wgts}
@@ -43,7 +43,7 @@
 #' defaulted to 1 (equal weighting). To ensure a proper prior distribution, you
 #' must have \code{sum(gridwgts * density)} equal to 1; this is NOT checked,
 #' however.
-#' @param x An object of type \code{gsDesign} or \code{gsProbability}
+#' @param x An object of type \code{gsDesignCRT} or \code{gsProbability}
 #' @param theta a vector with \eqn{\theta}{theta} value(s) at which conditional
 #' power is to be computed; for \code{gsCP()} if \code{NULL}, an estimated
 #' value of \eqn{\theta}{theta} based on the interim test statistic
@@ -73,7 +73,7 @@
 #' provides a point estimate rather than an interval.
 #' @return \code{gsCP()} returns an object of the class \code{gsProbability}.
 #' Based on the input design and the interim test statistic, the output
-#' gsDesign object has bounds for test statistics computed based on solely on
+#' gsDesignCRT object has bounds for test statistics computed based on solely on
 #' observations after interim \code{i}.  Boundary crossing probabilities are
 #' computed for the input \eqn{\theta}{theta} values. See manual and examples.
 #'
@@ -106,7 +106,7 @@
 #' @examples
 #' library(ggplot2)
 #' # set up a group sequential design
-#' x <- gsDesign(k = 5)
+#' x <- gsDesignCRT(k = 5)
 #' x
 #' 
 #' # set up a prior distribution for the treatment effect
@@ -141,7 +141,7 @@
 #' gsCPOS(x = x, i = 2, theta = prior$z, wgts = prior$wgts)
 #' 
 #' # 2-stage example to compare results to direct computation
-#' x <- gsDesign(k = 2)
+#' x <- gsDesignCRT(k = 2)
 #' z1 <- 0.5
 #' n1 <- x$n.I[1]
 #' n2 <- x$n.I[2] - x$n.I[1]
@@ -182,10 +182,10 @@
 #' # start with point estimate, followed by 90% prediction interval
 #' gsPI(x = x, i = 1, zi = z1, j = 2, theta = prior$z, wgts = prior$wgts, level = 0)
 #' gsPI(x = x, i = 1, zi = z1, j = 2, theta = prior$z, wgts = prior$wgts, level = .9)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{\link{normalGrid}}, \code{\link{gsDesign}},
+#' @seealso \code{\link{normalGrid}}, \code{\link{gsDesignCRT}},
 #' \code{\link{gsProbability}}, \code{\link{gsBoundCP}}, \code{\link{ssrCP}},
 #' \code{\link{condPower}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
@@ -206,8 +206,8 @@ gsCP <- function(x, theta = NULL, i = 1, zi = 0, r = 18) {
   # as a gsProbability object
   # Inputs: interim theta value and which interim is considered
 
-  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesign"))) {
-    stop("gsCP must be called with class of x either gsProbability or gsDesign")
+  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesignCRT"))) {
+    stop("gsCP must be called with class of x either gsProbability or gsDesignCRT")
   }
 
   if (i < 1 || i >= x$k) {
@@ -261,8 +261,8 @@ gsCP <- function(x, theta = NULL, i = 1, zi = 0, r = 18) {
 #' @rdname gsCP
 # gsPP function [sinew] ----
 gsPP <- function(x, i = 1, zi = 0, theta = c(0, 3), wgts = c(.5, .5), r = 18, total = TRUE) {
-  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesign"))) {
-    stop("gsPP: class(x) must be gsProbability or gsDesign")
+  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesignCRT"))) {
+    stop("gsPP: class(x) must be gsProbability or gsDesignCRT")
   }
   if (!(is.numeric(zi) & (length(zi) == 1))) stop("gsPP: zi must be positive and of length 1")
   test.type <- ifelse(inherits(x, "gsProbability"), 3, x$test.type)
@@ -288,8 +288,8 @@ gsPP <- function(x, i = 1, zi = 0, theta = c(0, 3), wgts = c(.5, .5), r = 18, to
 #' @rdname gsCP
 # gsPI function [sinew] ----
 gsPI <- function(x, i = 1, zi = 0, j = 2, level = .95, theta = c(0, 3), wgts = c(.5, .5)) {
-  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesign"))) {
-    stop("gsPI: class(x) must be gsProbability or gsDesign")
+  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesignCRT"))) {
+    stop("gsPI: class(x) must be gsProbability or gsDesignCRT")
   }
   checkScalar(i, "integer", c(1, x$k - 1))
   checkScalar(j, "integer", c(i + 1, x$k))
@@ -323,8 +323,8 @@ gsPI <- function(x, i = 1, zi = 0, j = 2, level = .95, theta = c(0, 3), wgts = c
 #' See Conditional power section of manual for further clarification. See also
 #' Muller and Schaffer (2001) for background theory.
 #'
-#' @param x An object of type \code{gsDesign} or \code{gsProbability}
-#' @param theta if \code{"thetahat"} and \code{class(x)!="gsDesign"},
+#' @param x An object of type \code{gsDesignCRT} or \code{gsProbability}
+#' @param theta if \code{"thetahat"} and \code{class(x)!="gsDesignCRT"},
 #' conditional power computations for each boundary value are computed using
 #' estimated treatment effect assuming a test statistic at that boundary
 #' (\code{zi/sqrt(x$n.I[i])} at analysis \code{i}, interim test statistic
@@ -343,7 +343,7 @@ gsPI <- function(x, i = 1, zi = 0, j = 2, level = .95, theta = c(0, 3), wgts = c
 #' @examples
 #' 
 #' # set up a group sequential design
-#' x <- gsDesign(k = 5)
+#' x <- gsDesignCRT(k = 5)
 #' x
 #' 
 #' # compute conditional power based on interim treatment effects
@@ -351,10 +351,10 @@ gsPI <- function(x, i = 1, zi = 0, j = 2, level = .95, theta = c(0, 3), wgts = c
 #' 
 #' # compute conditional power based on original x$delta
 #' gsBoundCP(x, theta = x$delta)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{\link{gsDesign}}, \code{\link{gsProbability}},
+#' @seealso \code{\link{gsDesignCRT}}, \code{\link{gsProbability}},
 #' \code{\link{gsCP}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
@@ -367,8 +367,8 @@ gsPI <- function(x, i = 1, zi = 0, j = 2, level = .95, theta = c(0, 3), wgts = c
 #' @rdname gsBoundCP
 # gsBoundCP function [sinew] ----
 gsBoundCP <- function(x, theta = "thetahat", r = 18) {
-  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesign"))) {
-    stop("gsPI: class(x) must be gsProbability or gsDesign")
+  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesignCRT"))) {
+    stop("gsPI: class(x) must be gsProbability or gsDesignCRT")
   }
   checkScalar(r, "integer", c(1, 70))
   if (!is.character(theta)) {
@@ -406,14 +406,14 @@ gsBoundCP <- function(x, theta = "thetahat", r = 18) {
 #' @rdname gsCP
 #' @export
 # gsPosterior function [sinew] ----
-gsPosterior <- function(x = gsDesign(), i = 1, zi = NULL, prior = normalGrid(), r = 18) {
+gsPosterior <- function(x = gsDesignCRT(), i = 1, zi = NULL, prior = normalGrid(), r = 18) {
   if (is.null(prior$gridwgts)) prior$gridwgts <- rep(1, length(prior$z))
   checkLengths(prior$z, prior$density, prior$gridwgts)
   checkVector(prior$gridwgts, "numeric", c(0, Inf), c(TRUE, FALSE))
   checkVector(prior$density, "numeric", c(0, Inf), c(TRUE, FALSE))
   checkVector(prior$z, "numeric", c(-Inf, Inf), c(FALSE, FALSE))
-  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesign"))) {
-    stop("gsPosterior: x must have class gsDesign or gsProbability")
+  if (!(inherits(x, "gsProbability") || inherits(x, "gsDesignCRT"))) {
+    stop("gsPosterior: x must have class gsDesignCRT or gsProbability")
   }
   test.type <- ifelse(inherits(x, "gsProbability"), 3, x$test.type)
   checkScalar(i, "integer", c(1, x$k - 1))
@@ -479,8 +479,8 @@ postfn <- function(x, PP, d, i, zi, j, theta, wgts) {
 #' @rdname gsCP
 # gsPOS function [sinew] ----
 gsPOS <- function(x, theta, wgts) {
-  if (!inherits(x, c("gsProbability", "gsDesign"))) {
-    stop("x must have class gsProbability or gsDesign")
+  if (!inherits(x, c("gsProbability", "gsDesignCRT"))) {
+    stop("x must have class gsProbability or gsDesignCRT")
   }
   checkVector(theta, "numeric")
   checkVector(wgts, "numeric")
@@ -495,8 +495,8 @@ gsPOS <- function(x, theta, wgts) {
 #' @rdname gsCP
 # gsCPOS function [sinew] ----
 gsCPOS <- function(i, x, theta, wgts) {
-  if (!inherits(x, c("gsProbability", "gsDesign"))) {
-    stop("x must have class gsProbability or gsDesign")
+  if (!inherits(x, c("gsProbability", "gsDesignCRT"))) {
+    stop("x must have class gsProbability or gsDesignCRT")
   }
   checkScalar(i, "integer", c(1, x$k), c(TRUE, FALSE))
   checkVector(theta, "numeric")

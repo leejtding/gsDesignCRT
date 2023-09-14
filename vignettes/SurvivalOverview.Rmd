@@ -1,7 +1,7 @@
 ---
 title: "Overview of survival endpoint design"
 output: rmarkdown::html_vignette
-bibliography: gsDesign.bib
+bibliography: gsDesignCRT.bib
 vignette: >
   %\VignetteIndexEntry{Overview of survival endpoint design}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,13 +27,13 @@ options(width = 58)
 ## Introduction
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(gsDesign)
+library(gsDesignCRT)
 library(tidyr)
 library(knitr)
 library(tibble)
 ```
 
-This article/vignette provides a summary of functions in the ***gsDesign*** package supporting design and evaluation of trial designs for time-to-event outcomes.
+This article/vignette provides a summary of functions in the ***gsDesignCRT*** package supporting design and evaluation of trial designs for time-to-event outcomes.
 We do not focus on detailed output options, but what numbers summarizing the design are based on.
 If you are not looking for this level of detail and just want to see how to design a fixed or group sequential design for a time-to-event endpoint, see the vignette *Basic time-to-event group sequential design using gsSurv*.
 
@@ -54,7 +54,7 @@ This is done with the @LachinFoulkes method. Functions include:
 Output for survival design information is supported in various formats:
 
 - `gsBoundSummary()`: Tabular summary of a design in a data frame.
-- `plot.gsDesign()`: Various plot summaries of a design.
+- `plot.gsDesignCRT()`: Various plot summaries of a design.
 - `gsHR()`: Approximate HR required to cross a bound.
 
 ## Schoenfeld approximation support
@@ -96,7 +96,7 @@ r <- 1
 pnorm(qnorm(alpha) - sqrt(n * r) / (1 + r) * delta)
 ```
 
-We can compute this with `gsDesign::nEvents()` as:
+We can compute this with `gsDesignCRT::nEvents()` as:
 
 ```{r}
 nEvents(n = n, alpha = alpha, hr = hr, r = r)
@@ -138,13 +138,13 @@ The `se` in the table is the estimated standard error for the log hazard ratio $
 
 ### Group sequential design
 
-We can create a group sequential design for the above problem either with $\theta$ or with the fixed design sample size. The parameter `delta` in `gsDesign()` corresponds to standardized effect size with sign changed $-\theta$ in notation used above and by @JTBook, while the natural parameter, $\log(\hbox{HR})$ is in the parameter `delta1` passed to `gsDesign()`.
+We can create a group sequential design for the above problem either with $\theta$ or with the fixed design sample size. The parameter `delta` in `gsDesignCRT()` corresponds to standardized effect size with sign changed $-\theta$ in notation used above and by @JTBook, while the natural parameter, $\log(\hbox{HR})$ is in the parameter `delta1` passed to `gsDesignCRT()`.
 The name of the effect size is specified in `deltaname` and the parameter `logdelta = TRUE` indicates that `delta` input needs to be exponentiated to obtain HR in the output below.
 This example code can be useful in practice.
 We begin by passing the number of events for a fixed design in the parameter `n.fix` (continuous, not rounded) to adapt to a group sequential design.
 
 ```{r}
-Schoenfeld <- gsDesign(
+Schoenfeld <- gsDesignCRT(
   k = 2,
   n.fix = nEvents(hr = hr, alpha = alpha, beta = beta, r = 1),
   delta1 = log(hr)
@@ -156,10 +156,10 @@ Schoenfeld %>%
 
 ### Information based design
 
-Exactly the same result can be obtained with the following, passing the standardized effect size `theta` from above to the parameter `delta` in `gsDesign()`.
+Exactly the same result can be obtained with the following, passing the standardized effect size `theta` from above to the parameter `delta` in `gsDesignCRT()`.
 
 ```{r, eval=FALSE}
-Schoenfeld <- gsDesign(k = 2, delta = -theta, delta1 = log(hr))
+Schoenfeld <- gsDesignCRT(k = 2, delta = -theta, delta1 = log(hr))
 ```
 
 We noted above that the asymptotic variance for $\hat\theta$ is $1/n$ which corresponds to statistical information $\mathcal I=n$ for the parameter $\theta$.
@@ -173,7 +173,7 @@ corresponds both to the number of events and the statistical information for the
 Note that if you plug in the natural parameter $\delta= -\log\nu > 0$, then $n.I$ returns the statistical information for the log hazard ratio.
 
 ```{r}
-gsDesign(k = 2, delta = -log(hr))$n.I
+gsDesignCRT(k = 2, delta = -log(hr))$n.I
 ```
 
 The reader may wish to look above to derive the exact relationship between events and statistical information for $\delta$.
@@ -267,8 +267,8 @@ hrz2n(hr = hr, z = z, ratio = r)
 ## Lachin and Foulkes design
 
 For the purpose of sample size and power for group sequential design, the @LachinFoulkes is based on substantial evaluation not documented further here.
-We try to make clear here what some of the strengths and weaknesses of both the @LachinFoulkes method as well as its implementation in the `gsDesign::nSurv()` (fixed design) and `gsDesign::gsSurv()` (group sequential) functions.
-For historical and testing purposes, we also discuss use of the less flexible `gsDesign::nSurvival()` function that was independently programmed and can be used for some limited validations of `gsDesign::nSurv()`.
+We try to make clear here what some of the strengths and weaknesses of both the @LachinFoulkes method as well as its implementation in the `gsDesignCRT::nSurv()` (fixed design) and `gsDesignCRT::gsSurv()` (group sequential) functions.
+For historical and testing purposes, we also discuss use of the less flexible `gsDesignCRT::nSurvival()` function that was independently programmed and can be used for some limited validations of `gsDesignCRT::nSurv()`.
 
 ### Model assumptions
 
@@ -284,7 +284,7 @@ The model assumes
 - A fixed randomization ratio of experimental to control group assignment
 
 Other than the proportional hazards assumption, this allows a great deal of flexibility in trial design assumptions.
-While @LachinFoulkes adjusts the piecewise constant enrollment rates proportionately to derive a sample size, `gsDesign$nSurv()` also enables the approach of @KimTsiatis which fixes enrollment rates and extends the final enrollment rate duration to power the trial; the minimum follow-up period is still assumed this approach.
+While @LachinFoulkes adjusts the piecewise constant enrollment rates proportionately to derive a sample size, `gsDesignCRT$nSurv()` also enables the approach of @KimTsiatis which fixes enrollment rates and extends the final enrollment rate duration to power the trial; the minimum follow-up period is still assumed this approach.
 We do not enable the drop-in option proposed in @LachinFoulkes.
 
 The two practical differences the @LachinFoulkes method has from the @Schoenfeld1981 method are:
@@ -420,6 +420,6 @@ cat(paste(
 ))
 ```
 
-For expected accrual of events without a design returned by `gsDesign::gsSurv()`, see the help file for `gsDesign::eEvents()`.
+For expected accrual of events without a design returned by `gsDesignCRT::gsSurv()`, see the help file for `gsDesignCRT::eEvents()`.
 
 ## References

@@ -26,7 +26,7 @@ An object of type \code{spendfn}.
 \description{
 The function \code{sfExponential} implements the exponential spending
 function (Anderson and Clark, 2009). Normally \code{sfExponential} will be
-passed to \code{gsDesign} in the parameter \code{sfu} for the upper bound or
+passed to \code{gsDesignCRT} in the parameter \code{sfu} for the upper bound or
 \code{sfl} for the lower bound to specify a spending function family for a
 design. In this case, the user does not need to know the calling sequence.
 The calling sequence is useful, however, when the user wishes to plot a
@@ -51,7 +51,7 @@ spending function (\code{sfLDOF()}), \deqn{f(t; \alpha)=2-2\Phi \left(
 alpha)=2-2*Phi(Phi^(-1)(1-alpha/2)/t^(1/2)).}
 }
 \note{
-The gsDesign technical manual shows how to use \code{sfExponential()}
+The gsDesignCRT technical manual shows how to use \code{sfExponential()}
   to closely approximate an O'Brien-Fleming design. An example is given below.
   The manual is available at <https://keaven.github.io/gsd-tech-manual/>.
 }
@@ -59,17 +59,17 @@ The gsDesign technical manual shows how to use \code{sfExponential()}
 library(ggplot2)
 # use 'best' exponential approximation for k=6 to O'Brien-Fleming design
 # (see manual for details)
-gsDesign(
+gsDesignCRT(
   k = 6, sfu = sfExponential, sfupar = 0.7849295,
   test.type = 2
 )$upper$bound
 
 # show actual O'Brien-Fleming bound
-gsDesign(k = 6, sfu = "OF", test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = "OF", test.type = 2)$upper$bound
 
 # show Lan-DeMets approximation
 # (not as close as sfExponential approximation)
-gsDesign(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
+gsDesignCRT(k = 6, sfu = sfLDOF, test.type = 2)$upper$bound
 
 # plot exponential spending function across a range of values of interest
 t <- 0:100 / 100
@@ -102,7 +102,7 @@ Lan, KKG and DeMets, DL (1983), Discrete sequential boundaries for clinical
 trials. \emph{Biometrika}; 70:659-663.
 }
 \seealso{
-\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesign}},
+\code{vignette("SpendingFunctionOverview")}, \code{\link{gsDesignCRT}},
 \code{vignette("gsDesignPackageOverview")}
 }
 \author{

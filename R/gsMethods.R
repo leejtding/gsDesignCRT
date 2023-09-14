@@ -63,11 +63,11 @@ print.gsProbability <- function(x, ...) {
 }
 
 
-# summary.gsDesign roxy [sinew] ----
+# summary.gsDesignCRT roxy [sinew] ----
 #' @export
 #' @rdname gsBoundSummary
-# summary.gsDesign function [sinew] ----
-summary.gsDesign <- function(object, information = FALSE, timeunit = "months", ...) {
+# summary.gsDesignCRT function [sinew] ----
+summary.gsDesignCRT <- function(object, information = FALSE, timeunit = "months", ...) {
   out <- NULL
   if (object$test.type == 1) {
     out <- paste(out, "One-sided group sequential design with ", sep = "")
@@ -119,11 +119,11 @@ summary.gsDesign <- function(object, information = FALSE, timeunit = "months", .
   return(out)
 }
 
-# print.gsDesign roxy [sinew] ----
+# print.gsDesignCRT roxy [sinew] ----
 #' @export
 #' @rdname gsBoundSummary
-# print.gsDesign function [sinew] ----
-print.gsDesign <- function(x, ...) {
+# print.gsDesignCRT function [sinew] ----
+print.gsDesignCRT <- function(x, ...) {
   if (x$nFixSurv > 0) {
     cat("Group sequential design sample size for time-to-event outcome\n",
       "with sample size ", x$nSurv, ". The analysis plan below shows events\n",
@@ -315,10 +315,10 @@ print.nSurvival <- function(x, ...) {
 # gsBoundSummary roxy [sinew] ----
 #' @title Bound Summary and Z-transformations
 #' @description  A tabular summary of a group sequential design's bounds and their properties
-#' are often useful. The 'vintage' \code{print.gsDesign()} function provides a
+#' are often useful. The 'vintage' \code{print.gsDesignCRT()} function provides a
 #' complete but minimally formatted summary of a group sequential design
-#' derived by \code{gsDesign()}. A brief description of the overall design can
-#' also be useful (\code{summary.gsDesign()}.  A tabular summary of boundary
+#' derived by \code{gsDesignCRT()}. A brief description of the overall design can
+#' also be useful (\code{summary.gsDesignCRT()}.  A tabular summary of boundary
 #' characteristics oriented only towards LaTeX output is produced by
 #' \code{\link{xtable.gsSurv}}. More flexibility is provided by
 #' \code{gsBoundSummary()} which produces a tabular summary of a
@@ -337,13 +337,13 @@ print.nSurvival <- function(x, ...) {
 #' \code{gsHR()} and \code{gsCPz()} for B-values, approximate treatment effect
 #' (see details), approximate hazard ratio and conditional power, respectively.
 #'
-#' The \code{print.gsDesign} function is intended to provide an easier output
+#' The \code{print.gsDesignCRT} function is intended to provide an easier output
 #' to review than is available from a simple list of all the output components.
 #' The \code{gsBoundSummary} function is intended to provide a summary of
 #' boundary characteristics that is often useful for evaluating boundary
 #' selection; this outputs an extension of the \code{data.frame} class that
 #' sets up default printing without row names using
-#' \code{print.gsBoundSummary}. \code{summary.gsDesign}, on the other hand,
+#' \code{print.gsBoundSummary}. \code{summary.gsDesignCRT}, on the other hand,
 #' provides a summary of the overall design at a higher level; this provides
 #' characteristics not included in the \code{gsBoundSummary} summary and no
 #' detail concerning interim analysis bounds.
@@ -365,7 +365,7 @@ print.nSurvival <- function(x, ...) {
 #' exponentiated in the case of relative risks, hazard ratios or when the user
 #' specifies \code{logdelta=TRUE}. In the case of hazard ratios, the value is
 #' computed instead by \code{gsHR()} to be consistent with
-#' \code{plot.gsDesign()}. Similarly, the value is computed by \code{gsRR()}
+#' \code{plot.gsDesignCRT()}. Similarly, the value is computed by \code{gsRR()}
 #' when the relative risk is the natural parameter.
 #'
 #' \code{Spending: }Incremental error spending at each given analysis. For
@@ -393,24 +393,24 @@ print.nSurvival <- function(x, ...) {
 #' the probability of crossing the efficacy bound at or before the analysis of
 #' interest.
 #'
-#' @param x An item of class \code{gsDesign} or \code{gsSurv}, except for
+#' @param x An item of class \code{gsDesignCRT} or \code{gsSurv}, except for
 #' \code{print.gsBoundSummary()} where \code{x} is an object created by
 #' \code{gsBoundSummary()} and \code{xprint()} which is used with \code{xtable}
 #' (see examples)
-#' @param object An item of class \code{gsDesign} or \code{gsSurv}
+#' @param object An item of class \code{gsDesignCRT} or \code{gsSurv}
 #' @param information indicator of whether \code{n.I} in \code{object}
 #' represents statistical information rather than sample size or event counts.
 #' @param timeunit Text string with time units used for time-to-event designs
 #' created with \code{gsSurv()}
 #' @param deltaname Natural parameter name. If default \code{NULL} is used,
 #' routine will default to \code{"HR"} when class is \code{gsSurv} or if
-#' \code{nFixSurv} was input when creating \code{x} with \code{gsDesign()}.
+#' \code{nFixSurv} was input when creating \code{x} with \code{gsDesignCRT()}.
 #' @param logdelta Indicates whether natural parameter is the natural logarithm
 #' of the actual parameter. For example, the relative risk or odds-ratio would
 #' be put on the logarithmic scale since the asymptotic behavior is 'more
 #' normal' than a non-transformed value. As with \code{deltaname}, the default
-#' will be changed to true if \code{x} has class \code{gsDesign} or if
-#' \code{nFixSurv>0} was input when \code{x} was created by \code{gsDesign()};
+#' will be changed to true if \code{x} has class \code{gsDesignCRT} or if
+#' \code{nFixSurv>0} was input when \code{x} was created by \code{gsDesignCRT()};
 #' that is, the natural parameter for a time-to-event endpoint will be on the
 #' logarithmic scale.
 #' @param Nname This will normally be changed to \code{"N"} or, if a
@@ -447,7 +447,7 @@ print.nSurvival <- function(x, ...) {
 #' futility and efficacy bounds. Based on this, a posterior distribution for
 #' the standardized parameter is computed and the conditional power of the
 #' trial is averaged over this posterior distribution.
-#' @param r See \code{\link{gsDesign}}. This is an integer used to control the
+#' @param r See \code{\link{gsDesignCRT}}. This is an integer used to control the
 #' degree of accuracy of group sequential calculations which will normally not
 #' be changed.
 #' @param row.names indicator of whether or not to print row names
@@ -460,10 +460,10 @@ print.nSurvival <- function(x, ...) {
 #' @param i A vector containing the analysis for each element in \code{z}; each
 #' element must be in 1 to \code{x$k}, inclusive
 #' @param theta A scalar value representing the standardized effect size used
-#' for conditional power calculations; see \code{gsDesign}; if NULL,
+#' for conditional power calculations; see \code{gsDesignCRT}; if NULL,
 #' conditional power is computed at the estimated interim treatment effect
 #' based on \code{z}
-#' @param ylab Used when functions are passed to \code{plot.gsDesign} to
+#' @param ylab Used when functions are passed to \code{plot.gsDesignCRT} to
 #' establish default y-axis labels
 #' @param ... This allows many optional arguments that are standard when
 #' calling \code{plot} for \code{gsBValue}, \code{gsDelta}, \code{gsHR},
@@ -484,7 +484,7 @@ print.nSurvival <- function(x, ...) {
 #' Word (see the \code{rtf} package) or to a csv format readable by spreadsheet
 #' software using \code{write.csv}.
 #'
-#' \code{print.gsDesign} prints an overall summary a group sequential design.
+#' \code{print.gsDesignCRT} prints an overall summary a group sequential design.
 #' While the design description is complete, the format is not as `document
 #' friendly' as \code{gsBoundSummary}.
 #'
@@ -506,7 +506,7 @@ print.nSurvival <- function(x, ...) {
 #'   lambda1 = .2, lambda2 = .1, eta = .1, Ts = 2, Tr = .5,
 #'   sided = 1, alpha = .025, ratio = 2
 #' )
-#' xs <- gsDesign(nFixSurv = ss$n, n.fix = ss$nEvents, delta1 = log(ss$lambda2 / ss$lambda1))
+#' xs <- gsDesignCRT(nFixSurv = ss$n, n.fix = ss$nEvents, delta1 = log(ss$lambda2 / ss$lambda1))
 #' gsBoundSummary(xs, logdelta = TRUE, ratio = ss$ratio)
 #' # generate some of the above summary statistics for the upper bound
 #' z <- xs$upper$bound
@@ -520,7 +520,7 @@ print.nSurvival <- function(x, ...) {
 #' gsCPz(z = z[1:2], i = 1:2, x = xs, theta = xs$delta)
 #' 
 #' # information-based design
-#' xinfo <- gsDesign(delta = .3, delta1 = .3)
+#' xinfo <- gsDesignCRT(delta = .3, delta1 = .3)
 #' gsBoundSummary(xinfo, Nname = "Information")
 #' 
 #' # show all available boundary descriptions
@@ -528,46 +528,46 @@ print.nSurvival <- function(x, ...) {
 #' 
 #' # add intermediate parameter value
 #' xinfo <- gsProbability(d = xinfo, theta = c(0, .15, .3))
-#' class(xinfo) # note this is still as gsDesign class object
+#' class(xinfo) # note this is still as gsDesignCRT class object
 #' gsBoundSummary(xinfo, Nname = "Information")
 #' 
 #' # now look at a binomial endpoint; specify H0 treatment difference as p1-p2=.05
 #' # now treatment effect at bound (say, thetahat) is transformed to
 #' # xp$delta0 + xp$delta1*(thetahat-xp$delta0)/xp$delta
 #' np <- nBinomial(p1 = .15, p2 = .10)
-#' xp <- gsDesign(n.fix = np, endpoint = "Binomial", delta1 = .05)
+#' xp <- gsDesignCRT(n.fix = np, endpoint = "Binomial", delta1 = .05)
 #' summary(xp)
 #' gsBoundSummary(xp, deltaname = "p[C]-p[E]")
 #' # estimate treatment effect at lower bound
-#' # by setting delta0=0 (default) and delta1 above in gsDesign
+#' # by setting delta0=0 (default) and delta1 above in gsDesignCRT
 #' # treatment effect at bounds is scaled to these differences
 #' # in this case, this is the difference in event rates
 #' gsDelta(z = xp$lower$bound, i = 1:3, xp)
 #' 
 #' # binomial endpoint with risk ratio estimates
 #' n.fix <- nBinomial(p1 = .3, p2 = .15, scale = "RR")
-#' xrr <- gsDesign(k = 2, n.fix = n.fix, delta1 = log(.15 / .3), endpoint = "Binomial")
+#' xrr <- gsDesignCRT(k = 2, n.fix = n.fix, delta1 = log(.15 / .3), endpoint = "Binomial")
 #' gsBoundSummary(xrr, deltaname = "RR", logdelta = TRUE)
 #' gsRR(z = xp$lower$bound, i = 1:3, xrr)
 #' plot(xrr, plottype = "RR")
 #' 
 #' # delta is odds-ratio: sample size slightly smaller than for relative risk or risk difference
 #' n.fix <- nBinomial(p1 = .3, p2 = .15, scale = "OR")
-#' xOR <- gsDesign(k = 2, n.fix = n.fix, delta1 = log(.15 / .3 / .85 * .7), endpoint = "Binomial")
+#' xOR <- gsDesignCRT(k = 2, n.fix = n.fix, delta1 = log(.15 / .3 / .85 * .7), endpoint = "Binomial")
 #' gsBoundSummary(xOR, deltaname = "OR", logdelta = TRUE)
 #' 
 #' # for nice LaTeX table output, use xprint
 #' xprint(xtable::xtable(gsBoundSummary(xOR, deltaname = "OR", logdelta = TRUE), 
 #'                                           caption = "Table caption."))
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \link{gsDesign}, \link{plot.gsDesign},
+#' @seealso \link{gsDesignCRT}, \link{plot.gsDesignCRT},
 #' \code{\link{gsProbability}}, \code{\link{xtable.gsSurv}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 #' @keywords design
-#' @aliases print.gsDesign summary.gsDesign
+#' @aliases print.gsDesignCRT summary.gsDesignCRT
 #' @rdname gsBoundSummary
 #' @export
 #' @importFrom stats pnorm

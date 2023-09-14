@@ -1,4 +1,4 @@
-# Test: object of class gsDesign - plot for y
+# Test: object of class gsDesignCRT - plot for y
 
                   Lower bounds   Upper bounds
       Analysis N    Z   Nominal p  Z   Nominal p
@@ -35,7 +35,7 @@
       5.6727 0.0001 0.0001 0.0000 0.0002
       6.4830 0.0000 0.0000 0.0000 0.0000
 
-# Test: object of class gsDesign  - plot for z
+# Test: object of class gsDesignCRT  - plot for z
 
                   Lower bounds   Upper bounds
       Analysis N    Z   Nominal p  Z   Nominal p

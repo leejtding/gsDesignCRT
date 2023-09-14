@@ -1,10 +1,10 @@
 globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "Analysis"))
 
-# plot.gsDesign roxy [sinew] ----
+# plot.gsDesignCRT roxy [sinew] ----
 #' @title Plots for group sequential designs
 #' @description The \code{plot()} function has been extended to work with objects returned
-#' by \code{gsDesign()} and \code{gsProbability()}.  For objects of type
-#' \code{gsDesign}, seven types of plots are provided: z-values at boundaries
+#' by \code{gsDesignCRT()} and \code{gsProbability()}.  For objects of type
+#' \code{gsDesignCRT}, seven types of plots are provided: z-values at boundaries
 #' (default), power, approximate treatment effects at boundaries, conditional
 #' power at boundaries, spending functions, expected sample size, and B-values
 #' at boundaries. For objects of type \code{gsProbability} plots are available
@@ -20,17 +20,17 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #' \code{plottype} and the class of \code{x}.
 #'
 #' Note that there is some special behavior for values plotted and returned for
-#' power and expected sample size (ASN) plots for a \code{gsDesign} object. A
-#' call to \code{x<-gsDesign()} produces power and expected sample size for
+#' power and expected sample size (ASN) plots for a \code{gsDesignCRT} object. A
+#' call to \code{x<-gsDesignCRT()} produces power and expected sample size for
 #' only two \code{theta} values: 0 and \code{x$delta}.  The call \code{plot(x,
-#' plottype="Power")} (or \code{plot(x,plottype="ASN"}) for a \code{gsDesign}
+#' plottype="Power")} (or \code{plot(x,plottype="ASN"}) for a \code{gsDesignCRT}
 #' object produces power (expected sample size) curves and returns a
-#' \code{gsDesign} object with \code{theta} values determined as follows.  If
+#' \code{gsDesignCRT} object with \code{theta} values determined as follows.  If
 #' \code{theta} is non-null on input, the input value(s) are used. Otherwise,
 #' for a \code{gsProbability} object, the \code{theta} values from that object
-#' are used. For a \code{gsDesign} object where \code{theta} is input as
+#' are used. For a \code{gsDesignCRT} object where \code{theta} is input as
 #' \code{NULL} (the default), \code{theta=seq(0,2,.05)*x$delta}) is used.  For
-#' a \code{gsDesign} object, the x-axis values are rescaled to
+#' a \code{gsDesignCRT} object, the x-axis values are rescaled to
 #' \code{theta/x$delta} and the label for the x-axis \eqn{theta / delta}. For a
 #' \code{gsProbability} object, the values of \code{theta} are plotted and are
 #' labeled as \eqn{theta}. See examples below.
@@ -46,7 +46,7 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #' Conditional power is computed using the function \code{gsBoundCP()}.  The
 #' default input for this routine is \code{theta="thetahat"} which will compute
 #' the conditional power at each bound using the approximate treatment effect at
-#' that bound.  Otherwise, if the input is \code{gsDesign} object conditional
+#' that bound.  Otherwise, if the input is \code{gsDesignCRT} object conditional
 #' power is computed assuming \code{theta=x$delta}, the original effect size
 #' for which the trial was planned.
 #'
@@ -60,11 +60,11 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #' \eqn{theta} multiplied by the proportion of total planned observations at
 #' that time. See Proschan, Lan and Wittes (2006).
 #'
-#' @param x Object of class \code{gsDesign} for \code{plot.gsDesign()} or
+#' @param x Object of class \code{gsDesignCRT} for \code{plot.gsDesignCRT()} or
 #' \code{gsProbability} for
 #'
 #' \code{plot.gsProbability()}.
-#' @param plottype 1=boundary plot (default for \code{gsDesign}),
+#' @param plottype 1=boundary plot (default for \code{gsDesignCRT}),
 #'
 #' 2=power plot (default for \code{gsProbability}),
 #'
@@ -72,7 +72,7 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #'
 #' 4=conditional power at boundaries,
 #'
-#' 5=spending function plot (only available if \code{class(x)=="gsDesign"}),
+#' 5=spending function plot (only available if \code{class(x)=="gsDesignCRT"}),
 #'
 #' 6=expected sample size plot, and
 #'
@@ -95,7 +95,7 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #'
 #' \code{ses=TRUE} which applies only when \code{plottype=3} and
 #'
-#' \code{class(x)=="gsDesign"}; indicates that approximate standardized effect
+#' \code{class(x)=="gsDesignCRT"}; indicates that approximate standardized effect
 #' size at the boundary is to be plotted rather than the approximate natural parameter.
 #'
 #' \code{xval="Default"} which is only effective when \code{plottype=2} or
@@ -109,11 +109,11 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #' #  symmetric, 2-sided design with O'Brien-Fleming-like boundaries
 #' #  lower bound is non-binding (ignored in Type I error computation)
 #' #  sample size is computed based on a fixed design requiring n=100
-#' x <- gsDesign(k = 5, test.type = 2, n.fix = 100)
+#' x <- gsDesignCRT(k = 5, test.type = 2, n.fix = 100)
 #' x
 #' 
-#' # the following translate to calls to plot.gsDesign since x was
-#' # returned by gsDesign; run these commands one at a time
+#' # the following translate to calls to plot.gsDesignCRT since x was
+#' # returned by gsDesignCRT; run these commands one at a time
 #' plot(x)
 #' plot(x, plottype = 2)
 #' plot(x, plottype = 3)
@@ -132,27 +132,27 @@ globalVariables(c("y", "N", "Z", "Bound", "thetaidx", "Probability", "delta", "A
 #' # the following translates to a call to plot.gsProbability since
 #' # y has that type
 #' plot(y)
-#' @note The gsDesign technical manual is available at
+#' @note The gsDesignCRT technical manual is available at
 #'   \url{https://keaven.github.io/gsd-tech-manual/}.
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{\link{gsDesign}}, \code{\link{gsProbability}}
+#' @seealso \code{\link{gsDesignCRT}}, \code{\link{gsProbability}}
 #' @references Jennison C and Turnbull BW (2000), \emph{Group Sequential
 #' Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 #'
 #' Proschan, MA, Lan, KKG, Wittes, JT (2006), \emph{Statistical Monitoring of
 #' Clinical Trials. A Unified Approach}.  New York: Springer.
 #' @keywords design
-#' @rdname plot.gsDesign
+#' @rdname plot.gsDesignCRT
 #' @export
-# plot.gsDesign function [sinew] ----
-plot.gsDesign <- function(x, plottype = 1, base = FALSE, ...) {
+# plot.gsDesignCRT function [sinew] ----
+plot.gsDesignCRT <- function(x, plottype = 1, base = FALSE, ...) {
   #   checkScalar(plottype, "integer", c(1, 7))
   # if (base) invisible(do.call(gsPlotName(plottype), list(x, ...)))
   do.call(gsPlotName(plottype), list(x, base = base, ...))
 }
 
 # plot.gsProbability roxy [sinew] ----
-#' @rdname plot.gsDesign
+#' @rdname plot.gsDesignCRT
 #' @export
 # plot.gsProbability function [sinew] ----
 plot.gsProbability <- function(x, plottype = 2, base = FALSE, ...) {
@@ -745,7 +745,7 @@ plotsf <- function(x,
 # plotASN function [sinew] ----
 plotASN <- function(x, xlab = NULL, ylab = NULL, main = NULL, theta = NULL, xval = NULL, type = "l",
                     base = FALSE, ...) {
-  if (inherits(x, "gsDesign") && x$n.fix == 1) {
+  if (inherits(x, "gsDesignCRT") && x$n.fix == 1) {
     if (is.null(ylab)) ylab <- "E{N} relative to fixed design"
     if (is.null(main)) main <- "Expected sample size relative to fixed design"
   }
@@ -759,7 +759,7 @@ plotASN <- function(x, xlab = NULL, ylab = NULL, main = NULL, theta = NULL, xval
   }
 
   if (is.null(theta)) {
-    if (inherits(x, "gsDesign")) {
+    if (inherits(x, "gsDesignCRT")) {
       theta <- seq(0, 2, .05) * x$delta
     } else {
       theta <- x$theta
@@ -767,7 +767,7 @@ plotASN <- function(x, xlab = NULL, ylab = NULL, main = NULL, theta = NULL, xval
   }
 
   if (is.null(xval)) {
-    if (inherits(x, "gsDesign")) {
+    if (inherits(x, "gsDesignCRT")) {
       xval <- x$delta0 + (x$delta1 - x$delta0) * theta / x$delta
       if (inherits(x, "gsSurv")) {
         xval <- exp(xval)
@@ -779,7 +779,7 @@ plotASN <- function(x, xlab = NULL, ylab = NULL, main = NULL, theta = NULL, xval
     }
   }
 
-  x <- if (inherits(x, "gsDesign")) {
+  x <- if (inherits(x, "gsDesignCRT")) {
     gsProbability(d = x, theta = theta)
   } else {
     gsProbability(k = x$k, a = x$lower$bound, b = x$upper$bound, n.I = x$n.I, theta = theta)
@@ -816,11 +816,11 @@ plotASN <- function(x, xlab = NULL, ylab = NULL, main = NULL, theta = NULL, xval
 plotgsPower <- function(x, main = "Boundary crossing probabilities by effect size",
                         ylab = "Cumulative Boundary Crossing Probability",
                         xlab = NULL, lty = NULL, col = NULL, lwd = 1, cex = 1,
-                        theta = if (inherits(x, "gsDesign")) seq(0, 2, .05) * x$delta else x$theta,
+                        theta = if (inherits(x, "gsDesignCRT")) seq(0, 2, .05) * x$delta else x$theta,
                         xval = NULL, base = FALSE, outtype = 1, ...) {
 
   if (is.null(xval)) {
-    if (inherits(x, "gsDesign")) {
+    if (inherits(x, "gsDesignCRT")) {
       xval <- x$delta0 + (x$delta1 - x$delta0) * theta / x$delta
       if (inherits(x, "gsSurv")) {
         xval <- exp(xval)
@@ -832,7 +832,7 @@ plotgsPower <- function(x, main = "Boundary crossing probabilities by effect siz
     }
   }
   if (is.null(xlab)) xlab <- ""
-  x <- if (inherits(x, "gsDesign")) {
+  x <- if (inherits(x, "gsDesignCRT")) {
     gsProbability(d = x, theta = theta)
   } else {
     gsProbability(k = x$k, a = x$lower$bound, b = x$upper$bound, n.I = x$n.I, theta = theta)
@@ -919,7 +919,7 @@ plotgsPower <- function(x, main = "Boundary crossing probabilities by effect siz
   itxt <- rep("Interim", x$k - 1)
   itxt <- paste(itxt, 1:(x$k - 1), sep = " ")
 
-  if (inherits(x, "gsProbability") || (inherits(x, "gsDesign") && test.type > 1)) {
+  if (inherits(x, "gsProbability") || (inherits(x, "gsDesignCRT") && test.type > 1)) {
     itxt <- c(itxt, "Final", itxt)
     boundprob <- rep(1, length(xval))
     bound <- c(bound, rep(2, length(xval) * (x$k - 1)))
@@ -960,14 +960,14 @@ plotgsPower <- function(x, main = "Boundary crossing probabilities by effect siz
     lwd2 <- ifelse(length(lwd) > 1, lwd[2], lwd)
     lty2 <- ifelse(length(lty) > 1, lty[2], lty)
 
-    ylim <- if (inherits(x, "gsDesign") && test.type <= 2) c(0, 1) else c(0, 1.25)
+    ylim <- if (inherits(x, "gsDesignCRT") && test.type <= 2) c(0, 1) else c(0, 1.25)
 
     graphics::plot(xval, x$upper$prob[1, ],
       xlab = xlab, main = main, ylab = ylab,
       ylim = ylim, type = "l", col = col[1], lty = lty[1], lwd = lwd[1], yaxt = "n"
     )
 
-    if (inherits(x, "gsDesign") && test.type <= 2) {
+    if (inherits(x, "gsDesignCRT") && test.type <= 2) {
       graphics::axis(2, seq(0, 1, 0.1))
       graphics::axis(4, seq(0, 1, 0.1))
     }
@@ -980,7 +980,7 @@ plotgsPower <- function(x, main = "Boundary crossing probabilities by effect siz
       return(invisible(x))
     }
 
-    if ((inherits(x, "gsDesign") && test.type > 2) || !inherits(x, "gsDesign")) {
+    if ((inherits(x, "gsDesignCRT") && test.type > 2) || !inherits(x, "gsDesignCRT")) {
       graphics::lines(xval, 1 - x$lower$prob[1, ], lty = lty2, col = col2, lwd = lwd2)
       plo <- x$lower$prob[1, ]
 

@@ -31,14 +31,14 @@ gsPI(
   wgts = c(0.5, 0.5)
 )
 
-gsPosterior(x = gsDesign(), i = 1, zi = NULL, prior = normalGrid(), r = 18)
+gsPosterior(x = gsDesignCRT(), i = 1, zi = NULL, prior = normalGrid(), r = 18)
 
 gsPOS(x, theta, wgts)
 
 gsCPOS(i, x, theta, wgts)
 }
 \arguments{
-\item{x}{An object of type \code{gsDesign} or \code{gsProbability}}
+\item{x}{An object of type \code{gsDesignCRT} or \code{gsProbability}}
 
 \item{theta}{a vector with \eqn{\theta}{theta} value(s) at which conditional
 power is to be computed; for \code{gsCP()} if \code{NULL}, an estimated
@@ -79,7 +79,7 @@ provides a point estimate rather than an interval.}
 \value{
 \code{gsCP()} returns an object of the class \code{gsProbability}.
 Based on the input design and the interim test statistic, the output
-gsDesign object has bounds for test statistics computed based on solely on
+gsDesignCRT object has bounds for test statistics computed based on solely on
 observations after interim \code{i}.  Boundary crossing probabilities are
 computed for the input \eqn{\theta}{theta} values. See manual and examples.
 
@@ -137,7 +137,7 @@ Muller and Schaffer (2001) for background theory.
 
 For \code{gsPP()}, \code{gsPI()}, \code{gsPOS()} and \code{gsCPOS()}, the
 prior distribution for the standardized parameter \code{theta} () for a
-group sequential design specified through a gsDesign object is specified
+group sequential design specified through a gsDesignCRT object is specified
 through the arguments \code{theta} and \code{wgts}. This can be a discrete
 or a continuous probability density function. For a discrete function,
 generally all weights would be 1. For a continuous density, the \code{wgts}
@@ -156,13 +156,13 @@ must have \code{sum(gridwgts * density)} equal to 1; this is NOT checked,
 however.
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 library(ggplot2)
 # set up a group sequential design
-x <- gsDesign(k = 5)
+x <- gsDesignCRT(k = 5)
 x
 
 # set up a prior distribution for the treatment effect
@@ -197,7 +197,7 @@ gsPP(x, i = 2, zi = x$lower$bound[2], theta = prior$z, wgts = prior$wgts)
 gsCPOS(x = x, i = 2, theta = prior$z, wgts = prior$wgts)
 
 # 2-stage example to compare results to direct computation
-x <- gsDesign(k = 2)
+x <- gsDesignCRT(k = 2)
 z1 <- 0.5
 n1 <- x$n.I[1]
 n2 <- x$n.I[2] - x$n.I[1]
@@ -251,7 +251,7 @@ designs for clinical trials: combining the advantages of adaptive and
 classical group sequential approaches. \emph{Biometrics};57:886-891.
 }
 \seealso{
-\code{\link{normalGrid}}, \code{\link{gsDesign}},
+\code{\link{normalGrid}}, \code{\link{gsDesignCRT}},
 \code{\link{gsProbability}}, \code{\link{gsBoundCP}}, \code{\link{ssrCP}},
 \code{\link{condPower}}
 }

@@ -1,5 +1,5 @@
-# xtable.gsDesign roxy [sinew] ----
-#' @title Summary table of gsDesign using xtable
+# xtable.gsDesignCRT roxy [sinew] ----
+#' @title Summary table of gsDesignCRT using xtable
 #' 
 #' @seealso 
 #'  \code{\link[stats]{Normal}}
@@ -8,10 +8,10 @@
 #' @inheritParams xtable::xtable      
 #' @return An object of class "xtable" with attributes specifying formatting options for a table
 #' @importFrom stats pnorm
-#' @rdname gsDesign
+#' @rdname gsDesignCRT
 #' @export
-# xtable.gsDesign function [sinew] ----
-xtable.gsDesign <- function(x, caption = NULL, label = NULL, align = NULL, digits = NULL, 
+# xtable.gsDesignCRT function [sinew] ----
+xtable.gsDesignCRT <- function(x, caption = NULL, label = NULL, align = NULL, digits = NULL, 
                             display = NULL, ...) {
 
   .Deprecated("gsBoundSummary")

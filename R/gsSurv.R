@@ -156,8 +156,8 @@ eEvents1 <- function(lambda = 1, eta = 0, gamma = 1, R = 1, S = NULL,
 #'
 #' @aliases print.eEvents
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
-#' @seealso \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-#' \code{\link{gsDesign}}, \code{\link{gsHR}},
+#' @seealso \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+#' \code{\link{gsDesignCRT}}, \code{\link{gsHR}},
 #' \code{\link{nSurvival}}
 #' @references Lachin JM and Foulkes MA (1986), Evaluation of Sample Size and
 #' Power for Analyses of Survival with Allowance for Nonuniform Patient Entry,
@@ -700,7 +700,7 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' population is allowed as in Lachin and Foulkes (1986); this method has been
 #' extended to derive non-inferiority as well as superiority trials.
 #' Stratification also allows power calculation for meta-analyses.
-#' \code{gsSurv()} combines \code{nSurv()} with \code{gsDesign()} to derive a
+#' \code{gsSurv()} combines \code{nSurv()} with \code{gsDesignCRT()} to derive a
 #' group sequential design for a study with a time-to-event endpoint.
 #'
 #' \code{print()}, \code{xtable()} and \code{summary()} methods are provided to
@@ -708,7 +708,7 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' \code{gsSurv}. \code{print()} is also extended to \code{nSurv} objects. The
 #' functions \code{\link{gsBoundSummary}} (data frame for tabular output),
 #' \code{\link{xprint}} (application of \code{xtable} for tabular output) and
-#' \code{summary.gsSurv} (textual summary of \code{gsDesign} or \code{gsSurv}
+#' \code{summary.gsSurv} (textual summary of \code{gsDesignCRT} or \code{gsSurv}
 #' object) may be preferred summary functions; see example in vignettes. See
 #' also \link{gsBoundSummary} for output
 #' of tabular summaries of bounds for designs produced by \code{gsSurv()}.
@@ -753,7 +753,7 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' in such cases.
 #'
 #' The input to \code{gsSurv} is a combination of the input to \code{nSurv()}
-#' and \code{gsDesign()}.
+#' and \code{gsDesignCRT()}.
 #'
 #' \code{nEventsIA()} is provided to compute the expected number of events at a
 #' given point in time given enrollment, event and censoring rates. The routine
@@ -865,10 +865,10 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' \code{r} will not be changed by the user.
 #' @param usTime Default is NULL in which case upper bound spending time is
 #' determined by \code{timing}. Otherwise, this should be a vector of length
-#' code{k} with the spending time at each analysis (see Details in help for \code{gsDesign}).
+#' code{k} with the spending time at each analysis (see Details in help for \code{gsDesignCRT}).
 #' @param lsTime Default is NULL in which case lower bound spending time is
 #' determined by \code{timing}. Otherwise, this should be a vector of length
-#' \code{k} with the spending time at each analysis (see Details in help for \code{gsDesign}).
+#' \code{k} with the spending time at each analysis (see Details in help for \code{gsDesignCRT}).
 #' @param tIA Timing of an interim analysis; should be between 0 and
 #' \code{y$T}.
 #' @param target The targeted proportion of events at an interim analysis. This
@@ -918,7 +918,7 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' follow-up duration was specified and \code{beta=NULL} was input.}
 #'
 #' \code{gsSurv()} returns much of the above plus variables in the class
-#' \code{gsDesign}; see \code{\link{gsDesign}}
+#' \code{gsDesignCRT}; see \code{\link{gsDesignCRT}}
 #' for general documentation on what is returned in \code{gs}.  The value of
 #' \code{gs$n.I} represents the number of endpoints required at each analysis
 #' to adequately power the trial. Other items returned by \code{gsSurv()} are:
@@ -962,8 +962,8 @@ KT <- function(alpha = .025, sided = 1, beta = .1,
 #' \code{tEventsIA()} returns the same structure as \code{nEventsIA(..., simple=TRUE)} when
 #' @author Keaven Anderson \email{keaven_anderson@@merck.com}
 #' @seealso \code{\link{gsBoundSummary}}, \code{\link{xprint}},
-#' \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesign},
-#' \code{\link{gsDesign}}, \code{\link{gsHR}}, \code{\link{nSurvival}}
+#' \code{vignette("gsDesignPackageOverview")}, \link{plot.gsDesignCRT},
+#' \code{\link{gsDesignCRT}}, \code{\link{gsHR}}, \code{\link{nSurvival}}
 #' @references Kim KM and Tsiatis AA (1990), Study duration for clinical trials
 #' with survival response and early stopping rule. \emph{Biometrics}, 46, 81-92
 #'
@@ -1198,7 +1198,7 @@ gsSurv <- function(k = 3, test.type = 4, alpha = 0.025, sided = 1,
     gamma = gamma, R = R, S = S, T = T, minfup = minfup, ratio = ratio,
     alpha = alpha, beta = beta, sided = sided, tol = tol
   )
-  y <- gsDesign(
+  y <- gsDesignCRT(
     k = k, test.type = test.type, alpha = alpha / sided,
     beta = beta, astar = astar, n.fix = x$d, timing = timing,
     sfu = sfu, sfupar = sfupar, sfl = sfl, sflpar = sflpar, tol = tol,
@@ -1244,7 +1244,7 @@ gsSurv <- function(k = 3, test.type = 4, alpha = 0.025, sided = 1,
   y$etaE <- z$etaE
   y$variable <- x$variable
   y$tol <- tol
-  class(y) <- c("gsSurv", "gsDesign")
+  class(y) <- c("gsSurv", "gsDesignCRT")
 
   nameR <- nameperiod(cumsum(y$R))
   stratnames <- paste("Stratum", 1:ncol(y$lambdaC))
@@ -1280,7 +1280,7 @@ print.gsSurv <- function(x, digits = 2, ...) {
     )
     if (length(x$ratio) > 1) cat("(randomization ratios shown by strata)\n")
   }
-  print.gsDesign(x)
+  print.gsDesignCRT(x)
   if (x$test.type != 1) {
     y <- cbind(
       x$T, (x$eNC + x$eNE) %*% rep(1, ncol(x$eNE)),

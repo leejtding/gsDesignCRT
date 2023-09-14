@@ -56,7 +56,7 @@ one-parameter spending function family is not sufficient. These functions
 all allow fitting of two points on a cumulative spending function curve; in
 this case, four parameters are specified indicating an x and a y coordinate
 for each of 2 points. Normally each of these functions will be passed to
-\code{gsDesign()} in the parameter \code{sfu} for the upper bound or
+\code{gsDesignCRT()} in the parameter \code{sfu} for the upper bound or
 \code{sfl} for the lower bound to specify a spending function family for a
 design. In this case, the user does not need to know the calling sequence.
 The calling sequence is useful, however, when the user wishes to plot a
@@ -85,14 +85,14 @@ the standard distribution is flipped about 0. This is reflected in
 \code{sfExtremeValue2()} where \deqn{F(x)=1-\exp(-\exp(x)).}
 }
 \note{
-The gsDesign technical manual is available at
+The gsDesignCRT technical manual is available at
   \url{https://keaven.github.io/gsd-tech-manual/}.
 }
 \examples{
 library(ggplot2)
 # design a 4-analysis trial using a Kim-DeMets spending function
 # for both lower and upper bounds
-x <- gsDesign(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
+x <- gsDesignCRT(k = 4, sfu = sfPower, sfupar = 3, sfl = sfPower, sflpar = 1.5)
 
 # print the design
 x
@@ -162,7 +162,7 @@ Jennison C and Turnbull BW (2000), \emph{Group Sequential
 Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
 }
 \seealso{
-\code{\link{gsDesign}}
+\code{\link{gsDesignCRT}}
 }
 \author{
 Keaven Anderson \email{keaven_anderson@merck.com}

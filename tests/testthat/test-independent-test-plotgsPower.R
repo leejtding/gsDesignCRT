@@ -11,7 +11,7 @@ source('../gsDesign_independent_code.R')
 test_that(desc = 'check plot data values,
                  source: Probability Calculations done using East 6.5', 
           code = {
-  x <- gsDesign(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
+  x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
                 delta1 = 0.3, sfu = sfLDOF)
   plotobj <- plotgsPower(x)
   
@@ -23,7 +23,7 @@ test_that(desc = 'check plot data values,
 test_that(desc = 'check plot data values,
                  source: Probability Calculations done using East 6.5', 
  code = {
-   x <- gsDesign(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
+   x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
                  delta1 = 0.3, sfu = sfLDOF)
    plotobj <- plotgsPower(x)
    
@@ -35,7 +35,7 @@ test_that(desc = 'check plot data values,
 
 test_that(desc = 'Test: plotgsPower graphs are correctly rendered,test.type = 1', 
           code = {
-      x <- gsDesign(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
+      x <- gsDesignCRT(k = 3, test.type = 1, alpha = 0.025,beta = 0.1, 
                     delta1 = 0.3, sfu = sfLDOF)
       
       save_plot_obj <- save_gg_plot( plotgsPower(x = x))
@@ -49,7 +49,7 @@ test_that(desc = 'Test: plotgsPower graphs are correctly rendered,test.type = 1'
 test_that(desc = 'check plot data values,
                  source: Probability Calculations done using East 6.5', 
           code = {
-  x <- gsDesign(k = 3, test.type = 2, alpha = 0.025, 
+  x <- gsDesignCRT(k = 3, test.type = 2, alpha = 0.025, 
                 beta = 0.1, delta1 = 0.3, sfu = sfLDOF)
   plotobj <- plotgsPower(x)
   
@@ -64,7 +64,7 @@ test_that(desc = 'check plot data values,
 test_that(desc = 'check plot data values,
                  source: Probability Calculations done using East 6.5', 
           code = {
-  x <- gsDesign(k = 3, test.type = 2, alpha = 0.025, 
+  x <- gsDesignCRT(k = 3, test.type = 2, alpha = 0.025, 
                 beta = 0.1, delta1 = 0.3, sfu = sfLDOF)
   plotobj <- plotgsPower(x)
   
@@ -79,7 +79,7 @@ test_that(desc = 'check plot data values,
 test_that(desc = 'check plot data values,
                  source: Probability Calculations done using East 6.5', 
           code = {
-   x <- gsDesign(k = 3, test.type = 2, alpha = 0.025, 
+   x <- gsDesignCRT(k = 3, test.type = 2, alpha = 0.025, 
                  beta = 0.1, delta1 = 0.3, sfu = sfLDOF)
    plotobj <- plotgsPower(x)
    
@@ -94,7 +94,7 @@ test_that(desc = 'check plot data values,
 
 test_that(desc = 'Test: plotgsPower graphs are correctly rendered,test.type = 1', 
           code = {
-  x <- gsDesign(k = 3, test.type = 2, alpha = 0.025, 
+  x <- gsDesignCRT(k = 3, test.type = 2, alpha = 0.025, 
                 beta = 0.1, delta1 = 0.3, sfu = sfLDOF)
   
   save_plot_obj <- save_gg_plot(plotgsPower(x = x))

@@ -1,4 +1,4 @@
-# Test gsBoundSummary for gsDesign Object
+# Test gsBoundSummary for gsDesignCRT Object
 
                    Analysis               Value Efficacy
                   IA 1: 20%                   Z   3.2527
@@ -27,7 +27,7 @@
                             P(Cross) if delta=0   0.0250
                             P(Cross) if delta=1   0.9000
 
-# Test gsBoundSummary for gsDesign Object with Nname set
+# Test gsBoundSummary for gsDesignCRT Object with Nname set
 
              Analysis               Value Efficacy
             IA 1: 20%                   Z   3.2527
@@ -75,7 +75,7 @@
        Month: 2   P(Cross) if HR=1   0.0233   0.9767
                 P(Cross) if HR=0.5   0.9000   0.1000
 
-# Test gsBoundSummary for gsDesign Object, test.type > 1
+# Test gsBoundSummary for gsDesignCRT Object, test.type > 1
 
                    Analysis            Value Efficacy Futility
                   IA 1: 20%                Z   3.2527  -0.9016
@@ -104,7 +104,7 @@
                             P(Cross) if HR=0   0.0226   0.9774
                             P(Cross) if HR=1   0.9000   0.1000
 
-# Test gsBoundSummary for gsDesign Object, when nFixSurv is set
+# Test gsBoundSummary for gsDesignCRT Object, when nFixSurv is set
 
                    Analysis            Value Efficacy Futility
                   IA 1: 20%                Z   3.2527  -0.9016

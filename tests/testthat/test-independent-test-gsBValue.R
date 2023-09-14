@@ -9,7 +9,7 @@
 
 test_that(desc = "check B-values",
   code = {
-    x <- gsDesign(k = 2, test.type = 1, alpha = 0.025, beta = 0.1, 
+    x <- gsDesignCRT(k = 2, test.type = 1, alpha = 0.025, beta = 0.1, 
                   delta1 = 0.3, sfu = sfLDOF)
     
     bvals <- gsBValue(z = x$upper$bound, i = 1:2, x = x) #actual output
