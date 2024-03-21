@@ -16,18 +16,18 @@
            jth interim analysis, j=1...nanal
    problo- input vector with probability of rejecting (Z<aj) at
            jth interim analysis, j=1...nanal
-	xtol  - relative change between iterations required to stop for 'convergence'
+   xtol  - relative change between iterations required to stop for 'convergence'
    xr    - determinant of # of grid points for numerical integration
            r=17 will give a max of 201 points which is what they recommend
-	retval- error flag returned; 0 if convergence; 1 indicates error
-	printerr- 1 if error messages to be printed - other values suppress printing
+   retval- error flag returned; 0 if convergence; 1 indicates error
+   printerr- 1 if error messages to be printed - other values suppress printing
 */
 void gsbound(int *xnanal,double *I,double *a,double *b,double *problo,double *probhi,
-             double *xtol,int *xr,int *retval,int *printerr)
-{   int i,ii,j,m1,m2,r,nanal;
+             double *xtol,int *xr,int *retval,int *printerr) {
+    int i,ii,j,m1,m2,r,nanal;
     double plo,phi,dplo,dphi,btem=0.,atem=0.,atem2,btem2,rtdeltak,rtIk,rtIkm1,xlo,xhi;
-	 double adelta,bdelta,tol;
-/* note: should allocat zwk & wwk dynamically...*/
+	double adelta,bdelta,tol;
+    /* note: should allocat zwk & wwk dynamically...*/
     double zwk[1000],wwk[1000],hwk[1000],zwk2[1000],wwk2[1000],hwk2[1000],
            *z1,*z2,*w1,*w2,*h,*h2,*tem,rt2pi;
     void h1(double,int,double *,double,double *, double *);
@@ -35,9 +35,10 @@ void gsbound(int *xnanal,double *I,double *a,double *b,double *problo,double *pr
                                  int,double,double *, double *);
     int gridpts(int, double,double,double,double *, double *);
     r=xr[0]; nanal= xnanal[0]; tol=xtol[0]; rt2pi=2.506628274631;
-/* compute bounds at 1st interim analysis using inverse normal */
-    if (nanal < 1 || r<1 || r>MAXR) 
-	 {	   retval[0]=1;
+    /* compute bounds at 1st interim analysis using inverse normal */
+    if (nanal < 1 || r<1 || r>MAXR)
+    {
+        retval[0]=1;
  	 		if (*printerr)
 			{	Rprintf("gsbound error: illegal argument");
 				if (nanal<1) Rprintf("; nanal=%d--must be > 0",nanal);
@@ -45,7 +46,7 @@ void gsbound(int *xnanal,double *I,double *a,double *b,double *problo,double *pr
 				Rprintf("\n");
 			}
 	 		return;
-	 }
+	}
     if (problo[0] <= 0) a[0] = -EXTREMEZ;
     else a[0]=qnorm(problo[0],0.,1.,1,0);
     if (probhi[0] <= 0) b[0] = EXTREMEZ;
@@ -64,8 +65,7 @@ void gsbound(int *xnanal,double *I,double *a,double *b,double *problo,double *pr
         else atem2=qnorm(problo[i],0.,1.,1,0); 
         if (probhi[i]<=0.) btem2= EXTREMEZ;
         else btem2=qnorm(probhi[i],0.,1.,0,0);
-        adelta=1.; bdelta=1.; 
-	  j=0;
+        adelta=1.; bdelta=1.; j=0;
         while((adelta>tol || bdelta>tol) && j++ < EXTREMEZ)
 	  {   plo=0.; phi=0.; dplo=0.; dphi=0.;
             atem=atem2; btem=btem2;

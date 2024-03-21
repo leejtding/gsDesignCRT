@@ -5,7 +5,7 @@
 #include "gsDesignCRT.h"
 
 /* This file is to register all .C entry points in gsDesignCRT: 
-gsbound; gsbound1; probrej; gsdensity; stdnorpts */
+gsupper; gsbounds1; gsbounds2; probrej; gsdensity; stdnorpts */
 
 /*
 void gsbound(int *xnanal,double *I,double *a,double *b,double *problo,double *probhi,
@@ -16,18 +16,66 @@ static R_NativePrimitiveArgType gsbound_t[] = {
 };
 
 /*
-void gsbound1(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+void gsupper1(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
               double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
 
-static R_NativePrimitiveArgType gsbound1_t[] = {
+static R_NativePrimitiveArgType gsupper1_t[] = {
   INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
 };
 
 /*
-void probrej(int *xnanal,int *ntheta,double *xtheta,double *I,double *a,double *b,
-             double *xproblo,double *xprobhi,int *xr) */
+void gsupper2(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+             double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
 
-static R_NativePrimitiveArgType probrej_t[] = {
+static R_NativePrimitiveArgType gsupper2_t[] = {
+  INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
+};
+
+/*
+void gsbounds1(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+               double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
+
+static R_NativePrimitiveArgType gsbounds1_t[] = {
+  INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
+};
+
+/*
+void gsbounds2(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+               double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
+
+static R_NativePrimitiveArgType gsbounds2_t[] = {
+  INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
+};
+
+/*
+void gsboundsnb1(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+               double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
+
+static R_NativePrimitiveArgType gsboundsnb1_t[] = {
+  INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
+};
+
+/*
+void gsboundsnb2(int *xnanal,double *xtheta,double *I,double *a,double *b,double *problo,
+               double *probhi,double *xtol,int *xr,int *retval,int *printerr) */
+
+static R_NativePrimitiveArgType gsboundsnb2_t[] = {
+  INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP, INTSXP, INTSXP
+};
+
+/*
+void probrej1(int *xnanal,int *ntheta,double *xtheta,double *I,double *a,double *b,
+              double *xproblo,double *xprobhi,int *xr) */
+
+static R_NativePrimitiveArgType probrej1_t[] = {
+  INTSXP, INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP
+};
+
+/*
+void probrej2(int *xnanal,int *ntheta,double *xtheta,double *I,double *a,double *b,
+              double *xproblo,double *xprobhi,int *xr) */
+
+static R_NativePrimitiveArgType probrej2_t[] = {
   INTSXP, INTSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, REALSXP, INTSXP
 };
 
@@ -50,8 +98,14 @@ static R_NativePrimitiveArgType stdnorpts_t[] = {
 /* define array of all C entry points */
 static const R_CMethodDef CEntries[] = {
   {"gsbound", (DL_FUNC) &gsbound, 10, gsbound_t},
-  {"gsbound1", (DL_FUNC) &gsbound1, 11, gsbound1_t},
-  {"probrej", (DL_FUNC) &probrej, 9, probrej_t},
+  {"gsupper1", (DL_FUNC) &gsupper1, 11, gsupper1_t},
+  {"gsupper2", (DL_FUNC) &gsupper2, 11, gsupper2_t},
+  {"gsbounds1", (DL_FUNC) &gsbounds1, 11, gsbounds1_t},
+  {"gsbounds2", (DL_FUNC) &gsbounds2, 11, gsbounds2_t},
+  {"gsboundsnb1", (DL_FUNC) &gsboundsnb1, 11, gsboundsnb1_t},
+  {"gsboundsnb2", (DL_FUNC) &gsboundsnb2, 11, gsboundsnb2_t},
+  {"probrej1", (DL_FUNC) &probrej1, 9, probrej1_t},
+  {"probrej2", (DL_FUNC) &probrej2, 9, probrej2_t},
   {"gsdensity", (DL_FUNC) &gsdensity, 10, gsdensity_t},
   {"stdnorpts", (DL_FUNC) &stdnorpts, 4, stdnorpts_t},
   {NULL, NULL, 0, NULL}
