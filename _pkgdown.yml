@@ -1,23 +1,18 @@
 url: https://leejtding.github.io/gsDesignCRT/
-
 template:
   bootstrap: 5
-
 reference:
 - title: Group Sequential CRT Sample Size Computation
-  desc: >
-    For an overview of how to use the gsDesignCRT package, see
-    `vignette("example")`.
-  contents:
-  - gsDesignCRT
+  desc: |
+    For an overview of how to use the gsDesignCRT package, see `vignette("example")`.
+  contents: gsDesignCRT
 - title: Group Sequential CRT Boundary Computation
   contents:
   - gsUpperCRT
   - gsLowerCRT
   - gsBoundsCRT
 - title: Group Sequential CRT Stopping Probability
-  contents:
-  - gsProbabilityCRT
+  contents: gsProbabilityCRT
 - title: Simulate Group Sequential CRT
   contents:
   - gsSimContCRT
@@ -25,9 +20,8 @@ reference:
   - genContCRT
   - genBinCRT
 - title: Spending Functions
-  desc: >
-    For an overview of spending functions, see
-    `vignette("SpendingFunctionOverview")`.
+  desc: |
+    For an overview of spending functions, see `vignette("SpendingFunctionOverview")`.
   contents:
   - spendingFunction
   - summary.spendfn
@@ -49,10 +43,9 @@ reference:
   - sfTrimmed
   - sfTruncated
   - sfGapped
-
 articles:
-  - title: "Example"
-    desc: >
-      The following vignettes provide an introduction to designing group sequential cluster randomized trials.
-    contents:
-      - example
+- title: Example
+  desc: |
+    The following vignettes provide an introduction to designing group sequential cluster randomized trials.
+  contents: example
+
