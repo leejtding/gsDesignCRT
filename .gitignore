@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
 *.o
 *.so
 *.dll
@@ -11,7 +10,6 @@ TODO
 *.pdf
 *.html
 *.rnw
-docs/
 vignettes/*.html
 vignettes/*.R
 docs
