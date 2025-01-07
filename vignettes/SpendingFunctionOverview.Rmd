@@ -1,6 +1,10 @@
 ---
 title: "Spending function overview"
 output: rmarkdown::html_vignette
+bibliography: gsDesignCRT.bib
+nocite: |
+  @JTBook
+  @gsDesign
 vignette: >
   %\VignetteIndexEntry{Spending function overview}
   %\VignetteEngine{knitr::rmarkdown}
