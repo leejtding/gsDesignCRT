@@ -42,6 +42,13 @@ reference:
   - sfTrimmed
   - sfTruncated
   - sfGapped
+- title: Utility Functions
+  contents:
+  - checkLengths
+  - checkRange
+  - checkScalar
+  - checkVector
+  - pipe
 articles:
 - title: Example
   desc: |

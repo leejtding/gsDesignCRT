@@ -6,9 +6,7 @@
 \alias{_PACKAGE}
 \title{gsDesignCRT: Group Sequential Design for Cluster Randomized Trials}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
-Derives group sequential cluster randomized trial designs with continuous or binary outcomes. Based on the methods described in Jennison, Christopher and Turnbull, Bruce W., 2000, "Group Sequential Methods with Applications to Clinical Trials" and implemented in the package gsDesign. ISBN: 0-8493-0316-8.
+Derives group sequential cluster randomized trial designs with continuous or binary outcomes. Based on the methods described in Jennison, Christopher and Turnbull, Bruce W., 2000, "Group Sequential Methods with Applications to Clinical Trials" and implemented in the package gsDesign (Anderson, 2024).
 }
 \seealso{
 Useful links:
