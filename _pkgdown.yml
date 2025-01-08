@@ -24,7 +24,6 @@ reference:
     For an overview of spending functions, see `vignette("SpendingFunctionOverview")`.
   contents:
   - spendingFunction
-  - summary.spendfn
   - sfLDPocock
   - sfLDOF
   - sfHSD
@@ -48,4 +47,8 @@ articles:
   desc: |
     The following vignettes provide an introduction to designing group sequential cluster randomized trials.
   contents: example
+- title: Spending Function Overview
+  desc: |
+    The following vignettes provide an overview of spending functions.
+  contents: SpendingFunctionOverview
 
