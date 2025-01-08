@@ -1,1 +1,1 @@
-# gsDesignCRT 0.0.1 (November, 2023)
+# gsDesignCRT 1.0.0 (January, 2024)
