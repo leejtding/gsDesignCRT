@@ -48,7 +48,6 @@ reference:
   - checkRange
   - checkScalar
   - checkVector
-  - pipe
 articles:
 - title: Example
   desc: |
