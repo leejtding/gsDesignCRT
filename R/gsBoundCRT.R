@@ -329,8 +329,9 @@ gsBoundsCRT <- function(theta = 0, I, falseneg, falsepos, sides = 1,
 #'  corresponding probabilities of crossing the lower boundaries given
 #'  \code{theta} (\code{prob}).} \item{upper}{List containing the upper efficacy
 #'  boundaries (\code{bound}) and the corresponding probabilities of crossing
-#'  the upper boundaries given theta (\code{prob}).} \item{eI}{Expected
-#'  information given \code{theta}} \item{r}{As input.}
+#'  the upper boundaries given theta (\code{prob}).} \item{power}{Estimated
+#'  power for trial.} \item{futile}{Estimated probability of futility for trial}
+#'  \item{r}{As input.}
 #'
 #' @author Lee Ding \email{lee_ding@g.harvard.edu}
 #'
@@ -377,21 +378,13 @@ gsProbabilityCRT <- function(theta = 0, I = 1, a = 0, b = 1,
   }
   plo <- matrix(xx[[7]], k, ntheta)
   phi <- matrix(xx[[8]], k, ntheta)
-  powr <- as.vector(rep(1, k) %*% phi)
+  power <- as.vector(rep(1, k) %*% phi)
   futile <- rep(1, k) %*% plo
-
-  # Compute expected information under null and alternative hypotheses
-  if (k == 1) {
-    eI <- (as.vector(I * (plo + phi)) +
-             as.vector(I[k] * (t(rep(1, ntheta)) - powr - futile)))
-  } else {
-    eI <- (as.vector(I %*% (plo + phi)) +
-             as.vector(I[k] * (t(rep(1, ntheta)) - powr - futile)))
-  }
 
   x <- list(k = xx[[1]], theta = xx[[3]], I = xx[[4]],
             lower = list(bound = xx[[5]], prob = plo),
-            upper = list(bound = xx[[6]], prob = phi), eI = eI, r = r)
+            upper = list(bound = xx[[6]], prob = phi),
+            power = power, futile = futile, r = r)
 
   x
 }
@@ -451,17 +444,10 @@ gsprobCRT <- function(theta, I, a, b, sides = 1, r = 18) {
   }
   plo <- matrix(xx[[7]], nanal, ntheta)
   phi <- matrix(xx[[8]], nanal, ntheta)
-  powr <- rep(1, nanal) %*% phi
+  power <- rep(1, nanal) %*% phi
   futile <- rep(1, nanal) %*% plo
-  if (nanal == 1) {
-    eI <- as.vector(I * (plo + phi)) + as.vector(I[nanal] * (t(rep(1, ntheta))
-                                                             - powr - futile))
-  } else {
-    eI <- as.vector(I %*% (plo + phi)) + as.vector(I[nanal] * (t(rep(1, ntheta))
-                                                               - powr - futile))
-  }
   list(
     k = xx[[1]], theta = xx[[3]], I = xx[[4]], a = xx[[5]], b = xx[[6]],
-    problo = plo, probhi = phi, powr = powr, eI = eI, r = r
+    problo = plo, probhi = phi, power = power, futile = futile, r = r
   )
 }

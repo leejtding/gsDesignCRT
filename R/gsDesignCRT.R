@@ -189,31 +189,8 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
     x_expect <- gsExpectedInfoCRT(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar)
     x$i <- x_expect$i
     x$e_i <- x_expect$e_i
-
-    # Convert expected information to sample sizes
-    if (recruit_type == 1 || recruit_type == 3) {
-      if (outcome_type == 1) {
-        x$m <- mContDiff(x$i, x$max_n, x$sigma_vec, x$rho)
-        x$e_m <- mContDiff(x$e_i, x$max_n, x$sigma_vec, x$rho)
-        x$e_n <- x$max_n
-      } else if (outcome_type == 2) {
-        x$m <- mPropDiff(x$i, x$max_n, x$p_vec, x$rho)
-        x$e_m <- mPropDiff(x$e_i, x$max_n, x$p_vec, x$rho)
-        x$e_n <- x$max_n
-      }
-    } else if (recruit_type == 2) {
-      if (outcome_type == 1) {
-        x$n <- nContDiff(x$i, x$max_m, x$sigma_vec, x$rho)
-        x$e_n <- nContDiff(x$e_i, x$max_m, x$sigma_vec, x$rho)
-        x$e_m <- x$max_m
-      } else if (outcome_type == 2) {
-        x$n <- mPropDiff(x$i, x$max_m, x$p_vec, x$rho)
-        x$e_n <- nPropDiff(x$e_i, x$max_m, x$p_vec, x$rho)
-        x$e_m <- x$max_m
-      }
-    } else {
-      stop("invalid recruitment strategy")
-    }
+    x$e_m <- x_expect$e_m
+    x$e_n <- x_expect$e_n
 
     # Compute total number per arm
     x$total <- x$m * x$n
@@ -242,7 +219,7 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   } else if (x$outcome_type == 2) {
     checkScalar(x$delta, "numeric", c(0, 1), c(FALSE, TRUE))
     checkVector(x$p_vec, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
-    checkScalar(abs(x$p_vec[2] - x$p_vec[1]), "numeric", x$delta)
+    checkScalar(abs(x$p_vec[2] - x$p_vec[1]), "numeric", rep(x$delta, 2))
   }
   checkScalar(x$alpha, "numeric", 0:1, c(FALSE, FALSE))
   checkScalar(x$beta, "numeric", c(0, 1 - x$alpha), c(FALSE, FALSE))
@@ -303,17 +280,17 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
     }
     falsepos <- upper$spend
     falsepos <- falsepos - c(0, falsepos[1:x$k - 1])
-    falseneg <- c(rep(1e-30, x$k - 1), x$beta)
+    falseneg <- c(rep(1e-15, x$k - 1), x$beta)
     
     binding <- TRUE
   } else if (x$test_type == 2 || x$test_type == 3) {
     # Partition error probabilities based on error spending
     if (x$test_sides == 1) {
       i0 <- ((stats::qnorm(x$alpha) + stats::qnorm(x$beta)) / x$delta)^2
-      falsepos <- c(rep(1e-30, x$k - 1), x$alpha)
+      falsepos <- c(rep(1e-15, x$k - 1), x$alpha)
     } else {
       i0 <- ((stats::qnorm(x$alpha / 2) + stats::qnorm(x$beta)) / x$delta)^2
-      falsepos <- c(rep(1e-30, x$k - 1), x$alpha / 2)
+      falsepos <- c(rep(1e-15, x$k - 1), x$alpha / 2)
     }
 
     lower <- beta_sf(x$beta, x$timing, beta_sfpar)
@@ -377,22 +354,24 @@ gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
 
   # Specify timing depending on provided information
   if (x$recruit_type == 1) {
-    x$m <- ((1:x$k) / x$k) * x$max_m
+    x$m <- ((1:x$k) / x$k) * ceiling(x$max_m)
+    x$n <- rep(ceiling(x$max_n), x$k)
     if (x$outcome_type == 1) {
       x$i <- iContDiff(x$m, x$max_n, x$sigma_vec, x$rho)
     } else if (x$outcome_type == 2) {
       x$i <- iPropDiff(x$m, x$max_n, x$p_vec, x$rho)
     }
   } else if (x$recruit_type == 2) {
-    x$n <- ((1:x$k) / x$k) * x$max_n
+    x$m <- rep(ceiling(x$max_m), x$k)
+    x$n <- ((1:x$k) / x$k) * ceiling(x$max_n)
     if (x$outcome_type == 1) {
       x$i <- iContDiff(x$max_m, x$n, x$sigma_vec, x$rho)
     } else if (x$outcome_type == 2) {
       x$i <- iPropDiff(x$max_m, x$n, x$p_vec, x$rho)
     }
   } else if (x$recruit_type == 3) {
-    x$m <- ((1:x$k) / x$k) * x$max_m
-    x$n <- ((1:x$k) / x$k) * x$max_n
+    x$m <- ((1:x$k) / x$k) * ceiling(x$max_m)
+    x$n <- ((1:x$k) / x$k) * ceiling(x$max_n)
     if (x$outcome_type == 1) {
       x$i <- iContDiff(x$m, x$n, x$sigma_vec, x$rho)
     } else if (x$outcome_type == 2) {
@@ -418,11 +397,7 @@ gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
     bounds <- gsUpperCRT(0, x$i, x$lower_bound, falsepos, x$test_sides,
                          x$tol, x$r)
     x$upper_bound <- bounds$b
-
-    # Compute crossing probabilities and expected information
-    theta <- as.double(c(0, x$delta)) # For H0 and H1
-    y <- gsprobCRT(theta, x$i, x$lower_bound, x$upper_bound, x$test_sides, x$r)
-    x$e_i <- y$eI
+    x$lower_bound[x$k] <- x$upper_bound[x$k]
   } else if (x$test_type == 2 || x$test_type == 3) {
     # Partition error probabilities based on error spending
     lower <- beta_sf(x$beta, x$timing, beta_sfpar)
@@ -439,11 +414,6 @@ gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
     bounds <- gsLowerCRT(x$delta, x$i, falseneg, x$upper_bound, x$test_sides,
                          binding, x$tol, x$r)
     x$lower_bound <- bounds$a
-
-    # Compute crossing probabilities and expected information
-    theta <- as.double(c(0, x$delta)) # For H0 and H1
-    y <- gsprobCRT(theta, x$i, x$lower_bound, x$upper_bound, x$test_sides, x$r)
-    x$e_i <- y$eI
   } else if (x$test_type == 4 || x$test_type == 5) {
     # Partition error probabilities based on error spending
     if (x$test_sides == 1) {
@@ -468,13 +438,21 @@ gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
                           binding, x$tol, x$r)
     x$lower_bound <- bounds$a
     x$upper_bound <- bounds$b
-
-    # Compute crossing probabilities and expected information
-    theta <- as.double(c(0, x$delta)) # For H0 and H1
-    y <- gsprobCRT(theta, x$i, x$lower_bound, x$upper_bound, x$test_sides, x$r)
-    x$e_i <- y$eI
   } else {
     stop("invalid test type")
+  }
+
+  # Compute crossing probabilities
+  theta <- as.double(c(0, x$delta)) # For H0 and H1
+  y <- gsprobCRT(theta, x$i, x$lower_bound, x$upper_bound, x$test_sides, x$r)
+
+  # Compute expected sample sizes from crossing probabilities
+  if (x$k == 1) {
+    x$e_m <- as.vector(x$m * (y$problo + y$probhi)) + as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_n <- as.vector(x$n * (y$problo + y$probhi)) + as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+  } else {
+    x$e_m <- as.vector(x$m %*% (y$problo + y$probhi)) + as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_n <- as.vector(x$n %*% (y$problo + y$probhi)) + as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
   }
 
   return(x)

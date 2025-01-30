@@ -39,8 +39,8 @@ void probrej1(int *xnanal,int *ntheta,double *xtheta,double *I,double *a,double 
 /* compute probability of rejecting at 1st interim analysis */
        if (nanal < 1) return;
        mu=theta*sqrt(I[0]);
-       problo[0]=pnorm(a[0]-mu,0.,1.,1,0);
-       probhi[0]=pnorm(b[0]-mu,0.,1.,0,0);
+       problo[0]=pnorm(a[0],mu,1.,1,0);
+       probhi[0]=pnorm(b[0],mu,1.,0,0);
 /* compute h1 */
        z1=zwk; w1=wwk; h=hwk;
        m1=gridpts(r,mu,a[0],b[0],z1,w1);
@@ -82,8 +82,8 @@ void probrej2(int *xnanal,int *ntheta,double *xtheta,double *I,double *a,double 
 /* compute probability of rejecting at 1st interim analysis */
        if (nanal < 1) return;
        mu=theta*sqrt(I[0]);
-       problo[0]=pnorm(a[0]-mu,0.,1.,1,0)-pnorm(-a[0]-mu,0.,1.,1,0);
-       probhi[0]=pnorm(b[0]-mu,0.,1.,0,0)+pnorm(-b[0]-mu,0.,1.,1,0);
+       problo[0]=pnorm(a[0],mu,1.,1,0)-pnorm(-a[0],mu,1.,1,0);
+       probhi[0]=pnorm(b[0],mu,1.,0,0)+pnorm(-b[0],mu,1.,1,0);
 /* compute h1 */
        z1=zwk; w1=wwk; h=hwk;
        m1=gridpts2(r,mu,a[0],b[0],z1,w1);
