@@ -32,8 +32,9 @@ Object containing the following elements: \item{k}{Number of interim
  corresponding probabilities of crossing the lower boundaries given
  \code{theta} (\code{prob}).} \item{upper}{List containing the upper efficacy
  boundaries (\code{bound}) and the corresponding probabilities of crossing
- the upper boundaries given theta (\code{prob}).} \item{eI}{Expected
- information given \code{theta}} \item{r}{As input.}
+ the upper boundaries given theta (\code{prob}).} \item{power}{Estimated
+ power for trial.} \item{futile}{Estimated probability of futility for trial}
+ \item{r}{As input.}
 }
 \description{
 Compute stopping boundary crossing probabilities.

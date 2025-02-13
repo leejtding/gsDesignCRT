@@ -21,10 +21,10 @@ gsSimBinCRT(
   beta = 0.1,
   lower_bound = NULL,
   upper_bound = NULL,
-  m,
-  n,
-  ifrac_size_m = NULL,
-  ifrac_size_n = NULL,
+  m_max = 1,
+  n_max = 1,
+  schedule_m = NULL,
+  schedule_n = NULL,
   alpha_sf,
   alpha_sfpar = -4,
   beta_sf,
@@ -78,18 +78,18 @@ interim analyses. Must be specified if precompute is TRUE. NULL otherwise.}
 \item{upper_bound}{Pre-computed upper efficacy boundaries at the specified
 interim analyses. Must be specified if precompute is TRUE. NULL otherwise.}
 
-\item{m}{Number of clusters.}
+\item{m_max}{Number of clusters.}
 
-\item{n}{Mean size of each cluster.}
+\item{n_max}{Mean size of each cluster.}
 
-\item{ifrac_size_m}{Number of clusters at each interim look. Interim analyses
-will be conducted according to the information levels in \code{ifrac_size_m}
-and \code{ifrac_size_n} if provided. Otherwise, interim analyses will be
+\item{schedule_m}{Number of clusters at each interim look. Interim analyses
+will be conducted according to the information levels in \code{schedule_m}
+and \code{schedule_n} if provided. Otherwise, interim analyses will be
 conducted at equal-sized sample increments according to \code{recruit_type}.}
 
-\item{ifrac_size_n}{Average cluster size at each interim look. Interim
+\item{schedule_n}{Average cluster size at each interim look. Interim
 analyses will be conducted according to the information levels in
-\code{ifrac_size_m} and \code{ifrac_size_n} if provided. Otherwise, interim
+\code{schedule_m} and \code{schedule_n} if provided. Otherwise, interim
 analyses will be conducted at equal-sized sample increments according to
 \code{recruit_type}.}
 

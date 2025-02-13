@@ -19,6 +19,12 @@
 #' @param size_type \code{1=}clusters per arm \cr \code{2=}cluster size
 #' @param recruit_type \code{1=}recruit clusters with fixed sizes
 #' \cr \code{2=}recruit individuals into fixed number of clusters
+#' \cr \code{3=}recruit both clusters and individuals
+#' @param timing_type \code{1=} maximum and expected sample sizes based on
+#'  specified information levels in \code{info_timing} \cr \code{2=} maximum
+#'  sample size based on specified information levels in \code{info_timing} and
+#'  expected sample sizes based on specified sample size levels in
+#'  \code{size_timing}
 #' @param delta Effect size for theta under alternative hypothesis. Must be > 0.
 #' @param sigma_vec Standard deviations for control and treatment groups
 #'  (continuous case).
@@ -30,10 +36,16 @@
 #' @param m_fix Number of clusters; used to find maximum size of each cluster.
 #' @param n_fix Mean size of each cluster; used to find maximum number of
 #'  clusters per arm.
-#' @param timing Sets relative timing of interim analyses. Default of 1
-#'  produces equally spaced analyses.  Otherwise, this is a vector of length
-#'  \code{k} or \code{k-1}.  The values should satisfy \code{0 < timing[1] <
-#'  timing[2] < ... < timing[k-1] < timing[k]=1}.
+#' @param info_timing Sets timing of interim analyses based on information
+#'  levels. Default of 1 produces analyses at equal-spaced increments.
+#'  Otherwise, this is a vector of length \code{k} or \code{k-1}. The values
+#'  should satisfy \code{0 < info_timing[1] < info_timing[2] < ... <
+#'  info_timing[k-1] < info_timing[k]=1}.
+#' @param size_timing Sets timing of interim analyses based on sample size
+#'  levels if \code{timing_type = 2}. Default of 1 produces analyses at
+#'  equal-spaced increments. Otherwise, this is a vector of length \code{k} or
+#'  \code{k-1}. The values should satisfy \code{0 < size_timing[1] <
+#'  size_timing[2] < ... < size_timing[k-1] < size_timing[k]=1}.
 #' @param alpha_sf A spending function or a character string indicating an
 #'  upper boundary type (that is, \dQuote{WT} for Wang-Tsiatis bounds,
 #'  \dQuote{OF} for O'Brien-Fleming bounds, and \dQuote{Pocock} for Pocock
@@ -69,33 +81,34 @@
 #'  \code{r} will not be changed by the user.
 #'
 #' @return Object containing the following elements: \item{k}{As
-#'  input.} \item{test_type}{As input.} \item{outcome_type}{As input.} \item{
-#'  size_type}{As input.} \item{size_type}{As input.} \item{recruit_type}{As
-#'  input.} \item{delta}{As input.} \item{sigma_vec}{As input.} \item{p_vec}{As
-#'  input.} \item{rho}{As input.} \item{alpha}{As input.} \item{beta}{As input.}
-#'  \item{timing}{As input.} \item{i}{Fisher information at each planned interim
-#'  analysis.} \item{fix_i}{Information for trial with no planned interim
-#'  analyses.} \item{max_i}{Maximum information.} \item{i_frac}{Fraction of
-#'  maximum information at each planned interim analysis} \item{e_i}{A vector of
-#'  length 2 with expected information under the null and alternative
-#'  hypotheses.} \item{m}{Number of clusters per arm at each planned interim
-#'  analysis.} \item{max_m}{Maximum number of clusters per arm.} \item{e_m}{A
-#'  vector of length 2 with expected number of clusters per arm under the null
-#'  and alternative hypotheses.} \item{n}{Average cluster size at each planned
-#'  interim analysis.} \item{max_n}{Maximum cluster size.} \item{e_m}{A vector
-#'  of length 2 with expected cluster sizes under the null and alternative
-#'  hypotheses.} \item{max_total}{Maximum number of individuals per arm.}
-#'  \item{e_total}{A vector of length 2 with expected number of individuals per
-#'  arm under the null and alternative hypotheses.} \item{sufficient}{Value
-#'  denoting whether calculated sample size will be sufficient to achieve
+#'  input.} \item{outcome_type}{As input.} \item{test_type}{As input.}
+#'  \item{test_sides}{As input.} \item{size_type}{As input.}
+#'  \item{recruit_type}{As input.} \item{timing_type}{As input.} \item{delta}{As
+#'  input.} \item{sigma_vec}{As input.} \item{p_vec}{As input.} \item{rho}{As
+#'  input.} \item{alpha}{As input.} \item{beta}{As input.} \item{info_timing}{As
+#'  input.} \item{size_timing}{As input.} \item{i}{Fisher information at each
+#'  planned interim analysis based on \code{timing_type}.} \item{max_i}{Maximum
+#'  information corresponding to design specifications.} \item{m}{Number of
+#'  clusters per arm at each planned interim analysis.} \item{max_m}{Maximum
+#'  number of clusters per arm.} \item{e_m}{A vector of length 2 with expected
+#'  number of clusters per arm under the null and alternative hypotheses. For
+#'  simplicity, the expected sizes with non-binding futility boundaries are
+#'  calculated assuming the boundaries are binding futility.} \item{n}{Average
+#'  cluster size at each planned interim analysis.} \item{max_n}{Maximum cluster
+#'  size.} \item{e_m}{A vector of length 2 with expected cluster sizes under the
+#'  null and alternative hypotheses. For simplicity, the expected sizes with
+#'  non-binding futility boundaries are calculated assuming the futility
+#'  boundaries are binding.} \item{max_total}{Maximum number of individuals in
+#'  the trial.} \item{e_total}{A vector of length 2 with expected number of
+#'  individuals in the trial under the null and alternative hypotheses. For
+#'  simplicity, the expected sizes with non-binding futility boundaries are
+#'  calculated assuming the futility boundaries are binding.} \item{sufficient}{
+#'  Value denoting whether calculated sample size will be sufficient to achieve
 #'  specified Type I error rate and power given the trial specifications.}
-#'  \item{m_frac}{Number of clusters per arm at each interim analysis under
-#'  equal information increments.} \item{n_frac}{Average cluster size at each
-#'  interim analysis under equal information increments.}
-#'  \item{lower_bound}{Calculated lower futility boundaries under equal
-#'  information increments.} \item{upper_bound}{Calculated upper efficacy
-#'  boundaries under equal information increments.} \item{tol}{As input.}
-#'  \item{r}{As input.}
+#'  \item{lower_bound}{Calculated lower futility boundaries under analysis
+#'  schedule specified by \code{timing_type}} \item{upper_bound}{Calculated
+#'  upper efficacy boundaries under analysis schedule specified by
+#'  \code{timing_types}.} \item{tol}{As input.} \item{r}{As input.}
 #'
 #' @author Lee Ding \email{lee_ding@g.harvard.edu}
 #'
@@ -110,32 +123,28 @@
 #' @name gsDesignCRT
 # gsDesignCRT function [sinew] ----
 gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
-                        size_type = 1, recruit_type = 1,
+                        size_type = 1, recruit_type = 1, timing_type = 2,
                         delta = 1, sigma_vec = c(1, 1), p_vec = c(0.5, 0.5),
                         rho = 0, alpha = 0.05, beta = 0.1,
-                        m_fix = 1, n_fix = 1, timing = 1,
+                        m_fix = 1, n_fix = 1, info_timing = 1, size_timing = 1,
                         alpha_sf = sfLDOF, alpha_sfpar = -4,
                         beta_sf = sfLDOF, beta_sfpar = -4,
                         tol = 0.000001, r = 18) {
   x <- list(k = k, outcome_type = outcome_type, test_type = test_type,
             test_sides = test_sides, size_type = size_type,
-            recruit_type = recruit_type, delta = delta,
-            sigma_vec = sigma_vec, p_vec = p_vec, rho = rho,
-            alpha = alpha, beta = beta, timing = timing,
-            i = 0, fix_i = 0, max_i = 0, i_frac = 0, e_i = 0,
-            m = m_fix, max_m = m_fix, e_m = c(m_fix, m_fix),
+            recruit_type = recruit_type, timing_type = timing_type,
+            delta = delta, sigma_vec = sigma_vec, p_vec = p_vec, rho = rho,
+            alpha = alpha, beta = beta,
+            info_timing = info_timing, size_timing = size_timing,
+            i = 1, max_i = 1, m = m_fix, max_m = m_fix, e_m = c(m_fix, m_fix),
             n = n_fix, max_n = n_fix, e_n = c(n_fix, n_fix),
             max_total = m_fix * n_fix, e_total = m_fix * n_fix,
             sufficient = 1, m_frac = 0, n_frac = 0,
             lower_bound = rep(0, k), upper_bound = rep(0, k), tol = tol, r = r)
-
   # Compute maximum information
   x_max <- gsMaxInfoCRT(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar)
-  x$fix_i <- x_max$fix_i
+  x$i <- x_max$i
   x$max_i <- x_max$i[x$k]
-  x$i_frac <- x_max$i / x$max_i
-  x$lower_bound <- x_max$lower_bound
-  x$upper_bound <- x_max$upper_bound
 
   # Convert maximum information to sample sizes
   if (size_type == 1) {
@@ -148,6 +157,7 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
     }
   } else if (size_type == 2) {
     if (outcome_type == 1 && !is.null(x$sigma_vec)) {
+      # Feasibility criteria for n_max
       x$sufficient <- checkSuff(outcome_type = x$outcome_type,
                                 m = x$max_m,
                                 max_i = x$max_i,
@@ -161,6 +171,7 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
       }
       x$max_n <- nContDiff(x$max_i, x$max_m, x$sigma_vec, x$rho)
     } else if (outcome_type == 2 && !is.null(x$p_vec)) {
+      # Feasibility criteria for n_max
       x$sufficient <- checkSuff(outcome_type = x$outcome_type,
                                 m = x$max_m,
                                 max_i = x$max_i,
@@ -179,23 +190,26 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
     stop("invalid sample size variable")
   }
 
-  # Compute sample increments under equal information fraction increments
-  x$m_frac <- sizeInfoFrac(1, x$i_frac, x$max_m, x$max_n, x$rho)
-  x$n_frac <- sizeInfoFrac(2, x$i_frac, x$max_m, x$max_n, x$rho)
-
-  # Compute information, expected information, and boundaries under equal
-  # sample size increments if sufficient
+  # Compute information levels, expected sample size, and boundaries according
+  # to specified analysis schedule if feasibility criteria is met
   if (x$sufficient == 1) {
-    x_expect <- gsExpectedInfoCRT(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar)
+    x_expect <- gsExpectedSizeCRT(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar)
+
+    # Information at scheduled analyses
     x$i <- x_expect$i
-    x$e_i <- x_expect$e_i
+
+    # Expected sample sizes at scheduled analyses
     x$e_m <- x_expect$e_m
     x$e_n <- x_expect$e_n
 
-    # Compute total number per arm
-    x$total <- x$m * x$n
-    x$max_total <- x$max_m * x$max_n
-    x$e_total <- x$e_m * x$e_n
+    # Stopping boundaries at scheduled analyses
+    x$lower_bound <- x_expect$lower_bound
+    x$upper_bound <- x_expect$upper_bound
+
+    # Compute total number of participants in trial
+    x$total <- 2 * x$m * x$n
+    x$max_total <- 2 * x$max_m * x$max_n
+    x$e_total <- 2 * x$e_m * x$e_n
   }
   return(x)
 }
@@ -219,7 +233,6 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   } else if (x$outcome_type == 2) {
     checkScalar(x$delta, "numeric", c(0, 1), c(FALSE, TRUE))
     checkVector(x$p_vec, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
-    checkScalar(abs(x$p_vec[2] - x$p_vec[1]), "numeric", rep(x$delta, 2))
   }
   checkScalar(x$alpha, "numeric", 0:1, c(FALSE, FALSE))
   checkScalar(x$beta, "numeric", c(0, 1 - x$alpha), c(FALSE, FALSE))
@@ -233,19 +246,18 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   checkScalar(x$r, "integer", c(1, 80))
 
   # Specify timing depending on provided information
-  if (length(x$timing) < 1 ||
-        (length(x$timing) == 1 &&
-           (x$k > 2 || (x$k == 2 && (x$timing[1] <= 0 || x$timing[1] >= 1))))) {
-    x$timing <- seq(x$k) / x$k
-  } else if (x$timing == 1 && x$k == 1) {
-    x$timing <- 1
-  } else if (length(x$timing) == x$k - 1 || length(x$timing) == x$k) {
-    if (length(x$timing) == x$k - 1) {
-      x$timing <- c(x$timing, 1)
-    } else if (x$timing[x$k] != 1) {
+  if (length(x$info_timing) < 1 ||
+        (length(x$info_timing) == 1 &&
+           (x$k > 2 || (x$k == 2 &&
+                          (x$info_timing[1] <= 0 || x$info_timing[1] >= 1))))) {
+    x$info_timing <- seq(x$k) / x$k
+  } else if (length(x$info_timing) == x$k - 1 || length(x$info_timing) == x$k) {
+    if (length(x$info_timing) == x$k - 1) {
+      x$info_timing <- c(x$info_timing, 1)
+    } else if (x$info_timing[x$k] != 1) {
       stop("if analysis timing for final analysis is input, it must be 1")
     }
-    if (min(x$timing - c(0, x$timing[1:(x$k - 1)])) <= 0) {
+    if (min(x$info_timing - c(0, x$info_timing[1:(x$k - 1)])) <= 0) {
       stop("input timing of interim analyses must be increasing strictly
            between 0 and 1")
     }
@@ -272,16 +284,16 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   if (x$test_type == 1) {
     # Partition error probabilities based on error spending
     if (x$test_sides == 1) {
-      upper <- alpha_sf(x$alpha, x$timing, alpha_sfpar)
+      upper <- alpha_sf(x$alpha, x$info_timing, alpha_sfpar)
       i0 <- ((stats::qnorm(x$alpha) + stats::qnorm(x$beta)) / x$delta)^2
     } else {
-      upper <- alpha_sf(x$alpha / 2, x$timing, alpha_sfpar)
+      upper <- alpha_sf(x$alpha / 2, x$info_timing, alpha_sfpar)
       i0 <- ((stats::qnorm(x$alpha / 2) + stats::qnorm(x$beta)) / x$delta)^2
     }
     falsepos <- upper$spend
     falsepos <- falsepos - c(0, falsepos[1:x$k - 1])
     falseneg <- c(rep(1e-15, x$k - 1), x$beta)
-    
+
     binding <- TRUE
   } else if (x$test_type == 2 || x$test_type == 3) {
     # Partition error probabilities based on error spending
@@ -293,7 +305,7 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
       falsepos <- c(rep(1e-15, x$k - 1), x$alpha / 2)
     }
 
-    lower <- beta_sf(x$beta, x$timing, beta_sfpar)
+    lower <- beta_sf(x$beta, x$info_timing, beta_sfpar)
     falseneg <- lower$spend
     falseneg <- falseneg - c(0, falseneg[1:x$k - 1])
 
@@ -305,16 +317,16 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   } else if (x$test_type == 4 || x$test_type == 5) {
     # Partition error probabilities based on error spending
     if (x$test_sides == 1) {
-      upper <- alpha_sf(x$alpha, x$timing, alpha_sfpar)
+      upper <- alpha_sf(x$alpha, x$info_timing, alpha_sfpar)
       i0 <- ((stats::qnorm(x$alpha) + stats::qnorm(x$beta)) / x$delta)^2
     } else {
-      upper <- alpha_sf(x$alpha / 2, x$timing, alpha_sfpar)
+      upper <- alpha_sf(x$alpha / 2, x$info_timing, alpha_sfpar)
       i0 <- ((stats::qnorm(x$alpha / 2) + stats::qnorm(x$beta)) / x$delta)^2
     }
     falsepos <- upper$spend
     falsepos <- falsepos - c(0, falsepos[1:x$k - 1])
 
-    lower <- beta_sf(x$beta, x$timing, beta_sfpar)
+    lower <- beta_sf(x$beta, x$info_timing, beta_sfpar)
     falseneg <- lower$spend
     falseneg <- falseneg - c(0, falseneg[1:x$k - 1])
 
@@ -331,9 +343,9 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   x$i <- stats::uniroot(gsbounddiffCRT, lower = i0, upper = 10 * i0,
                         extendInt = "yes", theta = x$delta,
                         falseneg = falseneg, falsepos = falsepos,
-                        time = x$timing, sides = x$test_sides,
+                        time = x$info_timing, sides = x$test_sides,
                         binding = binding, tol = x$tol,
-                        r = x$r)$root * x$timing
+                        r = x$r)$root * x$info_timing
 
   # Calculate corresponding boundaries based on maximum information
   bounds <- gsBoundsCRT(x$delta, x$i, falseneg, falsepos, x$test_sides,
@@ -347,38 +359,85 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   return(x)
 }
 
-# gsExpectedInfoCRT function [sinew] ----
-gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
+# gsExpectedSizeCRT function [sinew] ----
+gsExpectedSizeCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   # Check additional inputs
   checkScalar(x$recruit_type, "integer", c(1, 3))
+  checkScalar(x$timing_type, "integer", c(1, 2))
 
   # Specify timing depending on provided information
-  if (x$recruit_type == 1) {
-    x$m <- ((1:x$k) / x$k) * ceiling(x$max_m)
-    x$n <- rep(ceiling(x$max_n), x$k)
-    if (x$outcome_type == 1) {
-      x$i <- iContDiff(x$m, x$max_n, x$sigma_vec, x$rho)
-    } else if (x$outcome_type == 2) {
-      x$i <- iPropDiff(x$m, x$max_n, x$p_vec, x$rho)
+  if (x$timing_type == 1) {
+    if (x$recruit_type == 1) {
+      x$n <- rep(ceiling(x$max_n), x$k)
+      if (x$outcome_type == 1) {
+        x$m <- mContDiff(x$i, x$max_n, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$m <- mPropDiff(x$i, x$max_n, x$p_vec, x$rho)
+      }
+    } else if (x$recruit_type == 2) {
+      x$m <- rep(ceiling(x$max_m), x$k)
+      if (x$outcome_type == 1) {
+        x$n <- nContDiff(x$i, x$max_m, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$n <- nPropDiff(x$i, x$max_m, x$p_vec, x$rho)
+      }
+    } else if (x$recruit_type == 3) {
+      if (x$outcome_type == 1) {
+        x$m <- mContDiff(x$i, x$max_n, x$sigma_vec, x$rho)
+        x$n <- nContDiff(x$i, x$max_m, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$m <- mPropDiff(x$i, x$max_n, x$p_vec, x$rho)
+        x$n <- nPropDiff(x$i, x$max_m, x$p_vec, x$rho)
+      }
     }
-  } else if (x$recruit_type == 2) {
-    x$m <- rep(ceiling(x$max_m), x$k)
-    x$n <- ((1:x$k) / x$k) * ceiling(x$max_n)
-    if (x$outcome_type == 1) {
-      x$i <- iContDiff(x$max_m, x$n, x$sigma_vec, x$rho)
-    } else if (x$outcome_type == 2) {
-      x$i <- iPropDiff(x$max_m, x$n, x$p_vec, x$rho)
+  } else {
+    if (length(x$size_timing) < 1 ||
+          (length(x$size_timing) == 1 &&
+             (x$k > 2 || (x$k == 2 &&
+                            (x$size_timing[1] <= 0 ||
+                               x$size_timing[1] >= 1))))) {
+      x$size_timing <- seq(x$k) / x$k
+    } else if (length(x$size_timing) == x$k - 1 ||
+                 length(x$size_timing) == x$k) {
+      if (length(x$size_timing) == x$k - 1) {
+        x$size_timing <- c(x$size_timing, 1)
+      } else if (x$size_timing[x$k] != 1) {
+        stop("if analysis timing for final analysis is input, it must be 1")
+      }
+      if (min(x$size_timing - c(0, x$size_timing[1:(x$k - 1)])) <= 0) {
+        stop("input timing of interim analyses must be increasing strictly
+            between 0 and 1")
+      }
+    } else {
+      stop("value input for timing must be length 1, k-1 or k")
     }
-  } else if (x$recruit_type == 3) {
-    x$m <- ((1:x$k) / x$k) * ceiling(x$max_m)
-    x$n <- ((1:x$k) / x$k) * ceiling(x$max_n)
-    if (x$outcome_type == 1) {
-      x$i <- iContDiff(x$m, x$n, x$sigma_vec, x$rho)
-    } else if (x$outcome_type == 2) {
-      x$i <- iPropDiff(x$m, x$n, x$p_vec, x$rho)
+
+    if (x$recruit_type == 1) {
+      x$m <- x$size_timing * ceiling(x$max_m)
+      x$n <- rep(ceiling(x$max_n), x$k)
+      if (x$outcome_type == 1) {
+        x$i <- iContDiff(x$m, x$max_n, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$i <- iPropDiff(x$m, x$max_n, x$p_vec, x$rho)
+      }
+    } else if (x$recruit_type == 2) {
+      x$m <- rep(ceiling(x$max_m), x$k)
+      x$n <- x$size_timing * ceiling(x$max_n)
+      if (x$outcome_type == 1) {
+        x$i <- iContDiff(x$max_m, x$n, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$i <- iPropDiff(x$max_m, x$n, x$p_vec, x$rho)
+      }
+    } else if (x$recruit_type == 3) {
+      x$m <- x$size_timing * ceiling(x$max_m)
+      x$n <- x$size_timing * ceiling(x$max_n)
+      if (x$outcome_type == 1) {
+        x$i <- iContDiff(x$m, x$n, x$sigma_vec, x$rho)
+      } else if (x$outcome_type == 2) {
+        x$i <- iPropDiff(x$m, x$n, x$p_vec, x$rho)
+      }
     }
   }
-
   x$timing <- x$i / x$i[x$k]
 
   if (x$test_type == 1) {
@@ -448,11 +507,15 @@ gsExpectedInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
 
   # Compute expected sample sizes from crossing probabilities
   if (x$k == 1) {
-    x$e_m <- as.vector(x$m * (y$problo + y$probhi)) + as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
-    x$e_n <- as.vector(x$n * (y$problo + y$probhi)) + as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_m <- as.vector(x$m * (y$problo + y$probhi)) +
+      as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_n <- as.vector(x$n * (y$problo + y$probhi)) +
+      as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
   } else {
-    x$e_m <- as.vector(x$m %*% (y$problo + y$probhi)) + as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
-    x$e_n <- as.vector(x$n %*% (y$problo + y$probhi)) + as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_m <- as.vector(x$m %*% (y$problo + y$probhi)) +
+      as.vector(x$m[x$k] * (t(rep(1, 2)) - y$power - y$futile))
+    x$e_n <- as.vector(x$n %*% (y$problo + y$probhi)) +
+      as.vector(x$n[x$k] * (t(rep(1, 2)) - y$power - y$futile))
   }
 
   return(x)

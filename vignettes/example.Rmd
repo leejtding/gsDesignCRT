@@ -28,12 +28,12 @@ library(gsDesignCRT)
 ## Specify desired population parameters and error rates
 mu_vec <- c(0, 0.2) # Mean outcome for intervention arms
 sd_vec <- c(1, 1) # Standard deviations for intervention arms
-delta = abs(mu_vec[2] - mu_vec[1]) # Desired effect size; must be > 0
-n = 50 # Average cluster size
-rho = 0.1 # ICC
+delta <- abs(mu_vec[2] - mu_vec[1]) # Desired effect size; must be > 0
+n <- 50 # Average cluster size
+rho <- 0.1 # ICC
 
-alpha = 0.05 # Type I error 
-beta = 0.1 # Type II error (1 - power)
+alpha <- 0.05 # Type I error
+beta <- 0.1 # Type II error (1 - power)
 
 ## Specify how interim analyses are conducted
 k <- 3 # number of interim analyses
@@ -41,33 +41,38 @@ test_type <- 4 # efficacy or binding futility stopping
 test_sides <- 2 # two-sided test
 size_type <- 1 # calculate maximum number of clusters per arm m_max
 recruit_type <- 2 # recruit individuals within clusters
-alpha_sf = sfLDOF # Efficacy bound spending function (O'Brien-Fleming-like here)
-beta_sf = sfLDOF # Futility bound spending function (O'Brien-Fleming-like here)
+timing_type <- 2 # calculate maximum sample size based on information
+# increments in info_timing but calculate expected sample size based on sample
+# increments in size_timing
+alpha_sf <- sfLDOF # Efficacy bound spending function (O'Brien-Fleming here)
+beta_sf <- sfLDOF # Futility bound spending function (O'Brien-Fleming here)
 
 ## Calculate corresponding sample size
-size_calc = gsDesignCRT(k = k,
-                        outcome_type = 1, # continuous outcomes
-                        test_type = test_type,
-                        test_sides = test_sides,
-                        size_type = size_type,
-                        recruit_type = recruit_type,
-                        delta = delta,
-                        sigma_vec = sd_vec,
-                        rho = rho,
-                        alpha = alpha,
-                        beta = beta,
-                        n_fix = n,
-                        timing = 1, # assume equally-spaced analyses
-                        alpha_sf = alpha_sf,
-                        beta_sf = beta_sf)
+size_calc <- gsDesignCRT(k = k,
+                         outcome_type = 1, # continuous outcomes
+                         test_type = test_type,
+                         test_sides = test_sides,
+                         size_type = size_type,
+                         recruit_type = recruit_type,
+                         timing_type = timing_type,
+                         delta = delta,
+                         sigma_vec = sd_vec,
+                         rho = rho,
+                         alpha = alpha,
+                         beta = beta,
+                         n_fix = n,
+                         info_timing = 1,
+                         size_timing = 1,
+                         alpha_sf = alpha_sf,
+                         beta_sf = beta_sf)
 
 # Maximum number of clusters per arm
 size_calc$max_m
 
-# Maximum number of participants per arm
+# Maximum total number of participants
 size_calc$max_total
 
-# Expected number of participants per arm under null and alternative hypotheses
+# Expected total number of participants under null and alternative hypotheses
 size_calc$e_total
 ```
 
@@ -81,7 +86,8 @@ set.seed(3)
 ## Specify simulation parameters
 stat_type <- 2 # Z-test with re-estimated variance and ICC
 balance_size <- 1 # Exact sample increments according to the scheduled analyses
-precompute <- FALSE # Re-compute stopping boundaries using observed information at each analysis
+precompute <- FALSE # Re-compute stopping boundaries using observed information
+# at each analysis
 
 ## Conduct simulations
 reject <- c()
@@ -92,10 +98,11 @@ for (i in 1:1000) {
   sim_trial <- gsSimContCRT(k, data = sim_df,
                             test_type = test_type, test_sides = test_sides,
                             recruit_type = recruit_type, stat_type = stat_type,
-                            balance_size = balance_size, precompute = precompute,
+                            balance_size = balance_size,
+                            precompute = precompute,
                             delta = delta, rho = rho,
                             alpha = alpha, beta = beta,
-                            m = ceiling(size_calc$max_m), n = n,
+                            m_max = ceiling(size_calc$max_m), n_max = n,
                             alpha_sf = alpha_sf, beta_sf = beta_sf)
   reject <- c(reject, sim_trial$reject)
 }

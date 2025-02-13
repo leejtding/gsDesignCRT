@@ -12,6 +12,7 @@ gsDesignCRT(
   test_sides = 1,
   size_type = 1,
   recruit_type = 1,
+  timing_type = 2,
   delta = 1,
   sigma_vec = c(1, 1),
   p_vec = c(0.5, 0.5),
@@ -20,7 +21,8 @@ gsDesignCRT(
   beta = 0.1,
   m_fix = 1,
   n_fix = 1,
-  timing = 1,
+  info_timing = 1,
+  size_timing = 1,
   alpha_sf = sfLDOF,
   alpha_sfpar = -4,
   beta_sf = sfLDOF,
@@ -46,7 +48,14 @@ gsDesignCRT(
 \item{size_type}{\code{1=}clusters per arm \cr \code{2=}cluster size}
 
 \item{recruit_type}{\code{1=}recruit clusters with fixed sizes
-\cr \code{2=}recruit individuals into fixed number of clusters}
+\cr \code{2=}recruit individuals into fixed number of clusters
+\cr \code{3=}recruit both clusters and individuals}
+
+\item{timing_type}{\code{1=} maximum and expected sample sizes based on
+specified information levels in \code{info_timing} \cr \code{2=} maximum
+sample size based on specified information levels in \code{info_timing} and
+expected sample sizes based on specified sample size levels in
+\code{size_timing}}
 
 \item{delta}{Effect size for theta under alternative hypothesis. Must be > 0.}
 
@@ -67,10 +76,17 @@ gsDesignCRT(
 \item{n_fix}{Mean size of each cluster; used to find maximum number of
 clusters per arm.}
 
-\item{timing}{Sets relative timing of interim analyses. Default of 1
-produces equally spaced analyses.  Otherwise, this is a vector of length
-\code{k} or \code{k-1}.  The values should satisfy \code{0 < timing[1] <
-timing[2] < ... < timing[k-1] < timing[k]=1}.}
+\item{info_timing}{Sets timing of interim analyses based on information
+levels. Default of 1 produces analyses at equal-spaced increments.
+Otherwise, this is a vector of length \code{k} or \code{k-1}. The values
+should satisfy \code{0 < info_timing[1] < info_timing[2] < ... <
+info_timing[k-1] < info_timing[k]=1}.}
+
+\item{size_timing}{Sets timing of interim analyses based on sample size
+levels if \code{timing_type = 2}. Default of 1 produces analyses at
+equal-spaced increments. Otherwise, this is a vector of length \code{k} or
+\code{k-1}. The values should satisfy \code{0 < size_timing[1] <
+size_timing[2] < ... < size_timing[k-1] < size_timing[k]=1}.}
 
 \item{alpha_sf}{A spending function or a character string indicating an
 upper boundary type (that is, \dQuote{WT} for Wang-Tsiatis bounds,
@@ -113,33 +129,34 @@ values provide larger number of grid points and greater accuracy.  Normally
 }
 \value{
 Object containing the following elements: \item{k}{As
- input.} \item{test_type}{As input.} \item{outcome_type}{As input.} \item{
- size_type}{As input.} \item{size_type}{As input.} \item{recruit_type}{As
- input.} \item{delta}{As input.} \item{sigma_vec}{As input.} \item{p_vec}{As
- input.} \item{rho}{As input.} \item{alpha}{As input.} \item{beta}{As input.}
- \item{timing}{As input.} \item{i}{Fisher information at each planned interim
- analysis.} \item{fix_i}{Information for trial with no planned interim
- analyses.} \item{max_i}{Maximum information.} \item{i_frac}{Fraction of
- maximum information at each planned interim analysis} \item{e_i}{A vector of
- length 2 with expected information under the null and alternative
- hypotheses.} \item{m}{Number of clusters per arm at each planned interim
- analysis.} \item{max_m}{Maximum number of clusters per arm.} \item{e_m}{A
- vector of length 2 with expected number of clusters per arm under the null
- and alternative hypotheses.} \item{n}{Average cluster size at each planned
- interim analysis.} \item{max_n}{Maximum cluster size.} \item{e_m}{A vector
- of length 2 with expected cluster sizes under the null and alternative
- hypotheses.} \item{max_total}{Maximum number of individuals per arm.}
- \item{e_total}{A vector of length 2 with expected number of individuals per
- arm under the null and alternative hypotheses.} \item{sufficient}{Value
- denoting whether calculated sample size will be sufficient to achieve
+ input.} \item{outcome_type}{As input.} \item{test_type}{As input.}
+ \item{test_sides}{As input.} \item{size_type}{As input.}
+ \item{recruit_type}{As input.} \item{timing_type}{As input.} \item{delta}{As
+ input.} \item{sigma_vec}{As input.} \item{p_vec}{As input.} \item{rho}{As
+ input.} \item{alpha}{As input.} \item{beta}{As input.} \item{info_timing}{As
+ input.} \item{size_timing}{As input.} \item{i}{Fisher information at each
+ planned interim analysis based on \code{timing_type}.} \item{max_i}{Maximum
+ information corresponding to design specifications.} \item{m}{Number of
+ clusters per arm at each planned interim analysis.} \item{max_m}{Maximum
+ number of clusters per arm.} \item{e_m}{A vector of length 2 with expected
+ number of clusters per arm under the null and alternative hypotheses. For
+ simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the boundaries are binding futility.} \item{n}{Average
+ cluster size at each planned interim analysis.} \item{max_n}{Maximum cluster
+ size.} \item{e_m}{A vector of length 2 with expected cluster sizes under the
+ null and alternative hypotheses. For simplicity, the expected sizes with
+ non-binding futility boundaries are calculated assuming the futility
+ boundaries are binding.} \item{max_total}{Maximum number of individuals in
+ the trial.} \item{e_total}{A vector of length 2 with expected number of
+ individuals in the trial under the null and alternative hypotheses. For
+ simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the futility boundaries are binding.} \item{sufficient}{
+ Value denoting whether calculated sample size will be sufficient to achieve
  specified Type I error rate and power given the trial specifications.}
- \item{m_frac}{Number of clusters per arm at each interim analysis under
- equal information increments.} \item{n_frac}{Average cluster size at each
- interim analysis under equal information increments.}
- \item{lower_bound}{Calculated lower futility boundaries under equal
- information increments.} \item{upper_bound}{Calculated upper efficacy
- boundaries under equal information increments.} \item{tol}{As input.}
- \item{r}{As input.}
+ \item{lower_bound}{Calculated lower futility boundaries under analysis
+ schedule specified by \code{timing_type}} \item{upper_bound}{Calculated
+ upper efficacy boundaries under analysis schedule specified by
+ \code{timing_types}.} \item{tol}{As input.} \item{r}{As input.}
 }
 \description{
 \code{gsDesignCRT()} is used to determine the maximum sample

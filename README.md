@@ -8,10 +8,7 @@ and implemented in the package gsDesign (Anderson, 2024).
 ## Installation
 
 ```r
-# The easiest way to get gsDesignCRT is to install:
-install.packages("gsDesignCRT")
-
-# Alternatively, install development version from GitHub:
+# To install the development version from GitHub:
 # install.packages("remotes")
 remotes::install_github("leejtding/gsDesignCRT")
 ```
