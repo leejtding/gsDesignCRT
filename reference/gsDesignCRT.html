@@ -55,6 +55,7 @@
 <span>  test_sides <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  size_type <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  recruit_type <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  timing_type <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  delta <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  sigma_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  p_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
@@ -63,7 +64,8 @@
 <span>  beta <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  m_fix <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n_fix <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  timing <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  info_timing <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  size_timing <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  alpha_sf <span class="op">=</span> <span class="va">sfLDOF</span>,</span>
 <span>  alpha_sfpar <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,</span>
 <span>  beta_sf <span class="op">=</span> <span class="va">sfLDOF</span>,</span>
@@ -104,7 +106,16 @@
 
 <dt id="arg-recruit-type">recruit_type<a class="anchor" aria-label="anchor" href="#arg-recruit-type"></a></dt>
 <dd><p><code>1=</code>recruit clusters with fixed sizes
-<br><code>2=</code>recruit individuals into fixed number of clusters</p></dd>
+<br><code>2=</code>recruit individuals into fixed number of clusters
+<br><code>3=</code>recruit both clusters and individuals</p></dd>
+
+
+<dt id="arg-timing-type">timing_type<a class="anchor" aria-label="anchor" href="#arg-timing-type"></a></dt>
+<dd><p><code>1=</code> maximum and expected sample sizes based on
+specified information levels in <code>info_timing</code> <br><code>2=</code> maximum
+sample size based on specified information levels in <code>info_timing</code> and
+expected sample sizes based on specified sample size levels in
+<code>size_timing</code></p></dd>
 
 
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
@@ -142,11 +153,20 @@
 clusters per arm.</p></dd>
 
 
-<dt id="arg-timing">timing<a class="anchor" aria-label="anchor" href="#arg-timing"></a></dt>
-<dd><p>Sets relative timing of interim analyses. Default of 1
-produces equally spaced analyses.  Otherwise, this is a vector of length
-<code>k</code> or <code>k-1</code>.  The values should satisfy <code>0 &lt; timing[1] &lt;
-timing[2] &lt; ... &lt; timing[k-1] &lt; timing[k]=1</code>.</p></dd>
+<dt id="arg-info-timing">info_timing<a class="anchor" aria-label="anchor" href="#arg-info-timing"></a></dt>
+<dd><p>Sets timing of interim analyses based on information
+levels. Default of 1 produces analyses at equal-spaced increments.
+Otherwise, this is a vector of length <code>k</code> or <code>k-1</code>. The values
+should satisfy <code>0 &lt; info_timing[1] &lt; info_timing[2] &lt; ... &lt;
+info_timing[k-1] &lt; info_timing[k]=1</code>.</p></dd>
+
+
+<dt id="arg-size-timing">size_timing<a class="anchor" aria-label="anchor" href="#arg-size-timing"></a></dt>
+<dd><p>Sets timing of interim analyses based on sample size
+levels if <code>timing_type = 2</code>. Default of 1 produces analyses at
+equal-spaced increments. Otherwise, this is a vector of length <code>k</code> or
+<code>k-1</code>. The values should satisfy <code>0 &lt; size_timing[1] &lt;
+size_timing[2] &lt; ... &lt; size_timing[k-1] &lt; size_timing[k]=1</code>.</p></dd>
 
 
 <dt id="arg-alpha-sf">alpha_sf<a class="anchor" aria-label="anchor" href="#arg-alpha-sf"></a></dt>
@@ -206,94 +226,88 @@ values provide larger number of grid points and greater accuracy.  Normally
 <dl><dt>k</dt>
 <dd><p>As
  input.</p></dd>
- <dt>test_type</dt>
-<dd><p>As input.</p></dd>
  <dt>outcome_type</dt>
 <dd><p>As input.</p></dd>
- <dt>
- size_type</dt>
+ <dt>test_type</dt>
+<dd><p>As input.</p></dd>
+
+ <dt>test_sides</dt>
 <dd><p>As input.</p></dd>
  <dt>size_type</dt>
 <dd><p>As input.</p></dd>
+
  <dt>recruit_type</dt>
+<dd><p>As input.</p></dd>
+ <dt>timing_type</dt>
+<dd><p>As input.</p></dd>
+ <dt>delta</dt>
 <dd><p>As
  input.</p></dd>
- <dt>delta</dt>
-<dd><p>As input.</p></dd>
  <dt>sigma_vec</dt>
 <dd><p>As input.</p></dd>
  <dt>p_vec</dt>
+<dd><p>As input.</p></dd>
+ <dt>rho</dt>
 <dd><p>As
  input.</p></dd>
- <dt>rho</dt>
-<dd><p>As input.</p></dd>
  <dt>alpha</dt>
 <dd><p>As input.</p></dd>
  <dt>beta</dt>
 <dd><p>As input.</p></dd>
-
- <dt>timing</dt>
+ <dt>info_timing</dt>
+<dd><p>As
+ input.</p></dd>
+ <dt>size_timing</dt>
 <dd><p>As input.</p></dd>
  <dt>i</dt>
-<dd><p>Fisher information at each planned interim
- analysis.</p></dd>
- <dt>fix_i</dt>
-<dd><p>Information for trial with no planned interim
- analyses.</p></dd>
+<dd><p>Fisher information at each
+ planned interim analysis based on <code>timing_type</code>.</p></dd>
  <dt>max_i</dt>
-<dd><p>Maximum information.</p></dd>
- <dt>i_frac</dt>
-<dd><p>Fraction of
- maximum information at each planned interim analysis</p></dd>
- <dt>e_i</dt>
-<dd><p>A vector of
- length 2 with expected information under the null and alternative
- hypotheses.</p></dd>
+<dd><p>Maximum
+ information corresponding to design specifications.</p></dd>
  <dt>m</dt>
-<dd><p>Number of clusters per arm at each planned interim
- analysis.</p></dd>
+<dd><p>Number of
+ clusters per arm at each planned interim analysis.</p></dd>
  <dt>max_m</dt>
-<dd><p>Maximum number of clusters per arm.</p></dd>
+<dd><p>Maximum
+ number of clusters per arm.</p></dd>
  <dt>e_m</dt>
-<dd><p>A
- vector of length 2 with expected number of clusters per arm under the null
- and alternative hypotheses.</p></dd>
+<dd><p>A vector of length 2 with expected
+ number of clusters per arm under the null and alternative hypotheses. For
+ simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the boundaries are binding futility.</p></dd>
  <dt>n</dt>
-<dd><p>Average cluster size at each planned
- interim analysis.</p></dd>
+<dd><p>Average
+ cluster size at each planned interim analysis.</p></dd>
  <dt>max_n</dt>
-<dd><p>Maximum cluster size.</p></dd>
+<dd><p>Maximum cluster
+ size.</p></dd>
  <dt>e_m</dt>
-<dd><p>A vector
- of length 2 with expected cluster sizes under the null and alternative
- hypotheses.</p></dd>
+<dd><p>A vector of length 2 with expected cluster sizes under the
+ null and alternative hypotheses. For simplicity, the expected sizes with
+ non-binding futility boundaries are calculated assuming the futility
+ boundaries are binding.</p></dd>
  <dt>max_total</dt>
-<dd><p>Maximum number of individuals per arm.</p></dd>
-
+<dd><p>Maximum number of individuals in
+ the trial.</p></dd>
  <dt>e_total</dt>
-<dd><p>A vector of length 2 with expected number of individuals per
- arm under the null and alternative hypotheses.</p></dd>
+<dd><p>A vector of length 2 with expected number of
+ individuals in the trial under the null and alternative hypotheses. For
+ simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the futility boundaries are binding.</p></dd>
  <dt>sufficient</dt>
-<dd><p>Value
- denoting whether calculated sample size will be sufficient to achieve
+<dd><p>Value denoting whether calculated sample size will be sufficient to achieve
  specified Type I error rate and power given the trial specifications.</p></dd>
 
- <dt>m_frac</dt>
-<dd><p>Number of clusters per arm at each interim analysis under
- equal information increments.</p></dd>
- <dt>n_frac</dt>
-<dd><p>Average cluster size at each
- interim analysis under equal information increments.</p></dd>
-
  <dt>lower_bound</dt>
-<dd><p>Calculated lower futility boundaries under equal
- information increments.</p></dd>
+<dd><p>Calculated lower futility boundaries under analysis
+ schedule specified by <code>timing_type</code></p></dd>
  <dt>upper_bound</dt>
-<dd><p>Calculated upper efficacy
- boundaries under equal information increments.</p></dd>
+<dd><p>Calculated
+ upper efficacy boundaries under analysis schedule specified by
+ <code>timing_types</code>.</p></dd>
  <dt>tol</dt>
 <dd><p>As input.</p></dd>
-
  <dt>r</dt>
 <dd><p>As input.</p></dd>
 

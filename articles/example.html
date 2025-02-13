@@ -100,12 +100,12 @@ participants recruited into the clusters over time.</p>
 <span><span class="co">## Specify desired population parameters and error rates</span></span>
 <span><span class="va">mu_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="co"># Mean outcome for intervention arms</span></span>
 <span><span class="va">sd_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># Standard deviations for intervention arms</span></span>
-<span><span class="va">delta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">mu_vec</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># Desired effect size; must be &gt; 0</span></span>
-<span><span class="va">n</span> <span class="op">=</span> <span class="fl">50</span> <span class="co"># Average cluster size</span></span>
-<span><span class="va">rho</span> <span class="op">=</span> <span class="fl">0.1</span> <span class="co"># ICC</span></span>
+<span><span class="va">delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">mu_vec</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># Desired effect size; must be &gt; 0</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">50</span> <span class="co"># Average cluster size</span></span>
+<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.1</span> <span class="co"># ICC</span></span>
 <span></span>
-<span><span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.05</span> <span class="co"># Type I error </span></span>
-<span><span class="va">beta</span> <span class="op">=</span> <span class="fl">0.1</span> <span class="co"># Type II error (1 - power)</span></span>
+<span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.05</span> <span class="co"># Type I error</span></span>
+<span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fl">0.1</span> <span class="co"># Type II error (1 - power)</span></span>
 <span></span>
 <span><span class="co">## Specify how interim analyses are conducted</span></span>
 <span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># number of interim analyses</span></span>
@@ -113,37 +113,42 @@ participants recruited into the clusters over time.</p>
 <span><span class="va">test_sides</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="co"># two-sided test</span></span>
 <span><span class="va">size_type</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="co"># calculate maximum number of clusters per arm m_max</span></span>
 <span><span class="va">recruit_type</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="co"># recruit individuals within clusters</span></span>
-<span><span class="va">alpha_sf</span> <span class="op">=</span> <span class="va">sfLDOF</span> <span class="co"># Efficacy bound spending function (O'Brien-Fleming-like here)</span></span>
-<span><span class="va">beta_sf</span> <span class="op">=</span> <span class="va">sfLDOF</span> <span class="co"># Futility bound spending function (O'Brien-Fleming-like here)</span></span>
+<span><span class="va">timing_type</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="co"># calculate maximum sample size based on information</span></span>
+<span><span class="co"># increments in info_timing but calculate expected sample size based on sample</span></span>
+<span><span class="co"># increments in size_timing</span></span>
+<span><span class="va">alpha_sf</span> <span class="op">&lt;-</span> <span class="va">sfLDOF</span> <span class="co"># Efficacy bound spending function (O'Brien-Fleming here)</span></span>
+<span><span class="va">beta_sf</span> <span class="op">&lt;-</span> <span class="va">sfLDOF</span> <span class="co"># Futility bound spending function (O'Brien-Fleming here)</span></span>
 <span></span>
 <span><span class="co">## Calculate corresponding sample size</span></span>
-<span><span class="va">size_calc</span> <span class="op">=</span> <span class="fu"><a href="../reference/gsDesignCRT.html">gsDesignCRT</a></span><span class="op">(</span>k <span class="op">=</span> <span class="va">k</span>,</span>
-<span>                        outcome_type <span class="op">=</span> <span class="fl">1</span>, <span class="co"># continuous outcomes</span></span>
-<span>                        test_type <span class="op">=</span> <span class="va">test_type</span>,</span>
-<span>                        test_sides <span class="op">=</span> <span class="va">test_sides</span>,</span>
-<span>                        size_type <span class="op">=</span> <span class="va">size_type</span>,</span>
-<span>                        recruit_type <span class="op">=</span> <span class="va">recruit_type</span>,</span>
-<span>                        delta <span class="op">=</span> <span class="va">delta</span>,</span>
-<span>                        sigma_vec <span class="op">=</span> <span class="va">sd_vec</span>,</span>
-<span>                        rho <span class="op">=</span> <span class="va">rho</span>,</span>
-<span>                        alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
-<span>                        beta <span class="op">=</span> <span class="va">beta</span>,</span>
-<span>                        n_fix <span class="op">=</span> <span class="va">n</span>,</span>
-<span>                        timing <span class="op">=</span> <span class="fl">1</span>, <span class="co"># assume equally-spaced analyses</span></span>
-<span>                        alpha_sf <span class="op">=</span> <span class="va">alpha_sf</span>,</span>
-<span>                        beta_sf <span class="op">=</span> <span class="va">beta_sf</span><span class="op">)</span></span>
+<span><span class="va">size_calc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gsDesignCRT.html">gsDesignCRT</a></span><span class="op">(</span>k <span class="op">=</span> <span class="va">k</span>,</span>
+<span>                         outcome_type <span class="op">=</span> <span class="fl">1</span>, <span class="co"># continuous outcomes</span></span>
+<span>                         test_type <span class="op">=</span> <span class="va">test_type</span>,</span>
+<span>                         test_sides <span class="op">=</span> <span class="va">test_sides</span>,</span>
+<span>                         size_type <span class="op">=</span> <span class="va">size_type</span>,</span>
+<span>                         recruit_type <span class="op">=</span> <span class="va">recruit_type</span>,</span>
+<span>                         timing_type <span class="op">=</span> <span class="va">timing_type</span>,</span>
+<span>                         delta <span class="op">=</span> <span class="va">delta</span>,</span>
+<span>                         sigma_vec <span class="op">=</span> <span class="va">sd_vec</span>,</span>
+<span>                         rho <span class="op">=</span> <span class="va">rho</span>,</span>
+<span>                         alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
+<span>                         beta <span class="op">=</span> <span class="va">beta</span>,</span>
+<span>                         n_fix <span class="op">=</span> <span class="va">n</span>,</span>
+<span>                         info_timing <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                         size_timing <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                         alpha_sf <span class="op">=</span> <span class="va">alpha_sf</span>,</span>
+<span>                         beta_sf <span class="op">=</span> <span class="va">beta_sf</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Maximum number of clusters per arm</span></span>
 <span><span class="va">size_calc</span><span class="op">$</span><span class="va">max_m</span></span>
 <span><span class="co">#&gt; [1] 64.5923</span></span>
 <span></span>
-<span><span class="co"># Maximum number of participants per arm</span></span>
+<span><span class="co"># Maximum total number of participants</span></span>
 <span><span class="va">size_calc</span><span class="op">$</span><span class="va">max_total</span></span>
-<span><span class="co">#&gt; [1] 3229.615</span></span>
+<span><span class="co">#&gt; [1] 6459.23</span></span>
 <span></span>
-<span><span class="co"># Expected number of participants per arm under null and alternative hypotheses</span></span>
+<span><span class="co"># Expected total number of participants under null and alternative hypotheses</span></span>
 <span><span class="va">size_calc</span><span class="op">$</span><span class="va">e_total</span></span>
-<span><span class="co">#&gt; [1] 1293.359 1375.506</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2586.719 2751.012</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="evaluating-empirical-power-via-simulations">Evaluating empirical power via simulations<a class="anchor" aria-label="anchor" href="#evaluating-empirical-power-via-simulations"></a>
@@ -161,7 +166,8 @@ analysis.</p>
 <span><span class="co">## Specify simulation parameters</span></span>
 <span><span class="va">stat_type</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="co"># Z-test with re-estimated variance and ICC</span></span>
 <span><span class="va">balance_size</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="co"># Exact sample increments according to the scheduled analyses</span></span>
-<span><span class="va">precompute</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># Re-compute stopping boundaries using observed information at each analysis</span></span>
+<span><span class="va">precompute</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span> <span class="co"># Re-compute stopping boundaries using observed information</span></span>
+<span><span class="co"># at each analysis</span></span>
 <span></span>
 <span><span class="co">## Conduct simulations</span></span>
 <span><span class="va">reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -172,10 +178,11 @@ analysis.</p>
 <span>  <span class="va">sim_trial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gsSimContCRT.html">gsSimContCRT</a></span><span class="op">(</span><span class="va">k</span>, data <span class="op">=</span> <span class="va">sim_df</span>,</span>
 <span>                            test_type <span class="op">=</span> <span class="va">test_type</span>, test_sides <span class="op">=</span> <span class="va">test_sides</span>,</span>
 <span>                            recruit_type <span class="op">=</span> <span class="va">recruit_type</span>, stat_type <span class="op">=</span> <span class="va">stat_type</span>,</span>
-<span>                            balance_size <span class="op">=</span> <span class="va">balance_size</span>, precompute <span class="op">=</span> <span class="va">precompute</span>,</span>
+<span>                            balance_size <span class="op">=</span> <span class="va">balance_size</span>,</span>
+<span>                            precompute <span class="op">=</span> <span class="va">precompute</span>,</span>
 <span>                            delta <span class="op">=</span> <span class="va">delta</span>, rho <span class="op">=</span> <span class="va">rho</span>,</span>
 <span>                            alpha <span class="op">=</span> <span class="va">alpha</span>, beta <span class="op">=</span> <span class="va">beta</span>,</span>
-<span>                            m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">size_calc</span><span class="op">$</span><span class="va">max_m</span><span class="op">)</span>, n <span class="op">=</span> <span class="va">n</span>,</span>
+<span>                            m_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">size_calc</span><span class="op">$</span><span class="va">max_m</span><span class="op">)</span>, n_max <span class="op">=</span> <span class="va">n</span>,</span>
 <span>                            alpha_sf <span class="op">=</span> <span class="va">alpha_sf</span>, beta_sf <span class="op">=</span> <span class="va">beta_sf</span><span class="op">)</span></span>
 <span>  <span class="va">reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">reject</span>, <span class="va">sim_trial</span><span class="op">$</span><span class="va">reject</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>

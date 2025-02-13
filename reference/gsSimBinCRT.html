@@ -58,10 +58,10 @@ outcomes</p>
 <span>  beta <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  upper_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">m</span>,</span>
-<span>  <span class="va">n</span>,</span>
-<span>  ifrac_size_m <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ifrac_size_n <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  m_max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  schedule_m <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  schedule_n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">alpha_sf</span>,</span>
 <span>  alpha_sfpar <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,</span>
 <span>  <span class="va">beta_sf</span>,</span>
@@ -149,25 +149,25 @@ interim analyses. Must be specified if precompute is TRUE. NULL otherwise.</p></
 interim analyses. Must be specified if precompute is TRUE. NULL otherwise.</p></dd>
 
 
-<dt id="arg-m">m<a class="anchor" aria-label="anchor" href="#arg-m"></a></dt>
+<dt id="arg-m-max">m_max<a class="anchor" aria-label="anchor" href="#arg-m-max"></a></dt>
 <dd><p>Number of clusters.</p></dd>
 
 
-<dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
+<dt id="arg-n-max">n_max<a class="anchor" aria-label="anchor" href="#arg-n-max"></a></dt>
 <dd><p>Mean size of each cluster.</p></dd>
 
 
-<dt id="arg-ifrac-size-m">ifrac_size_m<a class="anchor" aria-label="anchor" href="#arg-ifrac-size-m"></a></dt>
+<dt id="arg-schedule-m">schedule_m<a class="anchor" aria-label="anchor" href="#arg-schedule-m"></a></dt>
 <dd><p>Number of clusters at each interim look. Interim analyses
-will be conducted according to the information levels in <code>ifrac_size_m</code>
-and <code>ifrac_size_n</code> if provided. Otherwise, interim analyses will be
+will be conducted according to the information levels in <code>schedule_m</code>
+and <code>schedule_n</code> if provided. Otherwise, interim analyses will be
 conducted at equal-sized sample increments according to <code>recruit_type</code>.</p></dd>
 
 
-<dt id="arg-ifrac-size-n">ifrac_size_n<a class="anchor" aria-label="anchor" href="#arg-ifrac-size-n"></a></dt>
+<dt id="arg-schedule-n">schedule_n<a class="anchor" aria-label="anchor" href="#arg-schedule-n"></a></dt>
 <dd><p>Average cluster size at each interim look. Interim
 analyses will be conducted according to the information levels in
-<code>ifrac_size_m</code> and <code>ifrac_size_n</code> if provided. Otherwise, interim
+<code>schedule_m</code> and <code>schedule_n</code> if provided. Otherwise, interim
 analyses will be conducted at equal-sized sample increments according to
 <code>recruit_type</code>.</p></dd>
 
