@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   example: example.html
   SpendingFunctionOverview: SpendingFunctionOverview.html
-last_built: 2025-02-13T17:25Z
+last_built: 2025-02-18T20:23Z
 urls:
   reference: https://leejtding.github.io/gsDesignCRT/reference
   article: https://leejtding.github.io/gsDesignCRT/articles
