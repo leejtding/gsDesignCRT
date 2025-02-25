@@ -195,8 +195,10 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
   if (x$sufficient == 1) {
     x_expect <- gsExpectedSizeCRT(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar)
 
-    # Information at scheduled analyses
+    # Information and sample sizes at scheduled analyses
     x$i <- x_expect$i
+    x$m <- x_expect$m
+    x$n <- x_expect$n
 
     # Expected sample sizes at scheduled analyses
     x$e_m <- x_expect$e_m
@@ -257,7 +259,8 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
     } else if (x$info_timing[x$k] != 1) {
       stop("if analysis timing for final analysis is input, it must be 1")
     }
-    if (min(x$info_timing - c(0, x$info_timing[1:(x$k - 1)])) <= 0) {
+    if (length(x$info_timing) > 1 &&
+          min(x$info_timing - c(0, x$info_timing[1:(x$k - 1)])) <= 0) {
       stop("input timing of interim analyses must be increasing strictly
            between 0 and 1")
     }
@@ -404,7 +407,8 @@ gsExpectedSizeCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
       } else if (x$size_timing[x$k] != 1) {
         stop("if analysis timing for final analysis is input, it must be 1")
       }
-      if (min(x$size_timing - c(0, x$size_timing[1:(x$k - 1)])) <= 0) {
+      if (length(x$size_timing) > 1 &&
+            min(x$size_timing - c(0, x$size_timing[1:(x$k - 1)])) <= 0) {
         stop("input timing of interim analyses must be increasing strictly
             between 0 and 1")
       }
