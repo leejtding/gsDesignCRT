@@ -4,10 +4,10 @@ Title: Group Sequential Design for Cluster Randomized Trials
 Authors@R: person(given = "Lee", family = "Ding", email =
           "lee_ding@g.harvard.edu", role = c('aut','cre'))
 Description: Derives group sequential cluster randomized trial designs with
-    continuous or binary outcomes. Based on the methods described in
-    Jennison, Christopher and Turnbull, Bruce W., 2000,
-    "Group Sequential Methods with Applications to Clinical Trials" and
-    implemented in the package gsDesign (Anderson, 2024).
+    continuous or binary outcomes. Extends the package gsDesign (Anderson, 2024)
+    based on methods described in the manuscript "Designing group sequential 
+    cluster randomized trials with continuous or binary outcomes" by Lee Ding 
+    and Rui Wang.
 License: GPL (>= 3)
 Encoding: UTF-8
 Depends:
