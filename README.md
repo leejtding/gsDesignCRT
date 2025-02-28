@@ -1,10 +1,9 @@
 # gsDesignCRT
 
-The gsDesignCRT package supports group sequential cluster randomized trial design,
-largely as presented in the book Group Sequential Methods with Applications to 
-Clinical Trials by Christopher Jennison and Bruce Turnbull 
-(Chapman and Hall/CRC, 2000) and implemented in the package gsDesign 
-(Anderson, 2024).
+The gsDesignCRT package supports group sequential cluster randomized trial 
+design, extending the package gsDesign (Anderson, 2024) based on methods 
+described in the manuscript "Designing group sequential cluster randomized 
+trials with continuous or binary outcomes" by Lee Ding and Rui Wang.
 
 ## Installation
 
