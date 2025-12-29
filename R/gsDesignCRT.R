@@ -327,8 +327,6 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
 # print.gsDesignCRT function [sinew] ----
 #' @title Print group sequential CRT design
 #'
-#' @description Print method for \code{gsDesignCRT} objects.
-#'
 #' @param x Object of class \code{gsDesignCRT} created by \code{gsDesignCRT()}.
 #'
 #' @return Printed output of design parameters and table of stopping boundaries
@@ -367,8 +365,6 @@ print.gsDesignCRT <- function(x) {
 
 # plot.gsDesignCRT function [sinew] ----
 #' @title Plot group sequential CRT design
-#'
-#' @description Plot method for \code{gsDesignCRT} objects.
 #'
 #' @param x Object of class \code{gsDesignCRT} created by \code{gsDesignCRT()}.
 #'

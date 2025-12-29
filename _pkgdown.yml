@@ -5,7 +5,10 @@ reference:
 - title: Group Sequential CRT Sample Size Computation
   desc: |
     For an overview of how to use the gsDesignCRT package, see `vignette("example")`.
-  contents: gsDesignCRT
+  contents:
+  - gsDesignCRT
+  - print.gsDesignCRT
+  - plot.gsDesignCRT
 - title: Group Sequential CRT Boundary Computation
   contents:
   - gsUpperCRT

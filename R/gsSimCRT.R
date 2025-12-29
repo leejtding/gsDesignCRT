@@ -754,50 +754,6 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
   return(out)
 }
 
-# genClusterSizes roxy [sinew] ----
-#' @title Generate varying cluster sizes for cluster-randomized trials
-#'
-#' @param m Number of clusters.
-#' @param n Mean size of each cluster.
-#' @param n_cv Coefficient of variation of cluster sizes.
-#' @param n_min Minimum allowable cluster size.
-#' @param n_max Maximum allowable cluster size.
-#' @return A vector of cluster sizes.
-#' @author Lee Ding \email{lee_ding@g.harvard.edu}
-#'
-#' @importFrom stats rnbinom
-#'
-#' @export
-#' @name genClusterSizes
-# genClusterSizes function [sinew] ----
-genClusterSizes <- function(m, n, n_cv, n_min, n_max) {
-  # Check inputs
-  checkScalar(m, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE))
-  checkVector(n_min, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
-  checkVector(n_max, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
-
-  if (n_cv == 0) {
-    return(rep(n, m))
-  } else {
-    if (n_cv^2 <= 1 / n) {
-      stop(
-        "In genClusterSizes(): n_cv^2 must be greater than 1 / n ",
-        "to obtain a valid negative binomial dispersion."
-      )
-    }
-    r_nb <- 1 / (n_cv^2 - (1 / n))
-    p_nb <- r_nb / (r_nb + n)
-
-    cluster_sizes <- rnbinom(m, size = r_nb, prob = p_nb)
-    cluster_sizes <- pmax(cluster_sizes, n_min)
-    cluster_sizes <- pmin(cluster_sizes, n_max)
-    return(cluster_sizes)
-  }
-}
-
-
 # genContCRT roxy [sinew] ----
 #' @title Simulate cluster-randomized trial data with continuous outcomes
 #'
@@ -1004,7 +960,37 @@ simResponse <- function(p, n, B) {
   return(y)
 }
 
-# genContCRT roxy [sinew] ----
+# genClusterSizes roxy [sinew] ----
+#' @importFrom stats rnbinom
+# genClusterSizes function [sinew] ----
+genClusterSizes <- function(m, n, n_cv, n_min, n_max) {
+  # Check inputs
+  checkScalar(m, "integer", c(0, Inf), c(FALSE, FALSE))
+  checkScalar(n, "integer", c(0, Inf), c(FALSE, FALSE))
+  checkScalar(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE))
+  checkVector(n_min, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
+  checkVector(n_max, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
+
+  if (n_cv == 0) {
+    return(rep(n, m))
+  } else {
+    if (n_cv^2 <= 1 / n) {
+      stop(
+        "In genClusterSizes(): n_cv^2 must be greater than 1 / n ",
+        "to obtain a valid negative binomial dispersion."
+      )
+    }
+    r_nb <- 1 / (n_cv^2 - (1 / n))
+    p_nb <- r_nb / (r_nb + n)
+
+    cluster_sizes <- rnbinom(m, size = r_nb, prob = p_nb)
+    cluster_sizes <- pmax(cluster_sizes, n_min)
+    cluster_sizes <- pmin(cluster_sizes, n_max)
+    return(cluster_sizes)
+  }
+}
+
+# seContCRT roxy [sinew] ----
 #' @importFrom stats var
 # seContDiff function [sinew] ----
 seContDiff <- function(x1, x2, size_vec1, size_vec2, rho, sigma_vec = NULL) {
