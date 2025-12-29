@@ -82,10 +82,9 @@ design_results$e_total[1, 1]
 design_results$e_total[1, 2]
 ```
 
-Stopping boundaries for the group sequential CRT design can be visualized using the plot.gsDesignCRT() function.
+Stopping boundaries for the group sequential CRT design can also be visualized.
 
 ```{r}
-# Plotting stopping boundaries
 plot.gsDesignCRT(design_results)
 ```
 
