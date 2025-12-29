@@ -80,6 +80,13 @@ design_results$e_total[1, 1]
 design_results$e_total[1, 2]
 ```
 
+Stopping boundaries for the group sequential CRT design can be visualized using the plot.gsDesignCRT() function.
+
+```{r}
+# Plotting stopping boundaries
+plot.gsDesignCRT(design_results)
+```
+
 # Evaluating empirical power via simulations
 
 After calculating the maximum sample size, suppose we want to evaluate the empirical power of the corresponding trial. We assume that interim analyses are conducted with a Z-test where variance and ICC are re-estimated at each analysis, participants are recruited exactly according to how the analyses were originally scheduled, and stopping boundaries are re-computed using the observed information at each analysis.
