@@ -52,6 +52,8 @@ rho <- round(seq(from = 1, to = 15, by = 1), 0)
 # gamma: sfHSD parameter
 gamma <- round(seq(from = -5, to = 5, by = 1), 0)
 
+######### gsUpperCRT tests #########
+
 test_that("test.gsUpperCRT.theta", {
   expect_error(gsUpperCRT(theta = "abc", I = 1, falsepos = 0.5),
     info = "Checking for incorrect variable type"
@@ -92,9 +94,6 @@ test_that("test.gsUpperCRT.a", {
 test_that("test.gsUpperCRT.falsepos", {
   expect_error(gsUpperCRT(falsepos = "abc", I = 1),
     info = "Checking for incorrect variable type"
-  )
-  expect_error(gsUpperCRT(falsepos = 0, I = 1),
-    info = "Checking for out-of-range variable value"
   )
   expect_error(gsUpperCRT(falsepos = 1, I = 1),
     info = "Checking for out-of-range variable value"
@@ -137,6 +136,8 @@ test_that("test.gsUpperCRT.r", {
   )
 })
 
+######## gsLowerCRT tests #########
+
 test_that("test.gsLowerCRT.theta", {
   expect_error(gsLowerCRT(theta = "abc", I = 1, falseneg = 0.5),
     info = "Checking for incorrect variable type"
@@ -177,9 +178,6 @@ test_that("test.gsLowerCRT.b", {
 test_that("test.gsLowerCRT.falseneg", {
   expect_error(gsLowerCRT(falseneg = "abc", I = 1),
     info = "Checking for incorrect variable type"
-  )
-  expect_error(gsLowerCRT(falseneg = 0, I = 1),
-    info = "Checking for out-of-range variable value"
   )
   expect_error(gsLowerCRT(falseneg = 1, I = 1),
     info = "Checking for out-of-range variable value"
@@ -246,6 +244,8 @@ test_that("test.gsBoundsCRT.theta", {
   )
 })
 
+######## gsBoundsCRT tests #########
+
 test_that("test.gsBoundsCRT.I", {
   expect_error(gsBoundsCRT(I = "abc", falseneg = 0.5, falsepos = 0.5),
     info = "Checking for incorrect variable type"
@@ -259,34 +259,28 @@ test_that("test.gsBoundsCRT.I", {
   )
 })
 
-test_that("test.gsBoundsCRT.falseneg", {
-  expect_error(gsBoundsCRT(falseneg = "abc", I = 1, falsepos = 0.5),
-    info = "Checking for incorrect variable type"
-  )
-  expect_error(gsBoundsCRT(falseneg = 0, I = 1, falsepos = 0.5),
-    info = "Checking for out-of-range variable value"
-  )
-  expect_error(gsBoundsCRT(falseneg = 1, I = 1, falsepos = 0.5),
-    info = "Checking for out-of-range variable value"
-  )
-  expect_error(gsBoundsCRT(
-    falseneg = rep(0.5, 2), I = 1, falsepos = 0.5
-  ), info = "Checking for incorrect variable length"
-  )
-})
-
 test_that("test.gsBoundsCRT.falsepos", {
   expect_error(gsBoundsCRT(falsepos = "abc", I = 1, falseneg = 0.5),
     info = "Checking for incorrect variable type"
-  )
-  expect_error(gsBoundsCRT(falsepos = 0, I = 1, falseneg = 0.5),
-    info = "Checking for out-of-range variable value"
   )
   expect_error(gsBoundsCRT(falsepos = 1, I = 1, falseneg = 0.5),
     info = "Checking for out-of-range variable value"
   )
   expect_error(gsBoundsCRT(
     falsepos = rep(0.5, 2), I = 1, falseneg = 0.5
+  ), info = "Checking for incorrect variable length"
+  )
+})
+
+test_that("test.gsBoundsCRT.falseneg", {
+  expect_error(gsBoundsCRT(falseneg = "abc", I = 1, falsepos = 0.5),
+    info = "Checking for incorrect variable type"
+  )
+  expect_error(gsBoundsCRT(falseneg = 1, I = 1, falsepos = 0.5),
+    info = "Checking for out-of-range variable value"
+  )
+  expect_error(gsBoundsCRT(
+    falseneg = rep(0.5, 2), I = 1, falsepos = 0.5
   ), info = "Checking for incorrect variable length"
   )
 })
@@ -342,6 +336,8 @@ test_that("test.gsBoundsCRT.r", {
   ), info = "Checking for incorrect variable length"
   )
 })
+
+######### gsDesignCRT tests #########
 
 test_that("test.gsDesignCRT.k", {
   expect_error(gsDesignCRT(k = "abc"),
@@ -409,6 +405,19 @@ test_that("test.gsDesignCRT.size.type", {
                info = "Checking for incorrect variable length")
 })
 
+test_that("test.gsDesignCRT.timing.type", {
+  expect_error(gsDesignCRT(timing_type = "abc"),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(timing_type = 1.2),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(timing_type = 0),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 4),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = seq(2)),
+               info = "Checking for incorrect variable length")
+})
+
 test_that("test.gsDesignCRT.recruit.type", {
   expect_error(gsDesignCRT(recruit_type = "abc"),
                info = "Checking for incorrect variable type")
@@ -419,19 +428,6 @@ test_that("test.gsDesignCRT.recruit.type", {
   expect_error(gsDesignCRT(recruit_type = 4),
                info = "Checking for out-of-range variable value")
   expect_error(gsDesignCRT(recruit_type = seq(2)),
-               info = "Checking for incorrect variable length")
-})
-
-test_that("test.gsDesignCRT.timing.type", {
-  expect_error(gsDesignCRT(timing_type = "abc"),
-               info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(timing_type = 1.2),
-               info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(timing_type = 0),
-               info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(timing_type = 3),
-               info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(timing_type = seq(2)),
                info = "Checking for incorrect variable length")
 })
 
@@ -470,6 +466,17 @@ test_that("test.gsDesignCRT.p_vec", {
                info = "Checking for out-of-range variable value")
 })
 
+test_that("test.gsDesignCRT.rho", {
+  expect_error(gsDesignCRT(rho = "abc"),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(rho = -0.5),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(rho = 2),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(rho = rep(1, 3)),
+               info = "Checking for incorrect variable length")
+})
+
 test_that("test.gsDesignCRT.alpha", {
   expect_error(gsDesignCRT(alpha = "abc"),
                info = "Checking for incorrect variable type")
@@ -494,52 +501,102 @@ test_that("test.gsDesignCRT.beta", {
                info = "Checking for incorrect variable length")
 })
 
-test_that("test.gsDesignCRT.m_fix", {
-  expect_error(gsDesignCRT(m_fix = "abc", size_type = 2),
+test_that("test.gsDesignCRT.m", {
+  expect_error(gsDesignCRT(m = "abc", size_type = 2),
                info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(m_fix = -1, size_type = 2),
+  expect_error(gsDesignCRT(m = -1, size_type = 2),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(m_fix = rep(2, 2), size_type = 2),
+  expect_error(gsDesignCRT(m = rep(2, 3), size_type = 2),
                info = "Checking for incorrect variable length")
 })
 
-test_that("test.gsDesignCRT.n_fix", {
-  expect_error(gsDesignCRT(n_fix = "abc", size_type = 1),
+test_that("test.gsDesignCRT.m.alloc", {
+  expect_error(gsDesignCRT(m_alloc = "abc", size_type = 2),
                info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(n_fix = -1, size_type = 1),
+  expect_error(gsDesignCRT(m_alloc = c(0.5, 0.6), size_type = 2),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(n_fix = rep(2, 2), size_type = 1),
+  expect_error(gsDesignCRT(m_alloc = rep(0.5, 3), size_type = 2),
+               info = "Checking for incorrect variable length")
+})
+
+test_that("test.gsDesignCRT.n", {
+  expect_error(gsDesignCRT(n = "abc", size_type = 1),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(n = -1, size_type = 1),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(n = rep(2, 3), size_type = 1),
+               info = "Checking for incorrect variable length")
+})
+
+test_that("test.gsDesignCRT.n.cv", {
+  expect_error(gsDesignCRT(n_cv = "abc", size_type = 1),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(n_cv = -1, size_type = 1),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(n_cv = rep(2, 3), size_type = 1),
                info = "Checking for incorrect variable length")
 })
 
 test_that("test.gsDesignCRT.info.timing", {
-  expect_error(gsDesignCRT(info_timing = "abc", k = 1),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = "abc", k = 1),
                info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(info_timing = -1, k = 1),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = -1, k = 1),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(info_timing = 2, k = 1),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = 2, k = 1),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(info_timing = c(0.1, 1.1), k = 2),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = c(0.1, 1.1), k = 2),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(info_timing = c(0.5, 0.1), k = 2),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = c(0.5, 0.1), k = 2),
                info = "Checking for incorrect variable specification")
-  expect_error(gsDesignCRT(info_timing = c(0.1, 0.5, 1), k = 2),
+  expect_error(gsDesignCRT(timing_type = 1, info_timing = c(0.1, 0.5, 1),
+                           k = 2),
                info = "Checking for incorrect variable length")
 })
 
-test_that("test.gsDesignCRT.size.timing", {
-  expect_error(gsDesignCRT(size_timing = "abc", k = 1),
+test_that("test.gsDesignCRT.m.timing", {
+  expect_error(gsDesignCRT(timing_type = 3, m_timing = "abc", k = 1),
                info = "Checking for incorrect variable type")
-  expect_error(gsDesignCRT(size_timing = -1, k = 1),
+  expect_error(gsDesignCRT(timing_type = 3, m_timing = -1, k = 1),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(size_timing = 2, k = 1),
+  expect_error(gsDesignCRT(timing_type = 3, m_timing = 2, k = 1),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(size_timing = c(0.1, 1.1), k = 2),
+  expect_error(gsDesignCRT(timing_type = 3,
+                           m_timing = matrix(c(0.5, 0.5, 1, 2), nrow = 2),
+                           k = 2),
                info = "Checking for out-of-range variable value")
-  expect_error(gsDesignCRT(size_timing = c(0.5, 0.1), k = 2),
+  expect_error(gsDesignCRT(timing_type = 3,
+                           m_timing = matrix(c(0.5, 0.5, 0.25, 0.25, 1, 1),
+                                             nrow = 2),
+                           k = 3),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 3,
+                           m_timing = matrix(c(0.25, 0.25, 0.5, 0.5, 1, 2),
+                                             nrow = 2),
+                           k = 2),
                info = "Checking for incorrect variable specification")
-  expect_error(gsDesignCRT(size_timing = c(0.1, 0.5, 1), k = 2),
-               info = "Checking for incorrect variable length")
+})
+
+test_that("test.gsDesignCRT.n.timing", {
+  expect_error(gsDesignCRT(timing_type = 3, n_timing = "abc", k = 1),
+               info = "Checking for incorrect variable type")
+  expect_error(gsDesignCRT(timing_type = 3, n_timing = -1, k = 1),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 3, n_timing = 2, k = 1),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 3,
+                           n_timing = matrix(c(0.5, 0.5, 1, 2), nrow = 2),
+                           k = 2),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 3,
+                           n_timing = matrix(c(0.5, 0.5, 0.25, 0.25, 1, 1),
+                                             nrow = 2),
+                           k = 3),
+               info = "Checking for out-of-range variable value")
+  expect_error(gsDesignCRT(timing_type = 3,
+                           n_timing = matrix(c(0.25, 0.25, 0.5, 0.5, 1, 2),
+                                             nrow = 2),
+                           k = 2),
+               info = "Checking for incorrect variable specification")
 })
 
 test_that("test.gsDesignCRT.alpha_sf", {
@@ -577,6 +634,8 @@ test_that("test.gsDesignCRT.tol", {
   expect_error(gsDesignCRT(tol = rep(0.1, 2)),
                info = "Checking for incorrect variable length")
 })
+
+######### Stress tests for spending functions #########
 
 test_that("test.stress.sfExp.type1", {
   no_errors <- param.range.util(param = nu, test_type = 1, sf = sfExponential)
@@ -733,6 +792,8 @@ test_that("test.stress.sfPower.type5", {
   expect_true(no_errors, info = "Type 5 sfPower stress test")
 })
 
+######## gsProbabilityCRT tests #########
+
 test_that("test.gsProbabilityCRT.theta", {
   expect_error(gsProbabilityCRT(theta = "abc"),
                info = "Checking for incorrect variable type")
@@ -799,6 +860,8 @@ test_that("test.Deming.gsProb", {
   expect_equal(0.097, round(y, 3), info = "Checking Type I error, k = 10")
   expect_equal(0.124, round(z, 3), info = "Checking Type I error, k = 20")
 })
+
+######### Spending function parameter tests #########
 
 test_that("test.sfcauchy.param", {
   expect_error(sfcauchy(param = rep(1, 3)),
@@ -896,4 +959,279 @@ test_that("test.sfTDist.param", {
 test_that("test.sfTDist.param ", {
   expect_error(sfTDist(param = "abc"),
                info = "Checking for incorrect variable type")
+})
+
+######### analysis schedule setting tests #########
+test_that("mSetSchedule handles scalar (0/1) inputs correctly", {
+  k <- 3
+
+  # Both arms: pattern 0 -> constant max clusters at each analysis
+  mt0 <- mSetSchedule(c(0, 0), k = k)
+  expect_equal(dim(mt0), c(2L, k))
+  expect_equal(mt0[1, ], rep(1, k))
+  expect_equal(mt0[2, ], rep(1, k))
+
+  # First arm constant, second arm linear accrual
+  mt01 <- mSetSchedule(c(0, 1), k = k)
+  expect_equal(dim(mt01), c(2L, k))
+  expect_equal(mt01[1, ], rep(1, k))
+  expect_equal(mt01[2, ], seq_len(k) / k)
+
+  # Length-1 input recycled to both arms
+  mt1 <- mSetSchedule(1, k = k)
+  expect_equal(dim(mt1), c(2L, k))
+  expect_equal(mt1[1, ], seq_len(k) / k)
+  expect_equal(mt1[2, ], seq_len(k) / k)
+})
+
+test_that("nSetSchedule handles scalar (0/1) inputs correctly", {
+  k <- 4
+
+  # Both arms: pattern 1 -> linear accrual in cluster size
+  nt11 <- nSetSchedule(c(1, 1), k = k)
+  expect_equal(dim(nt11), c(2L, k))
+  expect_equal(nt11[1, ], seq_len(k) / k)
+  expect_equal(nt11[2, ], seq_len(k) / k)
+
+  # First arm linear, second arm constant
+  nt10 <- nSetSchedule(c(1, 0), k = k)
+  expect_equal(dim(nt10), c(2L, k))
+  expect_equal(nt10[1, ], seq_len(k) / k)
+  expect_equal(nt10[2, ], rep(1, k))
+})
+
+test_that("mSetSchedule and nSetSchedule expand 2 x (k-1) matrices and enforce final timing = 1", {
+  k <- 3
+
+  # Valid 2 x (k-1) matrix: last column should be appended as 1s
+  m_in <- matrix(c(0.3, 0.3,
+                   0.7, 0.7), nrow = 2)  # 2 x 2, k = 3
+  mt <- mSetSchedule(m_in, k = k)
+  expect_equal(dim(mt), c(2L, k))
+  expect_equal(mt[, 1:2], m_in)
+  expect_equal(mt[, 3], rep(1, 2))
+
+  n_in <- matrix(c(0.25, 0.25,
+                   0.6,  0.6), nrow = 2) # 2 x 2, k = 3
+  nt <- nSetSchedule(n_in, k = k)
+  expect_equal(dim(nt), c(2L, k))
+  expect_equal(nt[, 1:2], n_in)
+  expect_equal(nt[, 3], rep(1, 2))
+
+  # Invalid: full 2 x k matrix with final timing != 1 should error
+  m_bad_final <- matrix(c(0.5, 0.5,
+                          0.9, 0.9), nrow = 2) # k = 2
+  expect_error(
+    mSetSchedule(m_bad_final, k = 2),
+    info = "final analysis is input, it must be 1"
+  )
+
+  n_bad_final <- matrix(c(0.4, 0.4,
+                          0.8, 0.8), nrow = 2)
+  expect_error(
+    nSetSchedule(n_bad_final, k = 2),
+    info = "final analysis is input, it must be 1"
+  )
+})
+
+test_that("mSetSchedule and nSetSchedule enforce 2-row matrices and strictly increasing timings", {
+  # Wrong number of rows
+  m_bad_rows <- matrix(0.5, nrow = 4, ncol = 1)
+  expect_error(
+    mSetSchedule(m_bad_rows, k = 3),
+    info = "if analysis timing for final analysis is input, it must be 1"
+  )
+
+  n_bad_rows <- matrix(0.5, nrow = 4, ncol = 1)
+  expect_error(
+    nSetSchedule(n_bad_rows, k = 3),
+    info = "if analysis timing for final analysis is input, it must be 1"
+  )
+
+  # Not strictly increasing: flat timing should fail
+  m_flat <- matrix(c(0.5, 0.5,
+                     0.5, 0.5), nrow = 2)  # 2 x 2, k = 2
+  expect_error(
+    mSetSchedule(m_flat, k = 2),
+    info = "Must be increasing strictly"
+  )
+
+  n_flat <- matrix(c(0.3, 0.3,
+                     0.3, 0.3), nrow = 2)
+  expect_error(
+    nSetSchedule(n_flat, k = 2),
+    info = "Must be increasing strictly"
+  )
+})
+
+######## genClusterSizes tests #########
+
+test_that("genClusterSizes with zero CV returns constant sizes", {
+  sizes <- genClusterSizes(
+    m     = 3,
+    n     = 10,
+    n_cv  = 0,
+    n_min = rep(1, 3),
+    n_max = rep(20, 3)
+  )
+
+  expect_equal(length(sizes), 3)
+  expect_true(all(sizes == 10))
+})
+
+test_that("genClusterSizes errors for invalid negative binomial dispersion", {
+  # n_cv^2 <= 1 / n should error
+  expect_error(
+    genClusterSizes(
+      m     = 3,
+      n     = 10,
+      n_cv  = sqrt(1 / 10),  # exactly on the boundary
+      n_min = rep(1, 3),
+      n_max = rep(20, 3)
+    ),
+    info = "n_cv^2 must be greater"
+  )
+})
+
+######## genContCRT tests #########
+
+test_that("genContCRT generates continuous CRT data properly", {
+  df <- genContCRT(
+    m        = c(2, 2),
+    m_alloc  = c(0.5, 0.5),
+    n        = c(5, 5),
+    n_cv     = c(0, 0),
+    mu_vec   = c(0, 1),
+    sigma_vec = c(1, 1),
+    rho      = c(0.01, 0.01)
+  )
+
+  expect_s3_class(df, "data.frame")
+  expect_equal(colnames(df), c("arm", "cluster", "individual", "response"))
+
+  expect_true(all(df$arm %in% 0:1))
+  expect_true(all(df$cluster >= 1))
+  expect_true(is.numeric(df$response))
+  expect_true(nrow(df) > 0)
+})
+
+######### genBinCRT tests #########
+
+test_that("genBinCRT generates binary CRT data properly", {
+  df <- genBinCRT(
+    m        = c(2, 2),
+    m_alloc  = c(0.5, 0.5),
+    n        = c(5, 5),
+    n_cv     = c(0, 0),
+    p_vec    = c(0.3, 0.5),
+    rho      = c(0.01, 0.01)
+  )
+
+  expect_s3_class(df, "data.frame")
+  expect_equal(colnames(df), c("arm", "cluster", "individual", "response"))
+
+  expect_true(all(df$arm %in% 0:1))
+  expect_true(all(df$cluster >= 1))
+  expect_true(all(df$response %in% c(0, 1)))
+  expect_true(nrow(df) > 0)
+})
+
+######### gsSimContCRT tests #########
+
+test_that("gsSimContCRT runs with known variance/ICC and returns expected structure", {
+  # Simple continuous data set compatible with m_max / n_max
+  m_max <- c(3, 3)
+  n_max <- c(8, 8)
+  data_cont <- genContCRT(
+    m        = m_max,
+    n        = n_max,
+    n_cv     = c(0, 0),
+    mu_vec   = c(0, 0.5),
+    sigma_vec = c(1, 1),
+    rho      = c(0.01, 0.01)
+  )
+
+  sim <- gsSimContCRT(
+    k           = 3,
+    data        = data_cont,
+    test_type   = 1,
+    test_sides  = 1,
+    recruit_type = 1,
+    stat_type   = 1,                 # Z_known
+    delta       = 0.5,
+    sigma_vec   = c(1, 1),
+    rho         = c(0.01, 0.01),
+    alpha       = 0.05,
+    beta        = 0.1,
+    i_max       = 1,                  # any positive value; just affects ifrac
+    m_max       = m_max,
+    n_max       = n_max,
+    n_cv        = c(0, 0),
+    schedule_m  = NULL,               # let function choose equal fractions
+    schedule_n  = NULL,
+    alpha_sf    = sfLDOF,
+    beta_sf     = sfLDOF
+  )
+
+  expect_type(sim, "list")
+  expect_true(all(c("reject", "t_i", "m_i", "n_i", "total_i",
+                    "i_frac") %in% names(sim)))
+
+  expect_true(is.logical(sim$reject))
+  expect_true(length(sim$reject) == 1L)
+  expect_true(is.numeric(sim$t_i))
+  expect_true(sim$t_i >= 1)
+  expect_true(is.numeric(sim$m_i))
+  expect_true(is.numeric(sim$n_i))
+  expect_true(is.numeric(sim$total_i))
+})
+
+######### gsSimBinCRT tests #########
+
+test_that("gsSimBinCRT runs with known variance/ICC and returns expected structure", {
+  set.seed(123)
+
+  m_max <- c(3L, 3L)
+  n_max <- c(8L, 8L)
+  data_bin <- genBinCRT(
+    m        = m_max,
+    n        = n_max,
+    n_cv     = c(0, 0),
+    p_vec    = c(0.3, 0.5),
+    rho      = c(0.01, 0.01)
+  )
+
+  sim <- gsSimBinCRT(
+    k           = 3L,
+    data        = data_bin,
+    test_type   = 1L,
+    test_sides  = 1L,
+    recruit_type = 1L,
+    stat_type   = 1L,                 # Z_known
+    delta       = 0.2,
+    p_vec       = c(0.3, 0.5),
+    rho         = c(0.01, 0.01),
+    alpha       = 0.05,
+    beta        = 0.1,
+    i_max       = 1,
+    m_max       = m_max,
+    n_max       = n_max,
+    n_cv        = c(0, 0),
+    schedule_m  = NULL,
+    schedule_n  = NULL,
+    alpha_sf    = sfLDOF,
+    beta_sf     = sfLDOF
+  )
+
+  expect_type(sim, "list")
+  expect_true(all(c("reject", "t_i", "m_i", "n_i", "total_i",
+                    "i_frac") %in% names(sim)))
+
+  expect_true(is.logical(sim$reject))
+  expect_true(length(sim$reject) == 1L)
+  expect_true(is.numeric(sim$t_i))
+  expect_true(sim$t_i >= 1)
+  expect_true(is.numeric(sim$m_i))
+  expect_true(is.numeric(sim$n_i))
+  expect_true(is.numeric(sim$total_i))
 })

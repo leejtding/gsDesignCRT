@@ -61,6 +61,7 @@ gsUpperCRT <- function(theta = 0, I, a = NULL, falsepos, sides = 1,
     checkVector(a, "numeric")
   }
   checkVector(I, "numeric", c(0, Inf), c(FALSE, TRUE))
+  falsepos[falsepos < 1e-15] <- 1e-15
   checkVector(falsepos, "numeric", c(0, 1), c(FALSE, FALSE))
   checkScalar(tol, "numeric", c(0, Inf), c(FALSE, TRUE))
   checkScalar(r, "integer", c(1, 80))
@@ -162,6 +163,7 @@ gsLowerCRT <- function(theta = 0, I, falseneg, b = NULL, sides = 1,
     checkVector(b, "numeric")
   }
   checkVector(I, "numeric", c(0, Inf), c(FALSE, TRUE))
+  falseneg[falseneg < 1e-15] <- 1e-15
   checkVector(falseneg, "numeric", c(0, 1), c(FALSE, FALSE))
   checkScalar(as.numeric(binding), "integer", c(0, 1))
   checkScalar(tol, "numeric", c(0, Inf), c(FALSE, TRUE))
@@ -257,6 +259,8 @@ gsBoundsCRT <- function(theta = 0, I, falseneg, falsepos, sides = 1,
   # Check input arguments
   checkScalar(theta, "numeric", c(0, Inf))
   checkVector(I, "numeric", c(0, Inf), c(FALSE, TRUE))
+  falseneg[falseneg < 1e-15] <- 1e-15
+  falsepos[falsepos < 1e-15] <- 1e-15
   checkVector(falseneg, "numeric", c(0, 1), c(FALSE, FALSE))
   checkVector(falsepos, "numeric", c(0, 1), c(FALSE, FALSE))
   checkScalar(sides, "integer", c(1, 2))
@@ -389,42 +393,41 @@ gsProbabilityCRT <- function(theta = 0, I = 1, a = 0, b = 1,
   x
 }
 
-###
-# Hidden Functions
-###
 
-# gsbetadiffCRT function [sinew] ----
-gsbetadiffCRT <- function(Imax, theta, beta, time, a, b, sides, r = 18) {
+######### Hidden Functions #########
+
+# gsBetaDiffCRT function [sinew] ----
+gsBetaDiffCRT <- function(Imax, theta, beta, time, a, b, sides, r = 18) {
   # Compute difference between actual and desired Type II error
   I <- time * Imax
-  x <- gsprobCRT(theta = theta, I = I, a = a, b = b, sides = sides, r = r)
+  x <- gsProbCRT(theta = theta, I = I, a = a, b = b, sides = sides, r = r)
   (sum(x$probhi) + sum(x$problo)) - (1 - beta)
 }
 
-# gsalphadiffCRT function [sinew] ----
-gsalphadiffCRT <- function(Imax, theta, alpha, falseneg, time, b, sides,
+# gsAlphaDiffCRT function [sinew] ----
+gsAlphaDiffCRT <- function(Imax, theta, alpha, falseneg, time, b, sides,
                            binding, tol = 0.000001, r = 18) {
   # Compute difference between actual and desired Type I error
   I <- time * Imax
   lower <- gsLowerCRT(theta = theta, I = I, falseneg = falseneg, b = b,
                       sides = sides, binding = binding, tol = tol, r = r)
-  x <- gsprobCRT(theta = 0, I = I, a = lower$a, b = b, sides = sides, r = r)
+  x <- gsProbCRT(theta = 0, I = I, a = lower$a, b = b, sides = sides, r = r)
   (sum(x$probhi) + sum(x$problo)) - alpha
 }
 
-# gsbounddiffCRT function [sinew] ----
-gsbounddiffCRT <- function(Imax, theta, falseneg, falsepos, time, sides,
+# gsBoundDiffCRT function [sinew] ----
+gsBoundDiffCRT <- function(Imax, theta, falseneg, falsepos, time, sides,
                            binding, tol = 0.000001, r = 18) {
   # Compute difference between last upper and lower stopping boundaries
   I <- time * Imax
   bounds <- gsBoundsCRT(theta = theta, I = I, falseneg = falseneg,
                         falsepos = falsepos, sides = sides, binding = binding,
                         tol = tol, r = r)
-  bounds$diff[length(time)]
+  return(bounds$diff[length(time)])
 }
 
-# gsprobCRT function [sinew] ----
-gsprobCRT <- function(theta, I, a, b, sides = 1, r = 18) {
+# gsProbCRT function [sinew] ----
+gsProbCRT <- function(theta, I, a, b, sides = 1, r = 18) {
   nanal <- as.integer(length(I))
   ntheta <- as.integer(length(theta))
   phi <- as.double(c(1:(nanal * ntheta)))

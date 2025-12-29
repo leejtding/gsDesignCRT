@@ -4,10 +4,21 @@
 \alias{genContCRT}
 \title{Simulate cluster-randomized trial data with continuous outcomes}
 \usage{
-genContCRT(m = 1, n = 1, mu_vec = c(0, 1), sigma_vec = c(1, 1), rho = 0)
+genContCRT(
+  m = c(1, 1),
+  m_alloc = c(0.5, 0.5),
+  n = c(1, 1),
+  n_cv = c(0, 0),
+  mu_vec = c(0, 1),
+  sigma_vec = c(1, 1),
+  rho = c(0, 0)
+)
 }
 \arguments{
 \item{m}{Number of clusters.}
+
+\item{m_alloc}{Allocation ratio of clusters per arm. Default is
+\code{c(0.5, 0.5)}.}
 
 \item{n}{Mean size of each cluster.}
 

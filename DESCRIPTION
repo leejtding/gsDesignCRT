@@ -1,5 +1,5 @@
 Package: gsDesignCRT
-Version: 1.0.0
+Version: 1.0.1
 Title: Group Sequential Design for Cluster Randomized Trials
 Authors@R: person(given = "Lee", family = "Ding", email =
           "lee_ding@g.harvard.edu", role = c('aut','cre'))
@@ -13,18 +13,18 @@ Encoding: UTF-8
 Depends:
     R (>= 3.5.0)
 Imports:
-    magrittr,
     methods,
     stats,
     tools,
     lme4,
-    performance
+    performance,
+    ggplot2,
+    reshape2
 Suggests:
     covr,
     gridExtra,
     kableExtra,
     knitr,
-    mvtnorm,
     ragg,
     rmarkdown,
     scales,

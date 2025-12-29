@@ -72,9 +72,9 @@ check is performed.}
 Other functions have no return value, called for side effects
 }
 \description{
-Utility functions to verify an objects's properties including whether it is
-a scalar or vector, the class, the length, and (if numeric) whether the
-range of values is on a specified interval. Additionally, the
+Utility functions to verify an objects's properties including
+whether it is a scalar or vector, the class, the length, and (if numeric)
+whether the range of values is on a specified interval. Additionally, the
 \code{checkLengths} function can be used to ensure that all the supplied
 inputs have equal lengths.
 

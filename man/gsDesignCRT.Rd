@@ -11,18 +11,21 @@ gsDesignCRT(
   test_type = 1,
   test_sides = 1,
   size_type = 1,
-  recruit_type = 1,
   timing_type = 2,
+  recruit_type = 1,
   delta = 1,
   sigma_vec = c(1, 1),
   p_vec = c(0.5, 0.5),
   rho = 0,
   alpha = 0.05,
   beta = 0.1,
-  m_fix = 1,
-  n_fix = 1,
+  m = 2,
+  m_alloc = c(0.5, 0.5),
+  n = 1,
+  n_cv = c(0, 0),
   info_timing = 1,
-  size_timing = 1,
+  m_timing = c(1, 1),
+  n_timing = c(1, 1),
   alpha_sf = sfLDOF,
   alpha_sfpar = -4,
   beta_sf = sfLDOF,
@@ -47,15 +50,17 @@ gsDesignCRT(
 
 \item{size_type}{\code{1=}clusters per arm \cr \code{2=}cluster size}
 
-\item{recruit_type}{\code{1=}recruit clusters with fixed sizes
-\cr \code{2=}recruit individuals into fixed number of clusters
-\cr \code{3=}recruit both clusters and individuals}
-
 \item{timing_type}{\code{1=} maximum and expected sample sizes based on
-specified information levels in \code{info_timing} \cr \code{2=} maximum
-sample size based on specified information levels in \code{info_timing} and
-expected sample sizes based on specified sample size levels in
-\code{size_timing}}
+specified information fractions in \code{info_timing}; recruit according to
+design specified in \code{recruit_type}
+\cr \code{2=} maximum sample size based on specified information fractions
+in \code{info_timing} and expected sample sizes based on specified sample
+size fractions in \code{m_timing} and \code{n_timing}
+\cr \code{3=} maximum and expected sample sizes based on specified
+sample size fractions in \code{m_timing} and \code{n_timing}
+@param recruit_type \code{1=}recruit clusters with fixed sizes
+\cr \code{2=}recruit individuals into fixed number of clusters
+\cr \code{3=}recruit at both cluster and individual levels}
 
 \item{delta}{Effect size for theta under alternative hypothesis. Must be > 0.}
 
@@ -71,22 +76,34 @@ expected sample sizes based on specified sample size levels in
 
 \item{beta}{Type II error, default value is 0.1 (90\% power).}
 
-\item{m_fix}{Number of clusters; used to find maximum size of each cluster.}
-
-\item{n_fix}{Mean size of each cluster; used to find maximum number of
+\item{m}{Number of clusters for finding maximum mean cluster size. If
+\code{m} is a scalar, it is treated as the total number of clusters across
+arms. If \code{m} is a vector of length 2, it is treated as the number of
 clusters per arm.}
 
+\item{m_alloc}{Allocation ratio of clusters per arm. Default is
+\code{c(0.5, 0.5)}.}
+
+\item{n}{Mean cluster size for finding maximum number of clusters. If
+\code{n} is a scalar, it is treated as the average cluster size for both
+arms. If \code{n} is a vector of length 2, it is treated as the average
+cluster size per arm.}
+
+\item{n_cv}{Coefficient of variation for cluster size. If \code{n_cv} is a
+scalar, it is treated as the coefficient of variation for both arms. If
+\code{n_cv} is a vector of length 2, it is treated as the coefficient of
+variation per arm.}
+
 \item{info_timing}{Sets timing of interim analyses based on information
-levels. Default of 1 produces analyses at equal-spaced increments.
+fractions. Default of 1 produces analyses at equal-spaced increments.
 Otherwise, this is a vector of length \code{k} or \code{k-1}. The values
 should satisfy \code{0 < info_timing[1] < info_timing[2] < ... <
 info_timing[k-1] < info_timing[k]=1}.}
 
-\item{size_timing}{Sets timing of interim analyses based on sample size
-levels if \code{timing_type = 2}. Default of 1 produces analyses at
-equal-spaced increments. Otherwise, this is a vector of length \code{k} or
-\code{k-1}. The values should satisfy \code{0 < size_timing[1] <
-size_timing[2] < ... < size_timing[k-1] < size_timing[k]=1}.}
+\item{m_timing}{Sets timing of interim analyses based on fractions of the
+number of clusters.}
+
+\item{n_timing}{Sets timing of interim analyses based on cluster size}
 
 \item{alpha_sf}{A spending function or a character string indicating an
 upper boundary type (that is, \dQuote{WT} for Wang-Tsiatis bounds,
@@ -134,20 +151,27 @@ Object containing the following elements: \item{k}{As
  \item{recruit_type}{As input.} \item{timing_type}{As input.} \item{delta}{As
  input.} \item{sigma_vec}{As input.} \item{p_vec}{As input.} \item{rho}{As
  input.} \item{alpha}{As input.} \item{beta}{As input.} \item{info_timing}{As
- input.} \item{size_timing}{As input.} \item{i}{Fisher information at each
- planned interim analysis based on \code{timing_type}.} \item{max_i}{Maximum
- information corresponding to design specifications.} \item{m}{Number of
- clusters per arm at each planned interim analysis.} \item{max_m}{Maximum
- number of clusters per arm.} \item{e_m}{A vector of length 2 with expected
- number of clusters per arm under the null and alternative hypotheses. For
- simplicity, the expected sizes with non-binding futility boundaries are
- calculated assuming the boundaries are binding futility.} \item{n}{Average
- cluster size at each planned interim analysis.} \item{max_n}{Maximum cluster
- size.} \item{e_m}{A vector of length 2 with expected cluster sizes under the
- null and alternative hypotheses. For simplicity, the expected sizes with
- non-binding futility boundaries are calculated assuming the futility
- boundaries are binding.} \item{max_total}{Maximum number of individuals in
- the trial.} \item{e_total}{A vector of length 2 with expected number of
+ input.} \item{m_timing}{As input.} \item{n_timing}{As input.}
+ \item{info_schedule}{Fraction of maximum information at each planned interim
+ analysis based on \code{timing_type} and \code{info_timing}.}
+ \item{m_schedule}{Fraction of maximum number of clusters per arm at each
+ planned interim analysis based on \code{timing_type} and \code{m_timing}.}
+ \item{n_schedule}{Fraction of maximum cluster size at each planned interim
+ analysis based on \code{timing_type} and \code{n_timing}.} \item{i}{Fisher
+ information at each planned interim analysis based on \code{timing_type}.}
+ \item{max_i}{Maximum information corresponding to design specifications.}
+ \item{m}{Number of clusters per arm at each planned interim analysis.}
+ \item{max_m}{Maximum number of clusters per arm.} \item{e_m}{A vector of
+ length 2 with expected number of clusters per arm under the null and
+ alternative hypotheses. For simplicity, the expected sizes with non-binding
+ futility boundaries are calculated assuming the boundaries are binding
+ futility.} \item{n}{Mean cluster size at each planned interim analysis.}
+ \item{max_n}{Maximum mean cluster size.} \item{e_n}{A vector of length 2
+ with expected mean cluster sizes under the null and alternative hypotheses.
+ For simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the futility boundaries are binding.}
+ \item{max_total}{Maximum number of individuals in the trial.}
+ \item{e_total}{A vector of length 2 with expected total number of
  individuals in the trial under the null and alternative hypotheses. For
  simplicity, the expected sizes with non-binding futility boundaries are
  calculated assuming the futility boundaries are binding.} \item{sufficient}{
@@ -167,6 +191,9 @@ Object containing the following elements: \item{k}{As
 \references{
 Jennison C and Turnbull BW (2000), \emph{Group Sequential
  Methods with Applications to Clinical Trials}. Boca Raton: Chapman and Hall.
+
+Anderson K (2025). gsDesign: Group Sequential Design.
+ R package version 3.8.0, https://keaven.github.io/gsDesign/.
 }
 \author{
 Lee Ding \email{lee_ding@g.harvard.edu}

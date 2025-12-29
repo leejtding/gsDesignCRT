@@ -12,17 +12,15 @@ gsSimBinCRT(
   test_sides,
   recruit_type,
   stat_type,
-  balance_size,
-  precompute = FALSE,
   delta,
   p_vec,
   rho,
   alpha = 0.05,
   beta = 0.1,
-  lower_bound = NULL,
-  upper_bound = NULL,
-  m_max = 1,
-  n_max = 1,
+  i_max = 1,
+  m_max = c(1, 1),
+  n_max = c(1, 1),
+  n_cv = c(0, 0),
   schedule_m = NULL,
   schedule_n = NULL,
   alpha_sf,
@@ -53,14 +51,9 @@ columns encoding the treatment arm, cluster, individual, and response.}
 
 \item{stat_type}{\code{1=} Z-test with known variance and ICC
 \cr \code{2=} Z-test with re-estimated variance and ICC
-\cr \code{3=} t-test with re-estimated variance and ICC}
-
-\item{balance_size}{\code{1=} exact sample increments according to the
-scheduled interim analyses.
+\cr \code{3=} t-test with re-estimated variance and ICC
 \cr \code{2=} randomized sample increments from multinomial distribution
 according to the scheduled interim analyses.}
-
-\item{precompute}{Use pre-computed stopping boundaries if true.}
 
 \item{delta}{Effect size for theta under alternative hypothesis.}
 
@@ -72,11 +65,7 @@ according to the scheduled interim analyses.}
 
 \item{beta}{Type II error, default value is 0.1 (90\% power).}
 
-\item{lower_bound}{Pre-computed lower futility boundaries at the specified
-interim analyses. Must be specified if precompute is TRUE. NULL otherwise.}
-
-\item{upper_bound}{Pre-computed upper efficacy boundaries at the specified
-interim analyses. Must be specified if precompute is TRUE. NULL otherwise.}
+\item{i_max}{Maximum information.}
 
 \item{m_max}{Number of clusters.}
 

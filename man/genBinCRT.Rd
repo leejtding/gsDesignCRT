@@ -4,10 +4,20 @@
 \alias{genBinCRT}
 \title{Simulate cluster-randomized trial data with binary outcomes}
 \usage{
-genBinCRT(m = 1, n = 1, p_vec = c(0.5, 0.5), rho = NULL)
+genBinCRT(
+  m = c(1, 1),
+  m_alloc = c(0.5, 0.5),
+  n = c(1, 1),
+  n_cv = c(0, 0),
+  p_vec = c(0.5, 0.5),
+  rho = c(0, 0)
+)
 }
 \arguments{
 \item{m}{Number of clusters.}
+
+\item{m_alloc}{Allocation ratio of clusters per arm. Default is
+\code{c(0.5, 0.5)}.}
 
 \item{n}{Mean size of each cluster.}
 

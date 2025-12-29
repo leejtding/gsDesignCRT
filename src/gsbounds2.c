@@ -94,6 +94,7 @@ void gsbounds2(int *xnanal, double *xtheta, double *I, double *a, double *b,
     for(i=1;i<nanal;i++)
     {   /* set up constants */
         rtIkm1=rtIk; rtIk=sqrt(I[i]); mu2=rtIk*theta; rtdeltak=sqrt(I[i]-I[i-1]);
+        if (rtdeltak < 1) rtdeltak=1;
         if (problo[i]<=0.) atem2= 0.;
         else atem2=qnorm(1-problo[i],mu2,1.,0,0);
         if (probhi[i]<=0.) btem2= EXTREMEZ;
@@ -123,7 +124,7 @@ void gsbounds2(int *xnanal, double *xtheta, double *I, double *a, double *b,
             else if (bdelta > -dphi) btem2=btem-1.;
             else btem2=btem+(probhi[i]-phi)/dphi;
             if (btem2>EXTREMEZ) btem2=EXTREMEZ;
-            else if (btem2< -EXTREMEZ) btem2= -EXTREMEZ;
+            else if (btem2< 0) btem2= 0;
             bdelta=btem2-btem; if (bdelta<0) bdelta= -bdelta;
         }
         b[i]=btem;
@@ -150,10 +151,12 @@ void gsbounds2(int *xnanal, double *xtheta, double *I, double *a, double *b,
             /* maximum value allowed is z1[m1]*rtIk to keep within grid points */
             if (*printerr) Rprintf("i=%2d j=%2d atem=%lf plo=%lf dplo=%lf\n",i,j,atem,plo,dplo);
             adelta=problo[i]-plo;
-            if (adelta>dplo) atem2=atem+1.;
+            if (adelta == 0) atem2=atem;
+            else if (adelta>dplo) atem2=atem+1.;
             else if (adelta < -dplo) atem2=atem-1.;
             else atem2=atem+(problo[i]-plo)/dplo;
             if (atem2>EXTREMEZ) atem2=EXTREMEZ;
+            else if (atem2 < 0) atem2= 0;
             adelta=atem2-atem; if (adelta<0) adelta= -adelta;
         }
         a[i]=atem;

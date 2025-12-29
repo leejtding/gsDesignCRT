@@ -1,3 +1,91 @@
+# gsSimCRT roxy [sinew] ----
+#' @title Simulate group sequential cluster-randomized trial.
+#'
+#' @param design Object of class \code{gsDesignCRT} specifying the group
+#' sequential cluster-randomized trial design.
+#' @param data Simulated outcomes. Should be an n x 4 matrix with the
+#' columns encoding the treatment arm, cluster, individual, and response.
+#' @param stat Type of test statistic to use. Options are \code{"Z_known"},
+#'  \code{"Z_unknown"}, and \code{"t_unknown"}.
+#'
+#' @return Object containing the following elements: \item{reject}{Whether the
+#' null hypothesis was rejected in the simulated trial.} \item{k_i}{Interim
+#' analysis at which simulated trial was stopped.} \item{m_i}{Number of clusters
+#' per arm when the simulated trial was stopped.} \item{n_i}{Average number of
+#' individuals per cluster when the simulated trial was stopped.}
+#' \item{total_i}{Total number of individuals per arm when the simulated trial
+#' was stopped.} \item{i_frac}{Information fraction when the simulated trial
+#' was stopped.}
+#'
+#' @author Lee Ding \email{lee_ding@g.harvard.edu}
+#'
+#' @export
+#' @name gsSimCRT
+# gsSimCRT function [sinew] ----
+gsSimCRT <- function(design, data,
+                     stat = c("Z_known", "Z_unknown", "t_unknown")) {
+  stopifnot(inherits(design, "gsDesignCRT"))
+  stat <- match.arg(stat)
+  if (design$outcome_type == 1) {
+    # continuous
+    out <- gsSimContCRT(
+      k           = design$k,
+      data        = data,
+      test_type   = design$test_type,
+      test_sides  = design$test_sides,
+      recruit_type = design$recruit_type,
+      stat_type   = match(stat, c("Z_known", "Z_reestimate", "t_reestimate")),
+      delta       = design$delta,
+      sigma_vec   = design$sigma_vec,
+      rho         = design$rho,
+      alpha       = design$alpha,
+      beta        = design$beta,
+      i_max       = design$max_i,
+      m_max       = ceiling(design$max_m),
+      n_max       = ceiling(design$max_n),
+      n_cv        = design$n_cv,
+      schedule_m  = design$m_schedule,
+      schedule_n  = design$n_schedule,
+      alpha_sf    = design$alpha_sf,
+      alpha_sfpar = design$alpha_sfpar,
+      beta_sf     = design$beta_sf,
+      beta_sfpar  = design$beta_sfpar,
+      tol         = design$tol,
+      r           = design$r
+    )
+  } else {
+    # binary
+    out <- gsSimBinCRT(
+      k           = design$k,
+      data        = data,
+      test_type   = design$test_type,
+      test_sides  = design$test_sides,
+      recruit_type = design$recruit_type,
+      stat_type   = match(stat, c("Z_known", "Z_reestimate", "t_reestimate")),
+      delta       = design$delta,
+      p_vec       = design$p_vec,
+      rho         = design$rho,
+      alpha       = design$alpha,
+      beta        = design$beta,
+      i_max       = design$max_i,
+      m_max       = ceiling(design$max_m),
+      n_max       = ceiling(design$max_n),
+      n_cv        = design$n_cv,
+      schedule_m  = design$m_schedule,
+      schedule_n  = design$n_schedule,
+      alpha_sf    = design$alpha_sf,
+      alpha_sfpar = design$alpha_sfpar,
+      beta_sf     = design$beta_sf,
+      beta_sfpar  = design$beta_sfpar,
+      tol         = design$tol,
+      r           = design$r
+    )
+  }
+
+  class(out) <- c("gsSimCRT", class(out))
+  out
+}
+
 # gsSimContCRT roxy [sinew] ----
 #' @title Simulate group sequential cluster-randomized trial with continuous
 #' outcomes.
@@ -17,22 +105,15 @@
 #' @param stat_type \code{1=} Z-test with known variance and ICC
 #' \cr \code{2=} Z-test with re-estimated variance and ICC
 #' \cr \code{3=} t-test with re-estimated variance and ICC
-#' @param balance_size \code{1=} exact sample increments according to the
-#' scheduled interim analyses.
-#' \cr \code{2=} randomized sample increments from multinomial distribution
-#' according to the scheduled interim analyses.
-#' @param precompute Use pre-computed stopping boundaries if true.
 #' @param delta Effect size for theta under alternative hypothesis.
 #' @param sigma_vec Standard deviations for control and treatment groups.
 #' @param rho Intraclass correlation coefficient. Default value is 0.
 #' @param alpha Desired Type I error, always one-sided. Default value is 0.05.
 #' @param beta Desired Type II error, default value is 0.1 (90\% power).
-#' @param lower_bound Pre-computed lower futility boundaries at the specified
-#' interim analyses. Must be specified if precompute is TRUE. NULL otherwise.
-#' @param upper_bound Pre-computed upper efficacy boundaries at the specified
-#' interim analyses. Must be specified if precompute is TRUE. NULL otherwise.
+#' @param i_max Maximum information.
 #' @param m_max Number of clusters.
 #' @param n_max Mean size of each cluster.
+#' @param n_cv Coefficient of variation for cluster size
 #' @param schedule_m Number of clusters at each interim look. Interim analyses
 #' will be conducted according to the information levels in \code{schedule_m}
 #' and \code{schedule_n} if provided. Otherwise, interim analyses will be
@@ -85,7 +166,6 @@
 #' was stopped.} \item{i_frac}{Information fraction when the simulated trial
 #' was stopped.}
 #'
-#' @importFrom stats rmultinom
 #' @importFrom lme4 lmer
 #' @importFrom performance icc
 #'
@@ -95,11 +175,9 @@
 #' @name gsSimContCRT
 # gsSimContCRT function [sinew] ----
 gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
-                         stat_type, balance_size, precompute = FALSE,
-                         delta, sigma_vec = c(1, 1), rho,
-                         alpha = 0.05, beta = 0.1,
-                         lower_bound = NULL, upper_bound = NULL,
-                         m_max = 1, n_max = 1,
+                         stat_type, delta, sigma_vec = c(1, 1), rho,
+                         alpha = 0.05, beta = 0.1, i_max = 1,
+                         m_max = c(1, 1), n_max = c(1, 1), n_cv = c(0, 0),
                          schedule_m = NULL, schedule_n = NULL,
                          alpha_sf, alpha_sfpar = -4, beta_sf, beta_sfpar = -4,
                          tol = 0.000001, r = 18) {
@@ -109,23 +187,15 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
   checkScalar(test_sides, "integer", c(1, 2))
   checkScalar(recruit_type, "integer", c(1, 3))
   checkScalar(stat_type, "integer", c(1, 3))
-  checkScalar(balance_size, "integer", c(1, 2))
   checkScalar(delta, "numeric", c(0, Inf), c(FALSE, FALSE))
   checkVector(sigma_vec, "numeric", c(0, Inf), c(FALSE, FALSE), length = 2)
-  checkScalar(rho, "numeric", c(0, 1))
+  checkVector(rho, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
   checkScalar(alpha, "numeric", 0:1, c(FALSE, FALSE))
   checkScalar(beta, "numeric", c(0, 1 - alpha), c(FALSE, FALSE))
-  if (precompute) {
-    checkLengths(lower_bound, upper_bound)
-  }
-  checkScalar(m_max, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n_max, "integer", c(0, Inf), c(FALSE, FALSE))
-  if (!is.null(schedule_m) && !is.null(schedule_n)) {
-    checkLengths(schedule_m, schedule_n)
-    if (precompute) {
-      checkLengths(schedule_m, schedule_n, lower_bound, upper_bound)
-    }
-  }
+  checkScalar(i_max, "numeric", c(0, Inf), c(FALSE, FALSE))
+  checkVector(m_max, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_max, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE), length = 2)
   checkScalar(tol, "numeric", c(0, 0.1), c(FALSE, TRUE))
   checkScalar(r, "integer", c(1, 80))
 
@@ -144,33 +214,19 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
   falseneg_vec <- c()
   stop <- FALSE
 
-  if (is.null(schedule_m)) {
-    if (balance_size == 1) {
-      schedule_m1 <- ((1:k) / k) * m_max
-      schedule_m2 <- ((1:k) / k) * m_max
-    } else {
-      schedule_m1 <- cumsum(rep(1, k) + rmultinom(1, m_max - k, rep(1 / k, k)))
-      schedule_m2 <- cumsum(rep(1, k) + rmultinom(1, m_max - k, rep(1 / k, k)))
-    }
-  } else {
-    if (balance_size == 1) {
-      schedule_m1 <- schedule_m
-      schedule_m2 <- schedule_m
-    } else {
-      schedule_m1 <- cumsum(rep(1, k) + rmultinom(1, m_max - k,
-                                                  schedule_m / m_max))
-      schedule_m2 <- cumsum(rep(1, k) + rmultinom(1, m_max - k,
-                                                  schedule_m / m_max))
-    }
+  # Equal sample size fractions if not provided
+  if (is.null(schedule_m) || is.null(schedule_n)) {
+    equal_frac <- seq_len(k) / k
+    schedule_m <- rbind(equal_frac, equal_frac)
+    schedule_n <- rbind(equal_frac, equal_frac)
   }
 
-  if (is.null(schedule_n)) {
-    schedule_n1 <- ((1:k) / k) * n_max
-    schedule_n2 <- ((1:k) / k) * n_max
-  } else {
-    schedule_n1 <- schedule_n
-    schedule_n2 <- schedule_n
-  }
+  # Set schedule of recruited clusters - draw from multinomial distribution
+  n_max_gen <- n_max + round(5 * n_cv * n_max)
+  n1_max_vec <- genClusterSizes(m_max[1], n_max[1], n_cv[1],
+                                rep(1, m_max[1]), rep(n_max_gen[1], m_max[1]))
+  n2_max_vec <- genClusterSizes(m_max[2], n_max[2], n_cv[2],
+                                rep(1, m_max[2]), rep(n_max_gen[2], m_max[2]))
 
   while (!stop && ka_i < k) {
     # Update number of looks
@@ -178,153 +234,27 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
     kb_i <- kb_i + 1 # number of crossing bounds (usually = ka_i)
 
     # "Recruit" clusters
-    if (recruit_type == 1) {
-      ifrac_size_total1 <- ceiling(schedule_m1) * n_max
-      ifrac_size_total2 <- ceiling(schedule_m2) * n_max
+    m1 <- round(schedule_m[1, ka_i] * m_max[1])
+    m2 <- round(schedule_m[2, ka_i] * m_max[2])
 
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
+    n1_vec <- round(schedule_n[1, ka_i] * n1_max_vec[1:m1])
+    n2_vec <- round(schedule_n[2, ka_i] * n2_max_vec[1:m2])
+    data_i <- data.frame()
 
-        n1_i <- n_max
-        n2_i <- n_max
-      } else {
-        m1_i <- max(ceiling(schedule_m1[ka_i]), 1)
-        m2_i <- max(ceiling(schedule_m2[ka_i]), 1)
+    size_vec1_i <- c()
+    for (m_i in 1:m1) {
+      size_vec1_i <- c(size_vec1_i, n1_vec[m_i])
+      data1_i <- data[(data$arm == 0 & data$cluster == m_i &
+                         data$individual %in% 1:n1_vec[m_i]), ]
+      data_i <- rbind(data_i, data1_i)
+    }
 
-        n1_i <- n_max
-        n2_i <- n_max
-      }
-
-      size_vec1_i <- rep(n1_i, m1_i)
-      size_vec2_i <- rep(n1_i, m1_i)
-
-      data1_i <- data[(data$arm == 0 & data$cluster %in% 1:m1_i), ]
-      data2_i <- data[(data$arm == 1 &
-                         data$cluster %in% (m_max + 1):(m_max + m2_i)), ]
-      data_i <- rbind(data1_i, data2_i)
-    } else if (recruit_type == 2) {
-      ifrac_size_total1 <- m_max * ceiling(schedule_n1)
-      ifrac_size_total2 <- m_max * ceiling(schedule_n2)
-
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
-
-        n1_i <- n_max
-        n2_i <- n_max
-
-        size_vec1_i <- rep(n1_i, m1_i)
-        size_vec2_i <- rep(n1_i, m1_i)
-
-        data1_i <- data[(data$arm == 0 & data$individual %in% 1:n1_i), ]
-        data2_i <- data[(data$arm == 1 & data$individual %in% 1:n2_i), ]
-        data_i <- rbind(data1_i, data2_i)
-      } else {
-        if (balance_size == 1) {
-          n1_vec_i <- rep(schedule_n1[ka_i], m_max)
-          n2_vec_i <- rep(schedule_n2[ka_i], m_max)
-        } else {
-          n1_vec_i <- rep(2, m_max) + rmultinom(1,
-                                            max(ifrac_size_total1[ka_i] -
-                                                  (2 * m_max), 0),
-                                            rep(1 / m_max, m_max))
-          n2_vec_i <- rep(2, m_max) + rmultinom(1,
-                                            max(ifrac_size_total2[ka_i] -
-                                                  (2 * m_max), 0),
-                                            rep(1 / m_max, m_max))
-        }
-        m1_i <- 1
-        m2_i <- m_max + 1
-
-        size_vec1_i <- c()
-        size_vec2_i <- c()
-
-        data_i <- data.frame()
-        for (m_i in 1:m_max) {
-          n1_i <- n1_vec_i[m_i]
-          n2_i <- n2_vec_i[m_i]
-
-          size_vec1_i <- c(size_vec1_i, n1_i)
-          size_vec2_i <- c(size_vec2_i, n1_i)
-
-          data1_i <- data[(data$arm == 0 &
-                             data$cluster == m1_i &
-                             data$individual %in% 1:n1_i), ]
-          data2_i <- data[(data$arm == 1 &
-                             data$cluster == m2_i &
-                             data$individual %in% 1:n2_i), ]
-          data_i <- rbind(data_i, data1_i, data2_i)
-
-          m1_i <- m1_i + 1
-          m2_i <- m2_i + 1
-        }
-      }
-    } else if (recruit_type == 3) {
-      ifrac_size_total1 <- ceiling(schedule_m1) * ceiling(schedule_n1)
-      ifrac_size_total2 <- ceiling(schedule_m2) * ceiling(schedule_n2)
-
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
-
-        n1_i <- n_max
-        n2_i <- n_max
-
-        size_vec1_i <- rep(n1_i, m1_i)
-        size_vec2_i <- rep(n1_i, m1_i)
-
-        data1_i <- data[(data$arm == 0 & data$individual %in% 1:n1_i), ]
-        data2_i <- data[(data$arm == 1 & data$individual %in% 1:n2_i), ]
-        data_i <- rbind(data1_i, data2_i)
-      } else {
-        m1 <- max(ceiling(schedule_m1[ka_i]), 1)
-        m2 <- max(ceiling(schedule_m2[ka_i]), 1)
-
-        if (balance_size == 1) {
-          n1_vec_i <- rep(schedule_n1[ka_i], m1)
-          n2_vec_i <- rep(schedule_n2[ka_i], m2)
-        } else {
-          n1_vec_i <- rep(2, m1) + rmultinom(1,
-                                             max(ifrac_size_total1[ka_i] -
-                                                   (2 * m1), 0),
-                                             rep(1 / m1, m1))
-          n2_vec_i <- rep(2, m2) + rmultinom(1,
-                                             max(ifrac_size_total2[ka_i] -
-                                                   (2 * m2), 0),
-                                             rep(1 / m2, m2))
-        }
-
-        data_i <- data.frame()
-
-        m1_i <- 1
-        size_vec1_i <- c()
-        for (m_i in 1:m1) {
-          n1_i <- n1_vec_i[m_i]
-          size_vec1_i <- c(size_vec1_i, n1_i)
-
-          data1_i <- data[(data$arm == 0 &
-                             data$cluster == m1_i &
-                             data$individual %in% 1:n1_i), ]
-          data_i <- rbind(data_i, data1_i)
-
-          m1_i <- m1_i + 1
-        }
-
-        m2_i <- m_max + 1
-        size_vec2_i <- c()
-        for (m_i in 1:m2) {
-          n2_i <- n2_vec_i[m_i]
-          size_vec2_i <- c(size_vec2_i, n2_i)
-
-          data2_i <- data[(data$arm == 1 &
-                             data$cluster == m2_i &
-                             data$individual %in% 1:n2_i), ]
-          data_i <- rbind(data_i, data2_i)
-
-          m2_i <- m2_i + 1
-        }
-      }
+    size_vec2_i <- c()
+    for (m_i in 1:m2) {
+      size_vec2_i <- c(size_vec2_i, n2_vec[m_i])
+      data2_i <- data[(data$arm == 1 & data$cluster == m_max[1] + m_i &
+                         data$individual %in% 1:n2_vec[m_i]), ]
+      data_i <- rbind(data_i, data2_i)
     }
 
     # Get responses
@@ -343,13 +273,21 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
       rho_i <- rho
       se <- seContDiff(x1_i, x2_i, size_vec1_i, size_vec2_i, rho_i, sigma_vec)
     } else {
-      fit <- lmer(response ~ as.factor(arm) + (1 | cluster), data = data_i)
-      icc_est_i <- icc(fit)
-      if (length(icc_est_i) > 1) {
-        rho_i <- icc_est_i$ICC_adjusted
+      fit1 <- lmer(response ~ (1 | cluster), data = data1_i)
+      icc_est1_i <- icc(fit1)
+      if (length(icc_est1_i) > 1) {
+        rho1_i <- icc_est1_i$ICC_adjusted
       } else {
-        rho_i <- 0
+        rho1_i <- 0
       }
+      fit2 <- lmer(response ~ (1 | cluster), data = data2_i)
+      icc_est2_i <- icc(fit2)
+      if (length(icc_est2_i) > 1) {
+        rho2_i <- icc_est2_i$ICC_adjusted
+      } else {
+        rho2_i <- 0
+      }
+      rho_i <- c(rho1_i, rho2_i)
       se <- seContDiff(x1_i, x2_i, size_vec1_i, size_vec2_i, rho_i, NULL)
     }
 
@@ -362,84 +300,46 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
     info <- 1 / (se^2)
     info_vec_ret <- c(info_vec_ret, info)
 
-    ifrac <- iFrac(size_vec1_i, size_vec2_i, m_max, n_max, rho_i)
+    ifrac <- min(info / i_max, 1)
     ifrac_vec_ret <- c(ifrac_vec_ret, ifrac)
 
     if (ifrac <= ifrac_prev) {
       kb_i <- kb_i - 1
-    } else if (test_type == 1) {
-      # Get stopping bounds depending on test
-      if (precompute) {
-        if (stat_type <= 2) {
-          ub_i <- upper_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          ub_i <- qt(p = pnorm(upper_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
+    } else {
+      if (ifrac == 1) {
+        stop <- TRUE
+      }
+      if (test_type == 1) {
         # Alpha spending
         if (test_sides == 1) {
           spend_i <- alpha_sf(alpha, ifrac, alpha_sfpar)
           spend_i_prev <- alpha_sf(alpha, ifrac_prev, alpha_sfpar)
-          a <- rep(-30, kb_i)
         } else {
           spend_i <- alpha_sf(alpha / 2, ifrac, alpha_sfpar)
           spend_i_prev <- alpha_sf(alpha / 2, ifrac_prev, alpha_sfpar)
-          a <- rep(0, kb_i)
         }
         falsepos_i <- c(falsepos_vec, spend_i$spend - spend_i_prev$spend)
 
-        # Get stopping bounds depending on test
-        bounds_i <- gsUpperCRT(0, I = c(info_vec, info), a = a,
-                               falsepos = falsepos_i, sides = test_sides,
-                               tol = tol, r = r)
-        if (stat_type <= 2) {
-          ub_i <- bounds_i$b[kb_i]
+        # Beta spending
+        if (kb_i == k) {
+          falseneg_i <- c(falseneg_vec, beta)
         } else {
-          df_i <- dim(data_i)[1] - 2
-          ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
+          falseneg_i <- c(falseneg_vec, 1e-15)
         }
 
-        # Conduct group sequential test for interim look
-        if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
+        binding <- TRUE
+      } else if (test_type == 2 || test_type == 3) {
+        # Alpha spending
+        if (kb_i == k) {
+          falsepos_i <- c(falsepos_vec, 1e-15)
         } else {
-          reject <- FALSE
+          if (test_sides == 1) {
+            falsepos_i <- c(falsepos_vec, alpha)
+          } else {
+            falsepos_i <- c(falsepos_vec, alpha / 2)
+          }
         }
 
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-      }
-
-    } else if (test_type == 2 || test_type == 3) {
-      if (precompute) {
-        if (stat_type <= 2) {
-          lb_i <- lower_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(lower_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
         # Beta spending
         spend_i <- beta_sf(beta, ifrac, beta_sfpar)
         spend_i_prev <- beta_sf(beta, ifrac_prev, beta_sfpar)
@@ -451,52 +351,7 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
         } else {
           binding <- TRUE
         }
-        bounds_i <- gsLowerCRT(delta, I = c(info_vec, info), b = rep(30, kb_i),
-                               falseneg = falseneg_i, sides = test_sides,
-                               binding = binding, tol = tol, r = r)
-        if (stat_type <= 2) {
-          lb_i <- bounds_i$a[kb_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-      }
-    } else if (test_type == 4 || test_type == 5) {
-      if (precompute) {
-        if (stat_type <= 2) {
-          lb_i <- lower_bound[ka_i]
-          ub_i <- upper_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(lower_bound[ka_i]), df = df_i)
-          ub_i <- qt(p = pnorm(upper_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- FALSE
-          stop <- TRUE
-        } else if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
+      } else if (test_type == 4 || test_type == 5) {
         # Alpha spending
         if (test_sides == 1) {
           spend1_i <- alpha_sf(alpha, ifrac, alpha_sfpar)
@@ -518,37 +373,38 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
         } else {
           binding <- TRUE
         }
-        bounds_i <- gsBoundsCRT(theta = delta, I = c(info_vec, info),
-                                falseneg = falseneg_i, falsepos = falsepos_i,
-                                sides = test_sides, binding = binding,
-                                tol = tol, r = r)
-        if (stat_type <= 2) {
-          lb_i <- bounds_i$a[kb_i]
-          ub_i <- bounds_i$b[kb_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
-          ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- FALSE
-          stop <- TRUE
-        } else if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-        falseneg_vec <- falseneg_i
       }
+
+      bounds_i <- gsBoundsCRT(theta = delta, I = c(info_vec, info),
+                              falseneg = falseneg_i, falsepos = falsepos_i,
+                              sides = test_sides, binding = binding,
+                              tol = tol, r = r)
+      if (stat_type <= 2) {
+        lb_i <- bounds_i$a[kb_i]
+        ub_i <- bounds_i$b[kb_i]
+      } else {
+        df_i <- (m1 + m2) - 2
+        lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
+        ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
+      }
+
+      # Conduct group sequential test for interim look
+      if (z_i <= lb_i) {
+        reject <- FALSE
+        stop <- TRUE
+      } else if (z_i >= ub_i) {
+        reject <- TRUE
+        stop <- TRUE
+      } else {
+        reject <- FALSE
+      }
+
+      # Update previous information fractions
+      info_vec <- c(info_vec, info)
+      ifrac_prev <- ifrac
+      ifrac_vec <- c(ifrac_vec, ifrac)
+      falsepos_vec <- falsepos_i
+      falseneg_vec <- falseneg_i
     }
   }
 
@@ -561,7 +417,7 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
               "m_i" = m_i,
               "n_i" = n_i,
               "total_i" = total_i,
-              "i_frac" = ifrac_prev)
+              "i_frac" = ifrac_vec)
   return(out)
 }
 
@@ -584,20 +440,14 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
 #' @param stat_type \code{1=} Z-test with known variance and ICC
 #' \cr \code{2=} Z-test with re-estimated variance and ICC
 #' \cr \code{3=} t-test with re-estimated variance and ICC
-#' @param balance_size \code{1=} exact sample increments according to the
-#' scheduled interim analyses.
 #' \cr \code{2=} randomized sample increments from multinomial distribution
 #' according to the scheduled interim analyses.
-#' @param precompute Use pre-computed stopping boundaries if true.
 #' @param delta Effect size for theta under alternative hypothesis.
 #' @param p_vec Probabilities of event for control and treatment groups.
 #' @param rho Intraclass correlation coefficient. Default value is 0.
 #' @param alpha Type I error, always one-sided. Default value is 0.05.
 #' @param beta Type II error, default value is 0.1 (90\% power).
-#' @param lower_bound Pre-computed lower futility boundaries at the specified
-#' interim analyses. Must be specified if precompute is TRUE. NULL otherwise.
-#' @param upper_bound Pre-computed upper efficacy boundaries at the specified
-#' interim analyses. Must be specified if precompute is TRUE. NULL otherwise.
+#' @param i_max Maximum information.
 #' @param m_max Number of clusters.
 #' @param n_max Mean size of each cluster.
 #' @param schedule_m Number of clusters at each interim look. Interim analyses
@@ -652,7 +502,6 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
 #' was stopped.} \item{i_frac}{Information fraction when the simulated trial
 #' was stopped.}
 #'
-#' @importFrom stats rmultinom
 #' @importFrom lme4 lmer
 #' @importFrom performance icc
 #'
@@ -660,11 +509,9 @@ gsSimContCRT <- function(k, data, test_type, test_sides, recruit_type,
 #' @name gsSimBinCRT
 # gsSimBinCRT function [sinew] ----
 gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
-                        stat_type, balance_size, precompute = FALSE,
-                        delta, p_vec, rho, alpha = 0.05, beta = 0.1,
-                        lower_bound = NULL, upper_bound = NULL,
-                        m_max = 1, n_max = 1,
-                        schedule_m = NULL, schedule_n = NULL,
+                        stat_type, delta, p_vec, rho, alpha = 0.05, beta = 0.1,
+                        i_max = 1, m_max = c(1, 1), n_max = c(1, 1),
+                        n_cv = c(0, 0), schedule_m = NULL, schedule_n = NULL,
                         alpha_sf, alpha_sfpar = -4, beta_sf, beta_sfpar = -4,
                         tol = 0.000001, r = 18) {
   # Check inputs
@@ -673,23 +520,15 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
   checkScalar(test_sides, "integer", c(1, 2))
   checkScalar(recruit_type, "integer", c(1, 3))
   checkScalar(stat_type, "integer", c(1, 3))
-  checkScalar(balance_size, "integer", c(1, 2))
-  checkScalar(delta, "numeric", c(0, 1), c(FALSE, TRUE))
+  checkScalar(delta, "numeric", c(0, Inf), c(FALSE, FALSE))
   checkVector(p_vec, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
-  checkScalar(rho, "numeric", c(0, 1))
+  checkVector(rho, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
   checkScalar(alpha, "numeric", 0:1, c(FALSE, FALSE))
   checkScalar(beta, "numeric", c(0, 1 - alpha), c(FALSE, FALSE))
-  if (precompute) {
-    checkLengths(lower_bound, upper_bound)
-  }
-  checkScalar(m_max, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n_max, "integer", c(0, Inf), c(FALSE, FALSE))
-  if (!is.null(schedule_m) && !is.null(schedule_n)) {
-    checkLengths(schedule_m, schedule_n)
-    if (precompute) {
-      checkLengths(schedule_m, schedule_n, lower_bound, upper_bound)
-    }
-  }
+  checkScalar(i_max, "numeric", c(0, Inf), c(FALSE, FALSE))
+  checkVector(m_max, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_max, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE), length = 2)
   checkScalar(tol, "numeric", c(0, 0.1), c(FALSE, TRUE))
   checkScalar(r, "integer", c(1, 80))
 
@@ -708,33 +547,19 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
   falseneg_vec <- c()
   stop <- FALSE
 
-  if (is.null(schedule_m)) {
-    if (balance_size == 1) {
-      schedule_m1 <- ((1:k) / k) * m_max
-      schedule_m2 <- ((1:k) / k) * m_max
-    } else {
-      schedule_m1 <- cumsum(rep(1, k) + rmultinom(1, m_max - k, rep(1 / k, k)))
-      schedule_m2 <- cumsum(rep(1, k) + rmultinom(1, m_max - k, rep(1 / k, k)))
-    }
-  } else {
-    if (balance_size == 1) {
-      schedule_m1 <- schedule_m
-      schedule_m2 <- schedule_m
-    } else {
-      schedule_m1 <- cumsum(rep(1, k) + rmultinom(1, m_max - k,
-                                                  schedule_m / m_max))
-      schedule_m2 <- cumsum(rep(1, k) + rmultinom(1, m_max - k,
-                                                  schedule_m / m_max))
-    }
+  # Equal sample size fractions if not provided
+  if (is.null(schedule_m) || is.null(schedule_n)) {
+    equal_frac <- seq_len(k) / k
+    schedule_m <- rbind(equal_frac, equal_frac)
+    schedule_n <- rbind(equal_frac, equal_frac)
   }
 
-  if (is.null(schedule_n)) {
-    schedule_n1 <- ((1:k) / k) * n_max
-    schedule_n2 <- ((1:k) / k) * n_max
-  } else {
-    schedule_n1 <- schedule_n
-    schedule_n2 <- schedule_n
-  }
+  # Set schedule of recruited clusters - draw from multinomial distribution
+  n_max_gen <- n_max + round(5 * n_cv * n_max)
+  n1_max_vec <- genClusterSizes(m_max[1], n_max[1], n_cv[1],
+                                rep(1, m_max[1]), rep(n_max_gen[1], m_max[1]))
+  n2_max_vec <- genClusterSizes(m_max[2], n_max[2], n_cv[2],
+                                rep(1, m_max[2]), rep(n_max_gen[2], m_max[2]))
 
   while (!stop && ka_i < k) {
     # Update number of looks
@@ -742,153 +567,27 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
     kb_i <- kb_i + 1 # number of crossing bounds (usually = ka_i)
 
     # "Recruit" clusters
-    if (recruit_type == 1) {
-      ifrac_size_total1 <- ceiling(schedule_m1) * n_max
-      ifrac_size_total2 <- ceiling(schedule_m2) * n_max
+    m1 <- round(schedule_m[1, ka_i] * m_max[1])
+    m2 <- round(schedule_m[2, ka_i] * m_max[2])
 
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
+    n1_vec <- round(schedule_n[1, ka_i] * n1_max_vec[1:m1])
+    n2_vec <- round(schedule_n[2, ka_i] * n2_max_vec[1:m2])
+    data_i <- data.frame()
 
-        n1_i <- n_max
-        n2_i <- n_max
-      } else {
-        m1_i <- max(ceiling(schedule_m1[ka_i]), 1)
-        m2_i <- max(ceiling(schedule_m2[ka_i]), 1)
+    size_vec1_i <- c()
+    for (m_i in 1:m1) {
+      size_vec1_i <- c(size_vec1_i, n1_vec[m_i])
+      data1_i <- data[(data$arm == 0 & data$cluster == m_i &
+                         data$individual %in% 1:n1_vec[m_i]), ]
+      data_i <- rbind(data_i, data1_i)
+    }
 
-        n1_i <- n_max
-        n2_i <- n_max
-      }
-
-      size_vec1_i <- rep(n1_i, m1_i)
-      size_vec2_i <- rep(n1_i, m1_i)
-
-      data1_i <- data[(data$arm == 0 & data$cluster %in% 1:m1_i), ]
-      data2_i <- data[(data$arm == 1 &
-                         data$cluster %in% (m_max + 1):(m_max + m2_i)), ]
-      data_i <- rbind(data1_i, data2_i)
-    } else if (recruit_type == 2) {
-      ifrac_size_total1 <- m_max * ceiling(schedule_n1)
-      ifrac_size_total2 <- m_max * ceiling(schedule_n2)
-
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
-
-        n1_i <- n_max
-        n2_i <- n_max
-
-        size_vec1_i <- rep(n1_i, m1_i)
-        size_vec2_i <- rep(n1_i, m1_i)
-
-        data1_i <- data[(data$arm == 0 & data$individual %in% 1:n1_i), ]
-        data2_i <- data[(data$arm == 1 & data$individual %in% 1:n2_i), ]
-        data_i <- rbind(data1_i, data2_i)
-      } else {
-        if (balance_size == 1) {
-          n1_vec_i <- rep(schedule_n1[ka_i], m_max)
-          n2_vec_i <- rep(schedule_n2[ka_i], m_max)
-        } else {
-          n1_vec_i <- rep(2, m_max) + rmultinom(1,
-                                                max(ifrac_size_total1[ka_i] -
-                                                      (2 * m_max), 0),
-                                                rep(1 / m_max, m_max))
-          n2_vec_i <- rep(2, m_max) + rmultinom(1,
-                                                max(ifrac_size_total2[ka_i] -
-                                                      (2 * m_max), 0),
-                                                rep(1 / m_max, m_max))
-        }
-        m1_i <- 1
-        m2_i <- m_max + 1
-
-        size_vec1_i <- c()
-        size_vec2_i <- c()
-
-        data_i <- data.frame()
-        for (m_i in 1:m_max) {
-          n1_i <- n1_vec_i[m_i]
-          n2_i <- n2_vec_i[m_i]
-
-          size_vec1_i <- c(size_vec1_i, n1_i)
-          size_vec2_i <- c(size_vec2_i, n1_i)
-
-          data1_i <- data[(data$arm == 0 &
-                             data$cluster == m1_i &
-                             data$individual %in% 1:n1_i), ]
-          data2_i <- data[(data$arm == 1 &
-                             data$cluster == m2_i &
-                             data$individual %in% 1:n2_i), ]
-          data_i <- rbind(data_i, data1_i, data2_i)
-
-          m1_i <- m1_i + 1
-          m2_i <- m2_i + 1
-        }
-      }
-    } else if (recruit_type == 3) {
-      ifrac_size_total1 <- ceiling(schedule_m1) * ceiling(schedule_n1)
-      ifrac_size_total2 <- ceiling(schedule_m2) * ceiling(schedule_n2)
-
-      if (ka_i == k) {
-        m1_i <- m_max
-        m2_i <- m_max
-
-        n1_i <- n_max
-        n2_i <- n_max
-
-        size_vec1_i <- rep(n1_i, m1_i)
-        size_vec2_i <- rep(n1_i, m1_i)
-
-        data1_i <- data[(data$arm == 0 & data$individual %in% 1:n1_i), ]
-        data2_i <- data[(data$arm == 1 & data$individual %in% 1:n2_i), ]
-        data_i <- rbind(data1_i, data2_i)
-      } else {
-        m1 <- max(ceiling(schedule_m1[ka_i]), 1)
-        m2 <- max(ceiling(schedule_m2[ka_i]), 1)
-
-        if (balance_size == 1) {
-          n1_vec_i <- rep(schedule_n1[ka_i], m1)
-          n2_vec_i <- rep(schedule_n2[ka_i], m2)
-        } else {
-          n1_vec_i <- rep(2, m1) + rmultinom(1,
-                                             max(ifrac_size_total1[ka_i] -
-                                                   (2 * m1), 0),
-                                             rep(1 / m1, m1))
-          n2_vec_i <- rep(2, m2) + rmultinom(1,
-                                             max(ifrac_size_total2[ka_i] -
-                                                   (2 * m2), 0),
-                                             rep(1 / m2, m2))
-        }
-
-        data_i <- data.frame()
-
-        m1_i <- 1
-        size_vec1_i <- c()
-        for (m_i in 1:m1) {
-          n1_i <- n1_vec_i[m_i]
-          size_vec1_i <- c(size_vec1_i, n1_i)
-
-          data1_i <- data[(data$arm == 0 &
-                             data$cluster == m1_i &
-                             data$individual %in% 1:n1_i), ]
-          data_i <- rbind(data_i, data1_i)
-
-          m1_i <- m1_i + 1
-        }
-
-        m2_i <- m_max + 1
-        size_vec2_i <- c()
-        for (m_i in 1:m2) {
-          n2_i <- n2_vec_i[m_i]
-          size_vec2_i <- c(size_vec2_i, n2_i)
-
-          data2_i <- data[(data$arm == 1 &
-                             data$cluster == m2_i &
-                             data$individual %in% 1:n2_i), ]
-          data_i <- rbind(data_i, data2_i)
-
-          m2_i <- m2_i + 1
-        }
-      }
+    size_vec2_i <- c()
+    for (m_i in 1:m2) {
+      size_vec2_i <- c(size_vec2_i, n2_vec[m_i])
+      data2_i <- data[(data$arm == 1 & data$cluster == m_max[1] + m_i &
+                         data$individual %in% 1:n2_vec[m_i]), ]
+      data_i <- rbind(data_i, data2_i)
     }
 
     # Get responses
@@ -907,13 +606,21 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
       rho_i <- rho
       se <- seBinDiff(x1_i, x2_i, size_vec1_i, size_vec2_i, rho_i, p_vec)
     } else {
-      fit <- lmer(response ~ as.factor(arm) + (1 | cluster), data = data_i)
-      icc_est_i <- icc(fit)
-      if (length(icc_est_i) > 1) {
-        rho_i <- icc_est_i$ICC_adjusted
+      fit1 <- lmer(response ~ (1 | cluster), data = data1_i)
+      icc_est1_i <- icc(fit1)
+      if (length(icc_est1_i) > 1) {
+        rho1_i <- icc_est1_i$ICC_adjusted
       } else {
-        rho_i <- 0
+        rho1_i <- 0
       }
+      fit2 <- lmer(response ~ (1 | cluster), data = data2_i)
+      icc_est2_i <- icc(fit2)
+      if (length(icc_est2_i) > 1) {
+        rho2_i <- icc_est2_i$ICC_adjusted
+      } else {
+        rho2_i <- 0
+      }
+      rho_i <- c(rho1_i, rho2_i)
       se <- seBinDiff(x1_i, x2_i, size_vec1_i, size_vec2_i, rho_i, NULL)
     }
 
@@ -926,84 +633,46 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
     info <- 1 / (se^2)
     info_vec_ret <- c(info_vec_ret, info)
 
-    ifrac <- iFrac(size_vec1_i, size_vec2_i, m_max, n_max, rho_i)
+    ifrac <- min(info / i_max, 1)
     ifrac_vec_ret <- c(ifrac_vec_ret, ifrac)
 
     if (ifrac <= ifrac_prev) {
       kb_i <- kb_i - 1
-    } else if (test_type == 1) {
-      # Get stopping bounds depending on test
-      if (precompute) {
-        if (stat_type <= 2) {
-          ub_i <- upper_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          ub_i <- qt(p = pnorm(upper_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
+    } else {
+      if (ifrac == 1) {
+        stop <- TRUE
+      }
+      if (test_type == 1) {
         # Alpha spending
         if (test_sides == 1) {
           spend_i <- alpha_sf(alpha, ifrac, alpha_sfpar)
           spend_i_prev <- alpha_sf(alpha, ifrac_prev, alpha_sfpar)
-          a <- rep(-30, kb_i)
         } else {
           spend_i <- alpha_sf(alpha / 2, ifrac, alpha_sfpar)
           spend_i_prev <- alpha_sf(alpha / 2, ifrac_prev, alpha_sfpar)
-          a <- rep(0, kb_i)
         }
         falsepos_i <- c(falsepos_vec, spend_i$spend - spend_i_prev$spend)
 
-        # Get stopping bounds depending on test
-        bounds_i <- gsUpperCRT(0, I = c(info_vec, info), a = a,
-                               falsepos = falsepos_i, sides = test_sides,
-                               tol = tol, r = r)
-        if (stat_type <= 2) {
-          ub_i <- bounds_i$b[kb_i]
+        # Beta spending
+        if (kb_i == k) {
+          falseneg_i <- c(falseneg_vec, beta)
         } else {
-          df_i <- dim(data_i)[1] - 2
-          ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
+          falseneg_i <- c(falseneg_vec, 1e-15)
         }
 
-        # Conduct group sequential test for interim look
-        if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
+        binding <- TRUE
+      } else if (test_type == 2 || test_type == 3) {
+        # Alpha spending
+        if (kb_i == k) {
+          falsepos_i <- c(falsepos_vec, 1e-15)
         } else {
-          reject <- FALSE
+          if (test_sides == 1) {
+            falsepos_i <- c(falsepos_vec, alpha)
+          } else {
+            falsepos_i <- c(falsepos_vec, alpha / 2)
+          }
         }
 
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-      }
-
-    } else if (test_type == 2 || test_type == 3) {
-      if (precompute) {
-        if (stat_type <= 2) {
-          lb_i <- lower_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(lower_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
         # Beta spending
         spend_i <- beta_sf(beta, ifrac, beta_sfpar)
         spend_i_prev <- beta_sf(beta, ifrac_prev, beta_sfpar)
@@ -1015,52 +684,7 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
         } else {
           binding <- TRUE
         }
-        bounds_i <- gsLowerCRT(delta, I = c(info_vec, info), b = rep(30, kb_i),
-                               falseneg = falseneg_i, sides = test_sides,
-                               binding = binding, tol = tol, r = r)
-        if (stat_type <= 2) {
-          lb_i <- bounds_i$a[kb_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-      }
-    } else if (test_type == 4 || test_type == 5) {
-      if (precompute) {
-        if (stat_type <= 2) {
-          lb_i <- lower_bound[ka_i]
-          ub_i <- upper_bound[ka_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(lower_bound[ka_i]), df = df_i)
-          ub_i <- qt(p = pnorm(upper_bound[ka_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- FALSE
-          stop <- TRUE
-        } else if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-      } else {
+      } else if (test_type == 4 || test_type == 5) {
         # Alpha spending
         if (test_sides == 1) {
           spend1_i <- alpha_sf(alpha, ifrac, alpha_sfpar)
@@ -1082,37 +706,38 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
         } else {
           binding <- TRUE
         }
-        bounds_i <- gsBoundsCRT(theta = delta, I = c(info_vec, info),
-                                falseneg = falseneg_i, falsepos = falsepos_i,
-                                sides = test_sides, binding = binding,
-                                tol = tol, r = r)
-        if (stat_type <= 2) {
-          lb_i <- bounds_i$a[kb_i]
-          ub_i <- bounds_i$b[kb_i]
-        } else {
-          df_i <- dim(data_i)[1] - 2
-          lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
-          ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
-        }
-
-        # Conduct group sequential test for interim look
-        if (z_i <= lb_i) {
-          reject <- FALSE
-          stop <- TRUE
-        } else if (z_i >= ub_i) {
-          reject <- TRUE
-          stop <- TRUE
-        } else {
-          reject <- FALSE
-        }
-
-        # Update previous information fractions
-        info_vec <- c(info_vec, info)
-        ifrac_prev <- ifrac
-        ifrac_vec <- c(ifrac_vec, ifrac)
-        falsepos_vec <- falsepos_i
-        falseneg_vec <- falseneg_i
       }
+
+      bounds_i <- gsBoundsCRT(theta = delta, I = c(info_vec, info),
+                              falseneg = falseneg_i, falsepos = falsepos_i,
+                              sides = test_sides, binding = binding,
+                              tol = tol, r = r)
+      if (stat_type <= 2) {
+        lb_i <- bounds_i$a[kb_i]
+        ub_i <- bounds_i$b[kb_i]
+      } else {
+        df_i <- (m1 + m2) - 2
+        lb_i <- qt(p = pnorm(bounds_i$a[kb_i]), df = df_i)
+        ub_i <- qt(p = pnorm(bounds_i$b[kb_i]), df = df_i)
+      }
+
+      # Conduct group sequential test for interim look
+      if (z_i <= lb_i) {
+        reject <- FALSE
+        stop <- TRUE
+      } else if (z_i >= ub_i) {
+        reject <- TRUE
+        stop <- TRUE
+      } else {
+        reject <- FALSE
+      }
+
+      # Update previous information fractions
+      info_vec <- c(info_vec, info)
+      ifrac_prev <- ifrac
+      ifrac_vec <- c(ifrac_vec, ifrac)
+      falsepos_vec <- falsepos_i
+      falseneg_vec <- falseneg_i
     }
   }
 
@@ -1129,10 +754,56 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
   return(out)
 }
 
+# genClusterSizes roxy [sinew] ----
+#' @title Generate varying cluster sizes for cluster-randomized trials
+#'
+#' @param m Number of clusters.
+#' @param n Mean size of each cluster.
+#' @param n_cv Coefficient of variation of cluster sizes.
+#' @param n_min Minimum allowable cluster size.
+#' @param n_max Maximum allowable cluster size.
+#' @return A vector of cluster sizes.
+#' @author Lee Ding \email{lee_ding@g.harvard.edu}
+#'
+#' @importFrom stats rnbinom
+#'
+#' @export
+#' @name genClusterSizes
+# genClusterSizes function [sinew] ----
+genClusterSizes <- function(m, n, n_cv, n_min, n_max) {
+  # Check inputs
+  checkScalar(m, "integer", c(0, Inf), c(FALSE, FALSE))
+  checkScalar(n, "integer", c(0, Inf), c(FALSE, FALSE))
+  checkScalar(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE))
+  checkVector(n_min, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
+  checkVector(n_max, "integer", c(1, Inf), c(TRUE, FALSE), length = m)
+
+  if (n_cv == 0) {
+    return(rep(n, m))
+  } else {
+    if (n_cv^2 <= 1 / n) {
+      stop(
+        "In genClusterSizes(): n_cv^2 must be greater than 1 / n ",
+        "to obtain a valid negative binomial dispersion."
+      )
+    }
+    r_nb <- 1 / (n_cv^2 - (1 / n))
+    p_nb <- r_nb / (r_nb + n)
+
+    cluster_sizes <- rnbinom(m, size = r_nb, prob = p_nb)
+    cluster_sizes <- pmax(cluster_sizes, n_min)
+    cluster_sizes <- pmin(cluster_sizes, n_max)
+    return(cluster_sizes)
+  }
+}
+
+
 # genContCRT roxy [sinew] ----
 #' @title Simulate cluster-randomized trial data with continuous outcomes
 #'
 #' @param m Number of clusters.
+#' @param m_alloc Allocation ratio of clusters per arm. Default is
+#'  \code{c(0.5, 0.5)}.
 #' @param n Mean size of each cluster.
 #' @param mu_vec Vector of means for control and treatment groups, respectively.
 #' @param sigma_vec Vector of standard deviations for control and treatment
@@ -1149,42 +820,62 @@ gsSimBinCRT <- function(k, data, test_type, test_sides, recruit_type,
 #' @export
 #' @name genContCRT
 # genContCRT function [sinew] ----
-genContCRT <- function(m = 1, n = 1, mu_vec = c(0, 1), sigma_vec = c(1, 1),
-                       rho = 0) {
+genContCRT <- function(m = c(1, 1), m_alloc = c(0.5, 0.5), n = c(1, 1),
+                       n_cv = c(0, 0), mu_vec = c(0, 1), sigma_vec = c(1, 1),
+                       rho = c(0, 0)) {
   # Check inputs
-  checkScalar(m, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n, "integer", c(0, Inf), c(FALSE, FALSE))
+  if (length(m) == 1) { # Input is total clusters
+    m <- round(m * m_alloc)
+  }
+  if (length(n) == 1) { # Assume same average cluster size
+    n <- rep(n, 2)
+  }
+  if (length(n_cv) == 1) {
+    n_cv <- rep(n_cv, 2)
+  }
+  if (length(rho) == 1) {
+    rho <- rep(rho, 2)
+  }
+  checkVector(m, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(m_alloc, "numeric", c(0, 1), c(FALSE, FALSE), length = 2)
+  checkVector(n, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE), length = 2)
   checkVector(mu_vec, "numeric", c(-Inf, Inf), c(FALSE, FALSE), length = 2)
   checkVector(sigma_vec, "numeric", c(0, Inf), c(FALSE, FALSE), length = 2)
-  checkScalar(rho, "numeric", c(0, 1))
+  checkVector(rho, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
 
   # Specify population means
   mu1 <- mu_vec[1]
   mu2 <- mu_vec[2]
 
   # Specify between and within-cluster variances
-  sigma_b_1 <- sqrt(rho * sigma_vec[1]^2)
+  sigma_b_1 <- sqrt(rho[1] * sigma_vec[1]^2)
   sigma_w_1 <- sqrt(sigma_vec[1]^2 - sigma_b_1^2)
-  sigma_b_2 <- sqrt(rho * sigma_vec[2]^2)
+  sigma_b_2 <- sqrt(rho[2] * sigma_vec[2]^2)
   sigma_w_2 <- sqrt(sigma_vec[2]^2 - sigma_b_2^2)
 
   # Generate samples by cluster
-  a1 <- rep(0, m * n)
-  r1 <- rep(0, m * n)
-  c1 <- rep(1:m, each = n)
-  i1 <- rep(1:n, m)
+  n <- n + round(5 * n_cv * n)
 
-  a2 <- rep(1, m * n)
-  r2 <- rep(0, m * n)
-  c2 <- rep(m + 1:m, each = n)
-  i2 <- rep(1:n, m)
+  a1 <- rep(0, m[1] * n[1])
+  r1 <- rep(0, m[1] * n[1])
+  c1 <- rep(1:m[1], each = n[1])
+  i1 <- rep(1:n[1], m[1])
 
-  for (mi in 1:m) {
+  a2 <- rep(1, m[2] * n[2])
+  r2 <- rep(0, m[2] * n[2])
+  c2 <- rep(m[1] + 1:m[2], each = n[2])
+  i2 <- rep(1:n[2], m[2])
+
+  for (m1i in 1:m[1]) {
     re1 <- rnorm(1, mean = 0, sd = sigma_b_1)
-    r1[(mi - 1) * n + 1:n] <- (mu1 + re1 + rnorm(n, mean = 0, sd = sigma_w_1))
-
+    r1[(m1i - 1) * n[1] + 1:n[1]] <- (mu1 + re1 +
+                                        rnorm(n[1], mean = 0, sd = sigma_w_1))
+  }
+  for (m2i in 1:m[2]) {
     re2 <- rnorm(1, mean = 0, sd = sigma_b_2)
-    r2[(mi - 1) * n + 1:n] <- (mu2 + re2 + rnorm(n, mean = 0, sd = sigma_w_2))
+    r2[(m2i - 1) * n[2] + 1:n[2]] <- (mu2 + re2 +
+                                        rnorm(n[2], mean = 0, sd = sigma_w_2))
   }
 
   # Reshape samples into dataframe with cluster assignment
@@ -1204,6 +895,8 @@ genContCRT <- function(m = 1, n = 1, mu_vec = c(0, 1), sigma_vec = c(1, 1),
 #' @title Simulate cluster-randomized trial data with binary outcomes
 #'
 #' @param m Number of clusters.
+#' @param m_alloc Allocation ratio of clusters per arm. Default is
+#'  \code{c(0.5, 0.5)}.
 #' @param n Mean size of each cluster.
 #' @param p_vec Probabilities of event for control and treatment groups.
 #' @param rho Intraclass correlation coefficient. Default value is 0.
@@ -1216,31 +909,50 @@ genContCRT <- function(m = 1, n = 1, mu_vec = c(0, 1), sigma_vec = c(1, 1),
 #' @export
 #' @name genBinCRT
 # genBinCRT function [sinew] ----
-genBinCRT <- function(m = 1, n = 1, p_vec = c(0.5, 0.5), rho = NULL) {
+genBinCRT <- function(m = c(1, 1), m_alloc = c(0.5, 0.5), n = c(1, 1),
+                      n_cv = c(0, 0), p_vec = c(0.5, 0.5), rho = c(0, 0)) {
   # Check inputs
-  checkScalar(m, "integer", c(0, Inf), c(FALSE, FALSE))
-  checkScalar(n, "integer", c(0, Inf), c(FALSE, FALSE))
+  if (length(m) == 1) { # Input is total clusters
+    m <- round(m * m_alloc)
+  }
+  if (length(n) == 1) { # Assume same average cluster size
+    n <- rep(n, 2)
+  }
+  if (length(n_cv) == 1) {
+    n_cv <- rep(n_cv, 2)
+  }
+  if (length(rho) == 1) {
+    rho <- rep(rho, 2)
+  }
+  checkVector(m, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(m_alloc, "numeric", c(0, 1), c(FALSE, FALSE), length = 2)
+  checkVector(n, "integer", c(0, Inf), c(FALSE, FALSE), length = 2)
+  checkVector(n_cv, "numeric", c(0, Inf), c(TRUE, FALSE), length = 2)
   checkVector(p_vec, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
-  checkScalar(rho, "numeric", c(0, 1))
+  checkVector(rho, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
 
   # Generate samples by cluster
-  a1 <- rep(0, m * n)
-  r1 <- rep(0, m * n)
-  c1 <- rep(1:m, each = n)
-  i1 <- rep(1:n, m)
+  n <- n + round(5 * n_cv * n)
 
-  a2 <- rep(1, m * n)
-  r2 <- rep(0, m * n)
-  c2 <- rep(m + 1:m, each = n)
-  i2 <- rep(1:n, m)
+  a1 <- rep(0, m[1] * n[1])
+  r1 <- rep(0, m[1] * n[1])
+  c1 <- rep(1:m[1], each = n[1])
+  i1 <- rep(1:n[1], m[1])
+
+  a2 <- rep(1, m[2] * n[2])
+  r2 <- rep(0, m[2] * n[2])
+  c2 <- rep(m[1] + 1:m[2], each = n[2])
+  i2 <- rep(1:n[2], m[2])
 
   # Generate data according to Qaqish 2003 paper
-  b1 <- simB(p_vec[1], n, rho)
-  b2 <- simB(p_vec[2], n, rho)
+  b1 <- simB(p_vec[1], n[1], rho[1])
+  b2 <- simB(p_vec[2], n[2], rho[2])
 
-  for (mi in 1:m) {
-    r1[(mi - 1) * n + 1:n] <- simResponse(p_vec[1], n, b1)
-    r2[(mi - 1) * n + 1:n] <- simResponse(p_vec[2], n, b2)
+  for (m1i in 1:m[1]) {
+    r1[(m1i - 1) * n[1] + 1:n[1]] <- simResponse(p_vec[1], n[1], b1)
+  }
+  for (m2i in 1:m[2]) {
+    r2[(m2i - 1) * n[2] + 1:n[2]] <- simResponse(p_vec[2], n[2], b2)
   }
 
   # Reshape samples into dataframe with cluster assignment
@@ -1292,18 +1004,6 @@ simResponse <- function(p, n, B) {
   return(y)
 }
 
-# iFrac function [sinew] ----
-iFrac <- function(size_vec1, size_vec2, m_max, n_max, rho) {
-  n_sq_vec1 <- size_vec1^2
-  n_sq_vec2 <- size_vec2^2
-  nif <- 2 * (1 + (n_max - 1) * rho) / (m_max * n_max)
-  dif <- ((1 + ((sum(n_sq_vec1) / sum(size_vec1)) - 1) * rho) /
-            sum(size_vec1) +
-            (1 + ((sum(n_sq_vec2) / sum(size_vec2)) - 1) * rho) /
-              sum(size_vec2))
-  return(nif / dif)
-}
-
 # genContCRT roxy [sinew] ----
 #' @importFrom stats var
 # seContDiff function [sinew] ----
@@ -1316,17 +1016,17 @@ seContDiff <- function(x1, x2, size_vec1, size_vec2, rho, sigma_vec = NULL) {
                      (sum(size_vec2) - 1) * var(x2))
     pooled_denom <- (sum(size_vec1) - 1) + (sum(size_vec2) - 1)
     pooled <- pooled_num / pooled_denom
+    v1 <- pooled / sum(size_vec1)
+    v2 <- pooled / sum(size_vec2)
   } else {
-    pooled_num <- ((sum(size_vec1) - 1) * sigma_vec[1]^2 +
-                     (sum(size_vec2) - 1) * sigma_vec[2]^2)
-    pooled_denom <- (sum(size_vec1) - 1) + (sum(size_vec2) - 1)
-    pooled <- pooled_num / pooled_denom
+    v1 <- sigma_vec[1]^2 / sum(size_vec1)
+    v2 <- sigma_vec[2]^2 / sum(size_vec2)
   }
-  se <- sqrt(pooled *
-               (((1 + ((sum(n_sq_vec1) / sum(size_vec1)) - 1) * rho) /
-                   sum(size_vec1)) +
-                  ((1 + ((sum(n_sq_vec2) / sum(size_vec2)) - 1) * rho) /
-                     sum(size_vec2))))
+
+  d_eff1 <- (1 + ((sum(n_sq_vec1) / sum(size_vec1)) - 1) * rho[1])
+  d_eff2 <- (1 + ((sum(n_sq_vec2) / sum(size_vec2)) - 1) * rho[2])
+
+  se <- sqrt(v1 * d_eff1 + v2 * d_eff2)
   return(se)
 }
 
@@ -1336,18 +1036,23 @@ seBinDiff <- function(x1, x2, size_vec1, size_vec2, rho, p_vec = NULL) {
   n_sq_vec2 <- size_vec2^2
 
   if (is.null(p_vec)) {
-    p <- (sum(x1) + sum(x2)) / (length(x1) + length(x2))
+    p <- (sum(x1) + sum(x2)) / (sum(size_vec1) + sum(size_vec2))
   } else {
     p <- mean(p_vec)
   }
+
   if ((p * (1 - p)) == 0) {
-    return(1)
+    warning("seBinDiff(): p is 0 or 1; variance is 0 and SE is undefined.
+            Returning NA.")
+    return(NA_real_)
   } else {
-    se <- sqrt(p * (1 - p) *
-                 (((1 + ((sum(n_sq_vec1) / sum(size_vec1)) - 1) * rho) /
-                     sum(size_vec1)) +
-                    ((1 + ((sum(n_sq_vec2) / sum(size_vec2)) - 1) * rho) /
-                       sum(size_vec2))))
+    v1 <- p * (1 - p) / sum(size_vec1)
+    v2 <- p * (1 - p) / sum(size_vec2)
+
+    d_eff1 <- (1 + ((sum(n_sq_vec1) / sum(size_vec1)) - 1) * rho[1])
+    d_eff2 <- (1 + ((sum(n_sq_vec2) / sum(size_vec2)) - 1) * rho[2])
+
+    se <- sqrt(v1 * d_eff1 + v2 * d_eff2)
     return(se)
   }
 }

@@ -20,11 +20,13 @@ checkLengths <- function(..., allowSingle = FALSE) {
   invisible(NULL)
 }
 
+
 # checkRange roxy [sinew] ----
 #' @rdname checkScalar
 #' @export
 # checkRange function [sinew] ----
-checkRange <- function(x, interval = 0:1, inclusion = c(TRUE, TRUE), varname = deparse(substitute(x)), tol = 0) {
+checkRange <- function(x, interval = 0:1, inclusion = c(TRUE, TRUE),
+                       varname = deparse(substitute(x)), tol = 0) {
   # check inputs
   checkVector(interval, "numeric")
   if (length(interval) != 2) {
@@ -36,27 +38,30 @@ checkRange <- function(x, interval = 0:1, inclusion = c(TRUE, TRUE), varname = d
   inclusion <- if (length(inclusion) == 1) rep(inclusion, 2) else inclusion[1:2]
 
   xrange <- range(x)
-  left <- ifelse(inclusion[1], xrange[1] >= interval[1] - tol, xrange[1] > interval[1] - tol)
-  right <- ifelse(inclusion[2], xrange[2] <= interval[2] + tol, xrange[2] < interval[2] + tol)
+  left <- ifelse(inclusion[1],
+                 xrange[1] >= interval[1] - tol,
+                 xrange[1] > interval[1] - tol)
+  right <- ifelse(inclusion[2],
+                  xrange[2] <= interval[2] + tol,
+                  xrange[2] < interval[2] + tol)
 
   if (!(left && right)) {
-    stop(paste(varname, " not on interval ", if (inclusion[1]) "[" else "(", interval[1], ", ",
-      interval[2], if (inclusion[2]) "]" else ")",
-      sep = ""
-    ), call. = TRUE)
+    stop(paste(varname, " not on interval ",
+               if (inclusion[1]) "[" else "(", interval[1], ", ",
+               interval[2], if (inclusion[2]) "]" else ")",
+               sep = ""), call. = TRUE)
   }
 
   invisible(NULL)
 }
 
 
-
 # checkScalar roxy [sinew] ----
 #' @title Utility functions to verify variable properties
 #'
-#' @description Utility functions to verify an objects's properties including whether it is
-#' a scalar or vector, the class, the length, and (if numeric) whether the
-#' range of values is on a specified interval. Additionally, the
+#' @description Utility functions to verify an objects's properties including
+#' whether it is a scalar or vector, the class, the length, and (if numeric)
+#' whether the range of values is on a specified interval. Additionally, the
 #' \code{checkLengths} function can be used to ensure that all the supplied
 #' inputs have equal lengths.
 #'
@@ -110,45 +115,45 @@ checkRange <- function(x, interval = 0:1, inclusion = c(TRUE, TRUE), varname = d
 #' test in the \code{\link{checkLengths}} function. Partial matching on the
 #' name of this argument is not performed so you must specify 'allowSingle' in
 #' its entirety in the call.
-#' @return 
+#' @return
 #' \code{isInteger}: Boolean value as checking result
 #' Other functions have no return value, called for side effects
 #' @examples
-#' 
+#'
 #' # check whether input is an integer
 #' isInteger(1)
 #' isInteger(1:5)
 #' try(isInteger("abc")) # expect error
-#' 
+#'
 #' # check whether input is an integer scalar
 #' checkScalar(3, "integer")
-#' 
+#'
 #' # check whether input is an integer scalar that resides
 #' # on the interval on [3, 6]. Then test for interval (3, 6].
 #' checkScalar(3, "integer", c(3, 6))
 #' try(checkScalar(3, "integer", c(3, 6), c(FALSE, TRUE))) # expect error
-#' 
+#'
 #' # check whether the input is an atomic vector of class numeric,
 #' # of length 3, and whose value all reside on the interval [1, 10)
 #' x <- c(3, pi, exp(1))
 #' checkVector(x, "numeric", c(1, 10), c(TRUE, FALSE), length = 3)
-#' 
+#'
 #' # do the same but change the expected length; expect error
 #' try(checkVector(x, "numeric", c(1, 10), c(TRUE, FALSE), length = 2))
-#' 
+#'
 #' # create faux function to check input variable
 #' foo <- function(moo) checkVector(moo, "character")
 #' foo(letters)
 #' try(foo(1:5)) # expect error with function and argument name in message
-#' 
+#'
 #' # check for equal lengths of various inputs
 #' checkLengths(1:2, 2:3, 3:4)
 #' try(checkLengths(1, 2, 3, 4:5)) # expect error
-#' 
+#'
 #' # check for equal length inputs but ignore single element vectors
 #' checkLengths(1, 2, 3, 4:5, 7:8, allowSingle = TRUE)
-#' 
-#' 
+#'
+#'
 #' @aliases checkLengths isInteger
 #' @keywords programming
 #' @rdname checkScalar
@@ -164,8 +169,7 @@ checkScalar <- function(x, isType = "numeric", ...) {
   # check scalar type
   if (isType == "integer") {
     bad <- (!isInteger(x) || length(x) > 1)
-  }
-  else {
+  } else {
     bad <- (!methods::is(c(x), isType) || length(x) > 1)
   }
   if (bad) {
@@ -182,6 +186,7 @@ checkScalar <- function(x, isType = "numeric", ...) {
 
   invisible(NULL)
 }
+
 
 # checkVector roxy [sinew] ----
 #' @rdname checkScalar
@@ -202,9 +207,9 @@ checkVector <- function(x, isType = "numeric", ..., length = NULL) {
   # check vector type
   bad <- if (isType == "integer") {
     !isVectorAtomic(x) || !isInteger(x)
-  }
-  else {
-    !isVectorAtomic(x) || !methods::is(c(x), isType) # wrap "x" in c() to strip dimension(s)
+  } else {
+    # wrap "x" in c() to strip dimension(s)
+    !isVectorAtomic(x) || !methods::is(c(x), isType)
   }
   if (bad) {
     # create error message
@@ -225,62 +230,13 @@ checkVector <- function(x, isType = "numeric", ..., length = NULL) {
   invisible(NULL)
 }
 
+
 # isInteger roxy [sinew] ----
 #' @rdname checkScalar
 #' @export
 # isInteger function [sinew] ----
 isInteger <- function(x) all(is.numeric(x)) && all(round(x, 0) == x)
 
-checkMD5 <- function(package = "gsDesignCRT", dir) {
-  if (missing(dir)) {
-    dir <- find.package(package, quiet = TRUE)
-  }
-  if (!length(dir)) {
-    return(NA)
-  }
-  md5file <- file.path(dir, "MD5")
-  if (!file.exists(md5file)) {
-    return(NA)
-  }
-
-  ignore <- c(
-    "MD5", "DESCRIPTION", "Meta/package.rds", "R/gsDesignCRT.rdb", "R/gsDesignCRT.rdx",
-    "libs/i386/gsDesignCRT.so", "libs/ppc/gsDesignCRT.so"
-  )
-
-  inlines <- readLines(md5file)
-  xx <- sub("^([0-9a-fA-F]*)(.*)", "\\1", inlines)
-  nmxx <- names(xx) <- sub("^[0-9a-fA-F]* [ |*](.*)", "\\1", inlines)
-
-  nmxx <- nmxx[!(nmxx %in% ignore)]
-
-  dot <- getwd()
-  on.exit(setwd(dot))  
-  setwd(dir)
-  x <- tools::md5sum(dir(dir, recursive = TRUE))
-  setwd(dot)
-
-  x <- x[!(names(x) %in% ignore)]
-  nmx <- names(x)
-  res <- TRUE
-  not.here <- !(nmxx %in% nmx)
-  if (any(not.here)) {
-    res <- FALSE
-    cat("files", paste(nmxx[not.here], collapse = ", "),
-      "are missing\n",
-      sep = " "
-    )
-  }
-  nmxx <- nmxx[!not.here]
-  diff <- xx[nmxx] != x[nmxx]
-  if (any(diff)) {
-    res <- FALSE
-    cat("files", paste(nmxx[diff], collapse = ", "), "have the wrong MD5 checksums\n",
-      sep = " "
-    )
-  }
-  return(res)
-}
 
 # checkMatrix function [sinew] ----
 checkMatrix <- function(x, isType = "numeric", ..., nrows = NULL, ncols = NULL) {
@@ -300,9 +256,9 @@ checkMatrix <- function(x, isType = "numeric", ..., nrows = NULL, ncols = NULL) 
   # check matrix type
   bad <- if (isType == "integer") {
     !isMatrixAtomic(x) || !isInteger(x)
-  }
-  else {
-    !isMatrixAtomic(x) || !methods::is(c(x), isType) # wrap "x" in c() to strip dimension(s)
+  } else {
+    # wrap "x" in c() to strip dimension(s)
+    !isMatrixAtomic(x) || !methods::is(c(x), isType)
   }
   if (bad) {
     # create error message
@@ -324,4 +280,41 @@ checkMatrix <- function(x, isType = "numeric", ..., nrows = NULL, ncols = NULL) 
   }
 
   invisible(NULL)
+}
+
+# expandTwo function [sinew] ----
+expandTwo <- function(x) {
+  if (length(x) == 1) {
+    rep(x, 2L)
+  } else if (length(x) == 2) {
+    x
+  } else {
+    stop("Must be length 1 or 2.")
+  }
+}
+
+# checkAlloc function [sinew] ----
+checkAlloc <- function(m_alloc) {
+  m_alloc <- as.numeric(m_alloc)
+  if (length(m_alloc) != 2) {
+    stop("m_alloc must be a vector of length 2.")
+  }
+  if (any(!is.finite(m_alloc)) || any(m_alloc < 0)) {
+    stop("m_alloc must be finite and non-negative.")
+  }
+  if (sum(m_alloc) != 1) {
+    stop("m_alloc must sum up to 1.")
+  }
+  invisible(NULL)
+}
+
+# checkSF function [sinew] ----
+checkSF <- function(sf) {
+  if (is.character(sf) &&
+        !is.element(sf, c("OF", "Pocock", "WT"))) {
+    stop("Character specification of upper spending may only be WT, OF or
+         Pocock")
+  } else if (!is.function(sf)) {
+    stop("Upper spending function mis-specified")
+  }
 }

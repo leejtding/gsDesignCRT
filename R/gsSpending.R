@@ -193,15 +193,14 @@ sfExponential <- function(alpha, t, param) {
 #' @importFrom stats nlminb pbeta
 # sfBetaDist function [sinew] ----
 sfBetaDist <- function(alpha, t, param) {
-  
-  if(length(param) == 4){
+  if (length(param) == 4) {
     if (param[1] >= param[2]) stop("sfBetaDist: param[1] < param[2] required in 4 point parameterization")
     if (param[3] >= param[4]) stop("sfBetaDist: param[3] < param[4] required in 4 point parameterization")
   }
-  
+
   x <- list(
-    name = "Beta distribution", param = param, parname = c("a", "b"), sf = sfBetaDist, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Beta distribution", param = param, parname = c("a", "b"),
+    sf = sfBetaDist, spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -213,19 +212,18 @@ sfBetaDist <- function(alpha, t, param) {
 
   if (len == 2) {
     checkVector(param, "numeric", c(0, Inf), c(FALSE, TRUE))
-  }
-  else if (len == 4) {
+  } else if (len == 4) {
     checkVector(param, "numeric", c(0, 1), c(FALSE, FALSE))
 
-    tem <- stats::nlminb(c(1, 1), diffbetadist, lower = c(0, 0), xval = param[1:2], uval = param[3:4])
+    tem <- stats::nlminb(c(1, 1), diffbetadist, lower = c(0, 0),
+                         xval = param[1:2], uval = param[3:4])
 
     if (tem$convergence != 0) {
       stop("Solution to 4-parameter specification of Beta distribution spending function not found.")
     }
 
     x$param <- tem$par
-  }
-  else {
+  } else {
     stop("Beta distribution spending function parameter must be of length 2 or 4")
   }
 
@@ -243,8 +241,8 @@ sfBetaDist <- function(alpha, t, param) {
 # sfCauchy function [sinew] ----
 sfCauchy <- function(alpha, t, param) {
   x <- list(
-    name = "Cauchy", param = param, parname = c("a", "b"), sf = sfCauchy, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Cauchy", param = param, parname = c("a", "b"), sf = sfCauchy,
+    spend = NULL, bound = NULL, prob = NULL
   )
 
   checkScalar(alpha, "numeric", c(0, Inf), c(FALSE, FALSE))
@@ -262,8 +260,7 @@ sfCauchy <- function(alpha, t, param) {
 
     a <- param[1]
     b <- param[2]
-  }
-  else if (len == 4) {
+  } else if (len == 4) {
     t0 <- param[1:2]
     p0 <- param[3:4]
 
@@ -276,8 +273,7 @@ sfCauchy <- function(alpha, t, param) {
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
     x$param <- c(a, b)
-  }
-  else {
+  } else {
     stop("Cauchy spending function parameter must be of length 2 or 4")
   }
 
@@ -314,8 +310,7 @@ sfExtremeValue <- function(alpha, t, param) {
 
     a <- param[1]
     b <- param[2]
-  }
-  else if (len == 4) {
+  } else if (len == 4) {
     t0 <- param[1:2]
     p0 <- param[3:4]
 
@@ -328,8 +323,7 @@ sfExtremeValue <- function(alpha, t, param) {
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
     x$param <- c(a, b)
-  }
-  else {
+  } else {
     stop("Extreme value spending function parameter must be of length 2 or 4")
   }
 
@@ -347,8 +341,8 @@ sfExtremeValue <- function(alpha, t, param) {
 # sfExtremeValue2 function [sinew] ----
 sfExtremeValue2 <- function(alpha, t, param) {
   x <- list(
-    name = "Extreme value 2", param = param, parname = c("a", "b"), sf = sfExtremeValue2, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Extreme value 2", param = param, parname = c("a", "b"),
+    sf = sfExtremeValue2, spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -366,8 +360,7 @@ sfExtremeValue2 <- function(alpha, t, param) {
 
     a <- param[1]
     b <- param[2]
-  }
-  else if (len == 4) {
+  } else if (len == 4) {
     t0 <- param[1:2]
     p0 <- param[3:4]
 
@@ -380,8 +373,7 @@ sfExtremeValue2 <- function(alpha, t, param) {
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
     x$param <- c(a, b)
-  }
-  else {
+  } else {
     stop("Extreme value (2) spending function parameter must be of length 2 or 4")
   }
 
@@ -511,27 +503,27 @@ sfHSD <- function(alpha, t, param) {
 sfLDOF <- function(alpha, t, param = NULL) {
   checkScalar(alpha, "numeric", c(0, Inf), c(FALSE, FALSE))
   checkVector(t, "numeric", c(0, Inf), c(TRUE, FALSE))
-  # Following 2 lines udated 10/11/17
-  # fix needed since default for gsDesignCRT is param=-4 is out of range for LDOF
+  # Following 2 lines updated 10/11/17; fix needed since default for gsDesignCRT
+  # is param=-4 is out of range for LDOF
   if (is.null(param) || param < .005 || param > 20) param <- 1
-  checkScalar(param, "numeric", c(.005,20),c(TRUE,TRUE))
-  t[t>1] <- 1
-  if (param == 1){
+  checkScalar(param, "numeric", c(.005, 20), c(TRUE, TRUE))
+  t[t > 1] <- 1
+  if (param == 1) {
     rho <- 1
     txt <- "Lan-DeMets O'Brien-Fleming approximation"
     parname <- "none"
-  }else{
-    rho<-param
+  } else {
+    rho <- param
     txt <- "Generalized Lan-DeMets O'Brien-Fleming"
     parname <- "rho"
   }
   z <- - qnorm(alpha / 2)
-  
-  x <- list(name=txt, param=param, parname=parname, sf=sfLDOF, 
-            spend=2 * (1 - pnorm(z / t^(rho/2))), bound=NULL, prob=NULL)  
-  
+
+  x <- list(name = txt, param = param, parname = parname, sf = sfLDOF,
+            spend = 2 * (1 - pnorm(z / t^(rho / 2))), bound = NULL, prob = NULL)
+
   class(x) <- "spendfn"
-  
+
   x
 }
 
@@ -545,8 +537,9 @@ sfLDPocock <- function(alpha, t, param) {
   t[t > 1] <- 1
 
   x <- list(
-    name = "Lan-DeMets Pocock approximation", param = NULL, parname = "none", sf = sfLDPocock,
-    spend = alpha * log(1 + (exp(1) - 1) * t), bound = NULL, prob = NULL
+    name = "Lan-DeMets Pocock approximation", param = NULL, parname = "none",
+    sf = sfLDPocock, spend = alpha * log(1 + (exp(1) - 1) * t), bound = NULL,
+    prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -561,8 +554,8 @@ sfLDPocock <- function(alpha, t, param) {
 # sfNormal function [sinew] ----
 sfNormal <- function(alpha, t, param) {
   x <- list(
-    name = "Normal", param = param, parname = c("a", "b"), sf = sfNormal, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Normal", param = param, parname = c("a", "b"), sf = sfNormal,
+    spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -580,8 +573,7 @@ sfNormal <- function(alpha, t, param) {
 
     a <- param[1]
     b <- param[2]
-  }
-  else if (len == 4) {
+  } else if (len == 4) {
     t0 <- param[1:2]
     p0 <- param[3:4]
 
@@ -594,8 +586,7 @@ sfNormal <- function(alpha, t, param) {
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
     x$param <- c(a, b)
-  }
-  else {
+  } else {
     stop("Normal spending function parameter must be of length 2 or 4")
   }
 
@@ -676,8 +667,8 @@ sfNormal <- function(alpha, t, param) {
 # sfLinear function [sinew] ----
 sfLinear <- function(alpha, t, param) {
   x <- list(
-    name = "Piecewise linear", param = param, parname = "line points", sf = sfLinear, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Piecewise linear", param = param, parname = "line points",
+    sf = sfLinear, spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -714,8 +705,7 @@ sfLinear <- function(alpha, t, param) {
   ind <- (1 > t) & (t >= param[k])
   s[ind] <- param[j] + (t[ind] - param[k]) / (1 - param[k]) * (1 - param[j])
   if (k > 1) {
-    for (i in 2:k)
-    {
+    for (i in 2:k) {
       ind <- (param[i - 1] < t) & (t <= param[i])
       s[ind] <- param[k + i - 1] + (t[ind] - param[i - 1]) /
         (param[i] - param[i - 1]) *
@@ -731,8 +721,8 @@ sfLinear <- function(alpha, t, param) {
 # sfStep function [sinew] ----
 sfStep <- function(alpha, t, param) {
   x <- list(
-    name = "Step ", param = param, parname = "line points", sf = sfStep, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "Step ", param = param, parname = "line points", sf = sfStep,
+    spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -754,20 +744,20 @@ sfStep <- function(alpha, t, param) {
     stop("Timepoints and cumulative proportion of spending must be >= 0 and <= 1 in sfStep")
   }
   inctime <- param[1]
-  if (k>1) inctime <- c(inctime, param[2:k] - param[1:(k-1)])
+  if (k > 1) inctime <- c(inctime, param[2:k] - param[1:(k - 1)])
   if (min(inctime <= 0)) stop("Timepoints in param must be strictly increasing in sfStep")
-  incspend <- param[k+1]
-  if (k > 1) incspend <- c(incspend, param[(k + 2):j] - param[(k+1):(j-1)])
+  incspend <- param[k + 1]
+  if (k > 1) incspend <- c(incspend, param[(k + 2):j] - param[(k + 1):(j - 1)])
   if (min(incspend) < 0) stop("Spending in param must be non-decreasing in sfStep")
   s <- rep(-3, length(t))
   s[t < param[1]] <- 0
   s[t >= param[k]] <- param[j]
   s[t >= 1] <- 1
-  if (k > 1){
-     for (i in 1:(k-1)){
-       ind <- (param[i] <= t) & (t < param[i+1])
-       s[ind] <- param[k + i]
-     }
+  if (k > 1) {
+    for (i in 1:(k - 1)) {
+      ind <- (param[i] <= t) & (t < param[i + 1])
+      s[ind] <- param[k + i]
+    }
   }
   x$spend <- alpha * s
   x
@@ -812,8 +802,8 @@ sfStep <- function(alpha, t, param) {
 # sfPoints function [sinew] ----
 sfPoints <- function(alpha, t, param) {
   x <- list(
-    name = "User-specified", param = param, parname = "Points", sf = sfPoints, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "User-specified", param = param, parname = "Points", sf = sfPoints,
+    spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -965,8 +955,8 @@ sfPower <- function(alpha, t, param) {
 # sfTDist function [sinew] ----
 sfTDist <- function(alpha, t, param) {
   x <- list(
-    name = "t-distribution", param = param, parname = c("a", "b", "df"), sf = sfTDist, spend = NULL,
-    bound = NULL, prob = NULL
+    name = "t-distribution", param = param, parname = c("a", "b", "df"),
+    sf = sfTDist, spend = NULL, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
@@ -985,8 +975,7 @@ sfTDist <- function(alpha, t, param) {
     a <- param[1]
     b <- param[2]
     df <- param[3]
-  }
-  else if (len == 5) {
+  } else if (len == 5) {
     t0 <- param[1:2]
     p0 <- param[3:4]
     df <- param[5]
@@ -1003,8 +992,7 @@ sfTDist <- function(alpha, t, param) {
     y <- stats::qt(p0, df)
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
-  }
-  else if (len == 6) {
+  } else if (len == 6) {
     t0 <- param[1:3]
     p0 <- param[4:6]
 
@@ -1012,9 +1000,12 @@ sfTDist <- function(alpha, t, param) {
       stop("6-parameter specification of t-distribution spending function incorrect")
     }
 
-    # check Cauchy and normal which must err in opposite directions for a solution to exist
-    unorm <- sfNormal(alpha, t0[3], param = c(t0[1:2], p0[1:2]))$spend / alpha - p0[3]
-    ucauchy <- sfCauchy(alpha, t0[3], param = c(t0[1:2], p0[1:2]))$spend / alpha - p0[3]
+    # check Cauchy and normal which must err in opposite directions for a 
+    # solution to exist
+    unorm <- sfNormal(alpha, t0[3],
+                      param = c(t0[1:2], p0[1:2]))$spend / alpha - p0[3]
+    ucauchy <- sfCauchy(alpha, t0[3],
+                        param = c(t0[1:2], p0[1:2]))$spend / alpha - p0[3]
 
     if (unorm * ucauchy >= 0.) {
       stop("6-parameter specification of t-distribution spending function did not produce a solution")
@@ -1026,8 +1017,7 @@ sfTDist <- function(alpha, t, param) {
     y <- stats::qt(p0, df)
     b <- (y[2] - y[1]) / (xv[2] - xv[1])
     a <- y[2] - b * xv[2]
-  }
-  else {
+  } else {
     stop("t-distribution spending function parameter must be of length 3, 5 or 6")
   }
 
@@ -1126,7 +1116,8 @@ sfTruncated <- function(alpha, t, param) {
     s <- param$sf(alpha = alpha, t = (t[indx] - param$trange[1]) / (param$trange[2] - param$trange[1]), param$param)
     spend[indx] <- s$spend
   }
-  # the following line is awkward, but necessary to get the input spending function name in some cases
+  # the following line is awkward, but necessary to get the input spending
+  # function name in some cases
   param2 <- param$sf(alpha = alpha, t = .5, param = param$param)
   param$name <- param2$name
   param$parname <- param2$parname
@@ -1163,7 +1154,8 @@ sfTrimmed <- function(alpha, t, param) {
     s <- param$sf(alpha = alpha, t = t[indx], param$param)
     spend[indx] <- s$spend
   }
-  # the following line is awkward, but necessary to get the input spending function name in some cases
+  # the following line is awkward, but necessary to get the input spending
+  # function name in some cases
   param2 <- param$sf(alpha = alpha, t = .5, param = param$param)
   param$name <- param2$name
   param$parname <- param2$parname
@@ -1204,7 +1196,8 @@ sfGapped <- function(alpha, t, param) {
   if (max(indx)) {
     spend[indx] <- param$sf(alpha = alpha, t = param$trange[1], param$param)$spend
   }
-  # the following line is awkward, but necessary to get the input spending function name in some cases
+  # the following line is awkward, but necessary to get the input spending
+  # function name in some cases
   param2 <- param$sf(alpha = alpha, t = .5, param = param$param)
   param$name <- param2$name
   param$parname <- param2$parname
@@ -1276,8 +1269,8 @@ spendingFunction <- function(alpha, t, param) {
   t[t > 1] <- 1
 
   x <- list(
-    name = "Linear", param = param, parname = "none", sf = spendingFunction, spend = alpha * t,
-    bound = NULL, prob = NULL
+    name = "Linear", param = param, parname = "none", sf = spendingFunction,
+    spend = alpha * t, bound = NULL, prob = NULL
   )
 
   class(x) <- "spendfn"
