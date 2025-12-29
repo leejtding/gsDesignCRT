@@ -365,14 +365,14 @@ print.gsDesignCRT <- function(x) {
   print(boundary_table)
 }
 
-# print.gsDesignCRT function [sinew] ----
-#' @title Print group sequential CRT design
+# plot.gsDesignCRT function [sinew] ----
+#' @title Plot group sequential CRT design
 #'
-#' @description Print method for \code{gsDesignCRT} objects.
+#' @description Plot method for \code{gsDesignCRT} objects.
 #'
 #' @param x Object of class \code{gsDesignCRT} created by \code{gsDesignCRT()}.
 #'
-#' @return Printed output of design parameters and table of stopping boundaries
+#' @return Plot of stopping boundaries for the group sequential CRT design
 #'
 #' @import ggplot2
 #' @importFrom reshape2 melt
@@ -380,8 +380,8 @@ print.gsDesignCRT <- function(x) {
 #' @author Lee Ding \email{lee_ding@g.harvard.edu}
 #'
 #' @export
-#' @name print.gsDesignCRT
-# print.gsDesignCRT function [sinew] ----
+#' @name plot.gsDesignCRT
+# plot.gsDesignCRT function [sinew] ----
 plot.gsDesignCRT <- function(x) {
   # Plot lower and upper boundaries with ggplot
   boundary_data <- data.frame(
