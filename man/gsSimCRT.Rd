@@ -2,8 +2,7 @@
 % Please edit documentation in R/gsSimCRT.R
 \name{gsSimCRT}
 \alias{gsSimCRT}
-\title{Simulate group sequential cluster-randomized trial with continuous
-outcomes.}
+\title{Simulate group sequential cluster-randomized trial.}
 \usage{
 gsSimCRT(design, data, stat = c("Z_known", "Z_unknown", "t_unknown"))
 }
@@ -28,8 +27,7 @@ was stopped.} \item{i_frac}{Information fraction when the simulated trial
 was stopped.}
 }
 \description{
-Simulate group sequential cluster-randomized trial with continuous
-outcomes.
+Simulate group sequential cluster-randomized trial.
 }
 \author{
 Lee Ding \email{lee_ding@g.harvard.edu}
