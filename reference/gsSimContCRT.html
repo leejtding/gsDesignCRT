@@ -9,7 +9,7 @@ outcomes."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gsDesignCRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,17 +49,15 @@ outcomes.</p>
 <span>  <span class="va">test_sides</span>,</span>
 <span>  <span class="va">recruit_type</span>,</span>
 <span>  <span class="va">stat_type</span>,</span>
-<span>  <span class="va">balance_size</span>,</span>
-<span>  precompute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">delta</span>,</span>
 <span>  sigma_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">rho</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  beta <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  upper_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  m_max <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  n_max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  i_max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  m_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  n_cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  schedule_m <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  schedule_n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">alpha_sf</span>,</span>
@@ -108,17 +106,6 @@ columns encoding the treatment arm, cluster, individual, and response.</p></dd>
 <br><code>3=</code> t-test with re-estimated variance and ICC</p></dd>
 
 
-<dt id="arg-balance-size">balance_size<a class="anchor" aria-label="anchor" href="#arg-balance-size"></a></dt>
-<dd><p><code>1=</code> exact sample increments according to the
-scheduled interim analyses.
-<br><code>2=</code> randomized sample increments from multinomial distribution
-according to the scheduled interim analyses.</p></dd>
-
-
-<dt id="arg-precompute">precompute<a class="anchor" aria-label="anchor" href="#arg-precompute"></a></dt>
-<dd><p>Use pre-computed stopping boundaries if true.</p></dd>
-
-
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
 <dd><p>Effect size for theta under alternative hypothesis.</p></dd>
 
@@ -139,14 +126,8 @@ according to the scheduled interim analyses.</p></dd>
 <dd><p>Desired Type II error, default value is 0.1 (90% power).</p></dd>
 
 
-<dt id="arg-lower-bound">lower_bound<a class="anchor" aria-label="anchor" href="#arg-lower-bound"></a></dt>
-<dd><p>Pre-computed lower futility boundaries at the specified
-interim analyses. Must be specified if precompute is TRUE. NULL otherwise.</p></dd>
-
-
-<dt id="arg-upper-bound">upper_bound<a class="anchor" aria-label="anchor" href="#arg-upper-bound"></a></dt>
-<dd><p>Pre-computed upper efficacy boundaries at the specified
-interim analyses. Must be specified if precompute is TRUE. NULL otherwise.</p></dd>
+<dt id="arg-i-max">i_max<a class="anchor" aria-label="anchor" href="#arg-i-max"></a></dt>
+<dd><p>Maximum information.</p></dd>
 
 
 <dt id="arg-m-max">m_max<a class="anchor" aria-label="anchor" href="#arg-m-max"></a></dt>
@@ -155,6 +136,10 @@ interim analyses. Must be specified if precompute is TRUE. NULL otherwise.</p></
 
 <dt id="arg-n-max">n_max<a class="anchor" aria-label="anchor" href="#arg-n-max"></a></dt>
 <dd><p>Mean size of each cluster.</p></dd>
+
+
+<dt id="arg-n-cv">n_cv<a class="anchor" aria-label="anchor" href="#arg-n-cv"></a></dt>
+<dd><p>Coefficient of variation for cluster size</p></dd>
 
 
 <dt id="arg-schedule-m">schedule_m<a class="anchor" aria-label="anchor" href="#arg-schedule-m"></a></dt>
@@ -261,7 +246,7 @@ was stopped.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

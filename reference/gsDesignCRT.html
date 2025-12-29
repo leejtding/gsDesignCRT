@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gsDesignCRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,18 +54,21 @@
 <span>  test_type <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  test_sides <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  size_type <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  recruit_type <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  timing_type <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  recruit_type <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  delta <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  sigma_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  p_vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>  rho <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  beta <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  m_fix <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  n_fix <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  m <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  m_alloc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  n_cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  info_timing <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  size_timing <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  m_timing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  n_timing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  alpha_sf <span class="op">=</span> <span class="va">sfLDOF</span>,</span>
 <span>  alpha_sfpar <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,</span>
 <span>  beta_sf <span class="op">=</span> <span class="va">sfLDOF</span>,</span>
@@ -104,18 +107,18 @@
 <dd><p><code>1=</code>clusters per arm <br><code>2=</code>cluster size</p></dd>
 
 
-<dt id="arg-recruit-type">recruit_type<a class="anchor" aria-label="anchor" href="#arg-recruit-type"></a></dt>
-<dd><p><code>1=</code>recruit clusters with fixed sizes
-<br><code>2=</code>recruit individuals into fixed number of clusters
-<br><code>3=</code>recruit both clusters and individuals</p></dd>
-
-
 <dt id="arg-timing-type">timing_type<a class="anchor" aria-label="anchor" href="#arg-timing-type"></a></dt>
 <dd><p><code>1=</code> maximum and expected sample sizes based on
-specified information levels in <code>info_timing</code> <br><code>2=</code> maximum
-sample size based on specified information levels in <code>info_timing</code> and
-expected sample sizes based on specified sample size levels in
-<code>size_timing</code></p></dd>
+specified information fractions in <code>info_timing</code>; recruit according to
+design specified in <code>recruit_type</code>
+<br><code>2=</code> maximum sample size based on specified information fractions
+in <code>info_timing</code> and expected sample sizes based on specified sample
+size fractions in <code>m_timing</code> and <code>n_timing</code>
+<br><code>3=</code> maximum and expected sample sizes based on specified
+sample size fractions in <code>m_timing</code> and <code>n_timing</code>
+@param recruit_type <code>1=</code>recruit clusters with fixed sizes
+<br><code>2=</code>recruit individuals into fixed number of clusters
+<br><code>3=</code>recruit at both cluster and individual levels</p></dd>
 
 
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
@@ -144,29 +147,47 @@ expected sample sizes based on specified sample size levels in
 <dd><p>Type II error, default value is 0.1 (90% power).</p></dd>
 
 
-<dt id="arg-m-fix">m_fix<a class="anchor" aria-label="anchor" href="#arg-m-fix"></a></dt>
-<dd><p>Number of clusters; used to find maximum size of each cluster.</p></dd>
-
-
-<dt id="arg-n-fix">n_fix<a class="anchor" aria-label="anchor" href="#arg-n-fix"></a></dt>
-<dd><p>Mean size of each cluster; used to find maximum number of
+<dt id="arg-m">m<a class="anchor" aria-label="anchor" href="#arg-m"></a></dt>
+<dd><p>Number of clusters for finding maximum mean cluster size. If
+<code>m</code> is a scalar, it is treated as the total number of clusters across
+arms. If <code>m</code> is a vector of length 2, it is treated as the number of
 clusters per arm.</p></dd>
+
+
+<dt id="arg-m-alloc">m_alloc<a class="anchor" aria-label="anchor" href="#arg-m-alloc"></a></dt>
+<dd><p>Allocation ratio of clusters per arm. Default is
+<code>c(0.5, 0.5)</code>.</p></dd>
+
+
+<dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
+<dd><p>Mean cluster size for finding maximum number of clusters. If
+<code>n</code> is a scalar, it is treated as the average cluster size for both
+arms. If <code>n</code> is a vector of length 2, it is treated as the average
+cluster size per arm.</p></dd>
+
+
+<dt id="arg-n-cv">n_cv<a class="anchor" aria-label="anchor" href="#arg-n-cv"></a></dt>
+<dd><p>Coefficient of variation for cluster size. If <code>n_cv</code> is a
+scalar, it is treated as the coefficient of variation for both arms. If
+<code>n_cv</code> is a vector of length 2, it is treated as the coefficient of
+variation per arm.</p></dd>
 
 
 <dt id="arg-info-timing">info_timing<a class="anchor" aria-label="anchor" href="#arg-info-timing"></a></dt>
 <dd><p>Sets timing of interim analyses based on information
-levels. Default of 1 produces analyses at equal-spaced increments.
+fractions. Default of 1 produces analyses at equal-spaced increments.
 Otherwise, this is a vector of length <code>k</code> or <code>k-1</code>. The values
 should satisfy <code>0 &lt; info_timing[1] &lt; info_timing[2] &lt; ... &lt;
 info_timing[k-1] &lt; info_timing[k]=1</code>.</p></dd>
 
 
-<dt id="arg-size-timing">size_timing<a class="anchor" aria-label="anchor" href="#arg-size-timing"></a></dt>
-<dd><p>Sets timing of interim analyses based on sample size
-levels if <code>timing_type = 2</code>. Default of 1 produces analyses at
-equal-spaced increments. Otherwise, this is a vector of length <code>k</code> or
-<code>k-1</code>. The values should satisfy <code>0 &lt; size_timing[1] &lt;
-size_timing[2] &lt; ... &lt; size_timing[k-1] &lt; size_timing[k]=1</code>.</p></dd>
+<dt id="arg-m-timing">m_timing<a class="anchor" aria-label="anchor" href="#arg-m-timing"></a></dt>
+<dd><p>Sets timing of interim analyses based on fractions of the
+number of clusters.</p></dd>
+
+
+<dt id="arg-n-timing">n_timing<a class="anchor" aria-label="anchor" href="#arg-n-timing"></a></dt>
+<dd><p>Sets timing of interim analyses based on cluster size</p></dd>
 
 
 <dt id="arg-alpha-sf">alpha_sf<a class="anchor" aria-label="anchor" href="#arg-alpha-sf"></a></dt>
@@ -257,41 +278,56 @@ values provide larger number of grid points and greater accuracy.  Normally
  <dt>info_timing</dt>
 <dd><p>As
  input.</p></dd>
- <dt>size_timing</dt>
+ <dt>m_timing</dt>
 <dd><p>As input.</p></dd>
+ <dt>n_timing</dt>
+<dd><p>As input.</p></dd>
+
+ <dt>info_schedule</dt>
+<dd><p>Fraction of maximum information at each planned interim
+ analysis based on <code>timing_type</code> and <code>info_timing</code>.</p></dd>
+
+ <dt>m_schedule</dt>
+<dd><p>Fraction of maximum number of clusters per arm at each
+ planned interim analysis based on <code>timing_type</code> and <code>m_timing</code>.</p></dd>
+
+ <dt>n_schedule</dt>
+<dd><p>Fraction of maximum cluster size at each planned interim
+ analysis based on <code>timing_type</code> and <code>n_timing</code>.</p></dd>
  <dt>i</dt>
-<dd><p>Fisher information at each
- planned interim analysis based on <code>timing_type</code>.</p></dd>
+<dd><p>Fisher
+ information at each planned interim analysis based on <code>timing_type</code>.</p></dd>
+
  <dt>max_i</dt>
-<dd><p>Maximum
- information corresponding to design specifications.</p></dd>
+<dd><p>Maximum information corresponding to design specifications.</p></dd>
+
  <dt>m</dt>
-<dd><p>Number of
- clusters per arm at each planned interim analysis.</p></dd>
+<dd><p>Number of clusters per arm at each planned interim analysis.</p></dd>
+
  <dt>max_m</dt>
-<dd><p>Maximum
- number of clusters per arm.</p></dd>
+<dd><p>Maximum number of clusters per arm.</p></dd>
  <dt>e_m</dt>
-<dd><p>A vector of length 2 with expected
- number of clusters per arm under the null and alternative hypotheses. For
- simplicity, the expected sizes with non-binding futility boundaries are
- calculated assuming the boundaries are binding futility.</p></dd>
+<dd><p>A vector of
+ length 2 with expected number of clusters per arm under the null and
+ alternative hypotheses. For simplicity, the expected sizes with non-binding
+ futility boundaries are calculated assuming the boundaries are binding
+ futility.</p></dd>
  <dt>n</dt>
-<dd><p>Average
- cluster size at each planned interim analysis.</p></dd>
+<dd><p>Mean cluster size at each planned interim analysis.</p></dd>
+
  <dt>max_n</dt>
-<dd><p>Maximum cluster
- size.</p></dd>
- <dt>e_m</dt>
-<dd><p>A vector of length 2 with expected cluster sizes under the
- null and alternative hypotheses. For simplicity, the expected sizes with
- non-binding futility boundaries are calculated assuming the futility
- boundaries are binding.</p></dd>
+<dd><p>Maximum mean cluster size.</p></dd>
+ <dt>e_n</dt>
+<dd><p>A vector of length 2
+ with expected mean cluster sizes under the null and alternative hypotheses.
+ For simplicity, the expected sizes with non-binding futility boundaries are
+ calculated assuming the futility boundaries are binding.</p></dd>
+
  <dt>max_total</dt>
-<dd><p>Maximum number of individuals in
- the trial.</p></dd>
+<dd><p>Maximum number of individuals in the trial.</p></dd>
+
  <dt>e_total</dt>
-<dd><p>A vector of length 2 with expected number of
+<dd><p>A vector of length 2 with expected total number of
  individuals in the trial under the null and alternative hypotheses. For
  simplicity, the expected sizes with non-binding futility boundaries are
  calculated assuming the futility boundaries are binding.</p></dd>
@@ -316,6 +352,8 @@ values provide larger number of grid points and greater accuracy.  Normally
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Jennison C and Turnbull BW (2000), <em>Group Sequential
  Methods with Applications to Clinical Trials</em>. Boca Raton: Chapman and Hall.</p>
+<p>Anderson K (2025). gsDesign: Group Sequential Design.
+ R package version 3.8.0, https://keaven.github.io/gsDesign/.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -331,7 +369,7 @@ values provide larger number of grid points and greater accuracy.  Normally
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
