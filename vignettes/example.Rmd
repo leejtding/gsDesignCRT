@@ -85,7 +85,7 @@ design_results$e_total[1, 2]
 Stopping boundaries for the group sequential CRT design can also be visualized.
 
 ```{r}
-plot.gsDesignCRT(design_results)
+gsPlotCRT(design_results)
 ```
 
 # Evaluating empirical power via simulations

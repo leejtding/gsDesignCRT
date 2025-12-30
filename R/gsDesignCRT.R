@@ -324,7 +324,7 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
   return(x)
 }
 
-# print.gsDesignCRT function [sinew] ----
+# gsPrintCRT function [sinew] ----
 #' @title Print group sequential CRT design
 #'
 #' @param x Object of class \code{gsDesignCRT} created by \code{gsDesignCRT()}.
@@ -334,9 +334,9 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
 #' @author Lee Ding \email{lee_ding@g.harvard.edu}
 #'
 #' @export
-#' @name print.gsDesignCRT
-# print.gsDesignCRT function [sinew] ----
-print.gsDesignCRT <- function(x) {
+#' @name gsPrintCRT
+# gsPrintCRT function [sinew] ----
+gsPrintCRT <- function(x) {
   cat("Group sequential CRT design\n")
   cat("Outcome: ", if (x$outcome_type == 1) "continuous" else "binary", "\n")
   cat("Total Number of Analyses:", x$k, "\n")
@@ -363,7 +363,7 @@ print.gsDesignCRT <- function(x) {
   print(boundary_table)
 }
 
-# plot.gsDesignCRT function [sinew] ----
+# gsPlotCRT function [sinew] ----
 #' @title Plot group sequential CRT design
 #'
 #' @param x Object of class \code{gsDesignCRT} created by \code{gsDesignCRT()}.
@@ -376,9 +376,9 @@ print.gsDesignCRT <- function(x) {
 #' @author Lee Ding \email{lee_ding@g.harvard.edu}
 #'
 #' @export
-#' @name plot.gsDesignCRT
-# plot.gsDesignCRT function [sinew] ----
-plot.gsDesignCRT <- function(x) {
+#' @name gsPlotCRT
+# gsPlotCRT function [sinew] ----
+gsPlotCRT <- function(x) {
   # Plot lower and upper boundaries with ggplot
   boundary_data <- data.frame(
     analysis = 1:x$k,
