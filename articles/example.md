@@ -7,6 +7,10 @@ expected sample sizes and then evaluating the corresponding empirical
 power via simulation for a parallel group sequential CRT using the
 gsDesignCRT package.
 
+``` r
+library(gsDesignCRT)
+```
+
 ## Calculating maximum and expected sample sizes
 
 Suppose we were to design a group sequential CRT with a continuous
@@ -22,8 +26,6 @@ enrolled at the beginning of the trial with individual participants
 recruited into the clusters over time.
 
 ``` r
-library(gsDesignCRT)
-
 ## Specify desired population parameters and error rates
 mu_vec <- c(0, 0.2) # Mean outcome for intervention arms
 sd_vec <- c(1, 1) # Standard deviations for intervention arms
@@ -82,6 +84,15 @@ design_results$e_total[1, 1]
 design_results$e_total[1, 2]
 #> [1] 1375.776
 ```
+
+Stopping boundaries for the group sequential CRT design can also be
+visualized.
+
+``` r
+gsPlotCRT(design_results)
+```
+
+![](example_files/figure-html/unnamed-chunk-3-1.png)
 
 ## Evaluating empirical power via simulations
 

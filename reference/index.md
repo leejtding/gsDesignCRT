@@ -1,6 +1,6 @@
 # Package index
 
-## Group Sequential CRT Sample Size Computation
+## Group Sequential CRT Design Computation
 
 For an overview of how to use the gsDesignCRT package, see
 [`vignette("example")`](https://leejtding.github.io/gsDesignCRT/articles/example.md).
@@ -8,9 +8,9 @@ For an overview of how to use the gsDesignCRT package, see
 - [`gsDesignCRT()`](https://leejtding.github.io/gsDesignCRT/reference/gsDesignCRT.md)
   : Compute stopping boundaries, maximum sample size, and expected
   sample sizes for a group sequential cluster randomized trial.
-- [`print(`*`<gsDesignCRT>`*`)`](https://leejtding.github.io/gsDesignCRT/reference/print.gsDesignCRT.md)
+- [`gsPrintCRT()`](https://leejtding.github.io/gsDesignCRT/reference/gsPrintCRT.md)
   : Print group sequential CRT design
-- [`plot(`*`<gsDesignCRT>`*`)`](https://leejtding.github.io/gsDesignCRT/reference/plot.gsDesignCRT.md)
+- [`gsPlotCRT()`](https://leejtding.github.io/gsDesignCRT/reference/gsPlotCRT.md)
   : Plot group sequential CRT design
 
 ## Group Sequential CRT Boundary Computation

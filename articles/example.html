@@ -66,6 +66,8 @@
 expected sample sizes and then evaluating the corresponding empirical
 power via simulation for a parallel group sequential CRT using the
 gsDesignCRT package.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://leejtding.github.io/gsDesignCRT/">gsDesignCRT</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="calculating-maximum-and-expected-sample-sizes">Calculating maximum and expected sample sizes<a class="anchor" aria-label="anchor" href="#calculating-maximum-and-expected-sample-sizes"></a>
@@ -95,10 +97,8 @@ We will assume that recruitment will be conducted under Design #2 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">m_{max}</annotation></semantics></math>
 clusters enrolled at the beginning of the trial with individual
 participants recruited into the clusters over time.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://leejtding.github.io/gsDesignCRT/">gsDesignCRT</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Specify desired population parameters and error rates</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Specify desired population parameters and error rates</span></span>
 <span><span class="va">mu_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="co"># Mean outcome for intervention arms</span></span>
 <span><span class="va">sd_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># Standard deviations for intervention arms</span></span>
 <span><span class="va">delta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">mu_vec</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">mu_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># Desired effect size; must be &gt; 0</span></span>
@@ -155,6 +155,11 @@ participants recruited into the clusters over time.</p>
 <span><span class="co"># Expected total number of participants under alternative hypothesis</span></span>
 <span><span class="va">design_results</span><span class="op">$</span><span class="va">e_total</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] 1375.776</span></span></code></pre></div>
+<p>Stopping boundaries for the group sequential CRT design can also be
+visualized.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/gsPlotCRT.html">gsPlotCRT</a></span><span class="op">(</span><span class="va">design_results</span><span class="op">)</span></span></code></pre></div>
+<p><img src="example_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="evaluating-empirical-power-via-simulations">Evaluating empirical power via simulations<a class="anchor" aria-label="anchor" href="#evaluating-empirical-power-via-simulations"></a>
@@ -166,7 +171,7 @@ re-estimated at each analysis, participants are recruited exactly
 according to how the analyses were originally scheduled, and stopping
 boundaries are re-computed using the observed information at each
 analysis.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Specify simulation parameters</span></span>
