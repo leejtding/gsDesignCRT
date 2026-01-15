@@ -427,7 +427,6 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
                         time = x$info_schedule, sides = x$test_sides,
                         binding = binding, tol = x$tol,
                         r = x$r)$root * x$info_schedule
-  # x$i <- ((stats::qnorm(falsepos[x$k]) + stats::qnorm(x$beta)) / x$delta)^2 * x$info_schedule
 
   # Calculate corresponding boundaries based on maximum information
   bounds <- gsBoundsCRT(x$delta, x$i, falseneg, falsepos, x$test_sides,
