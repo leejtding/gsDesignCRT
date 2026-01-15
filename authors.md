@@ -6,14 +6,14 @@
 
 ## Citation
 
-Ding L (2025). *gsDesignCRT: Group Sequential Design for Cluster
+Ding L (2026). *gsDesignCRT: Group Sequential Design for Cluster
 Randomized Trials*. R package version 1.0.1,
 <https://leejtding.github.io/gsDesignCRT/>.
 
     @Manual{,
       title = {gsDesignCRT: Group Sequential Design for Cluster Randomized Trials},
       author = {Lee Ding},
-      year = {2025},
+      year = {2026},
       note = {R package version 1.0.1},
       url = {https://leejtding.github.io/gsDesignCRT/},
     }
