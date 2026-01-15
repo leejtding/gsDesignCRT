@@ -1,5 +1,5 @@
 Package: gsDesignCRT
-Version: 1.0.1
+Version: 1.0.0
 Title: Group Sequential Design for Cluster Randomized Trials
 Authors@R: person(given = "Lee", family = "Ding", email =
           "lee_ding@g.harvard.edu", role = c('aut','cre'))
