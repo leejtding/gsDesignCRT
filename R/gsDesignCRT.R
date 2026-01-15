@@ -175,7 +175,7 @@ gsDesignCRT <- function(k = 3, outcome_type = 1, test_type = 1, test_sides = 1,
   # Type I error, power, and ICC
   checkScalar(alpha, "numeric", 0:1, c(FALSE, FALSE))
   checkScalar(beta, "numeric", c(0, 1 - alpha), c(FALSE, FALSE))
-  rho    <- expandTwo(rho)
+  rho <- expandTwo(rho)
   checkVector(rho, "numeric", c(0, 1), c(TRUE, TRUE), length = 2)
 
   # Number of clusters
@@ -427,7 +427,7 @@ gsMaxInfoCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
                         time = x$info_schedule, sides = x$test_sides,
                         binding = binding, tol = x$tol,
                         r = x$r)$root * x$info_schedule
-  # x$i <- ((stats::qnorm(falsepos[x$k] / 2) + stats::qnorm(x$beta)) / x$delta)^2 * x$info_schedule
+  # x$i <- ((stats::qnorm(falsepos[x$k]) + stats::qnorm(x$beta)) / x$delta)^2 * x$info_schedule
 
   # Calculate corresponding boundaries based on maximum information
   bounds <- gsBoundsCRT(x$delta, x$i, falseneg, falsepos, x$test_sides,
@@ -573,7 +573,7 @@ gsExpectCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   x$n[, x$k] <- x$max_n
 
   x$info <- iDiff(m = x$m, n = x$n, n_cv = x$n_cv, var_vec = x$var_vec,
-                   rho = x$rho)
+                  rho = x$rho)
   x$info_schedule <- x$info / x$max_i
   x$info_schedule[x$info_schedule > 1] <- 1
 
@@ -598,6 +598,7 @@ gsExpectCRT <- function(x, alpha_sf, alpha_sfpar, beta_sf, beta_sfpar) {
   # Compute expected sample sizes from crossing probabilities
   p_nc <- sapply(t(rep(1, length(theta))) - x$power - x$futile,
                  function(x) max(x, 0))
+
   if (x$k == 1) {
     x$e_m <- cbind(x$m, x$m)
     x$e_n <- cbind(x$n, x$n)
